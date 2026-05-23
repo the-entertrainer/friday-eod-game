@@ -10,9 +10,14 @@
 <body>
     <div id="game-container">
         <div id="title-screen">
-            <h1>Friday<br>EOD</h1>
-            <p>EPISODE 1: FINAL_V7</p>
-            <button id="start-btn" onclick="startGame()">Start Shift</button>
+            <div class="title-scanlines"></div>
+            <div class="title-content">
+                <h1>Friday<br>EOD</h1>
+                <p class="episode-label">EPISODE 1: FINAL_V7</p>
+                <p class="tagline">An Interactive Workplace Horror</p>
+                <button id="start-btn" onclick="startGame()">Start Shift</button>
+                <p class="hint-text">tap dialogue to skip &nbsp;·&nbsp; choices have consequences</p>
+            </div>
         </div>
         <div id="hud">
             <div class="hud-left">
@@ -20,21 +25,28 @@
             </div>
             <div class="hud-right">
                 <div class="stat-wrapper" id="wrap-quality">
-                    <div>Quality</div>
+                    <div class="stat-label">Quality</div>
                     <div class="meter-container"><div id="quality-bar"></div></div>
                 </div>
                 <div class="stat-wrapper" id="wrap-patience" style="margin-top: 8px;">
-                    <div>Patience</div>
+                    <div class="stat-label">Patience</div>
                     <div class="meter-container"><div id="patience-bar"></div></div>
                 </div>
             </div>
         </div>
         <div id="viewport">
+            <div id="fade-overlay"></div>
+            <div id="loading-bar-container">
+                <div id="loading-label">PUBLISHING... 99%</div>
+                <div id="loading-bar-track"><div id="loading-bar-fill"></div></div>
+            </div>
             <div id="trap-overlay" onclick="triggerTrap()"></div>
         </div>
         <div id="terminal" onclick="advanceDialogue()">
             <div id="speaker-name">Speaker</div>
             <div id="dialogue-text"></div>
+            <div id="tap-hint">▼ tap anywhere to skip</div>
+            <div id="ending-card"></div>
             <div id="choices-container"></div>
         </div>
     </div>

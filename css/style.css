@@ -133,8 +133,8 @@ body {
     text-shadow: 6px 6px 0 var(--accent-hot); transform: rotate(-2deg);
 }
 
-#title-screen p { 
-    color: var(--priya-cyan); margin-bottom: 60px; font-size: 1.2rem; font-weight: 900;
+#title-screen .episode-label {
+    color: var(--priya-cyan); margin-bottom: 8px; font-size: 1.2rem; font-weight: 900;
     letter-spacing: 2px; background: #000; padding: 5px 15px; border-radius: 20px;
 }
 
@@ -143,4 +143,175 @@ body {
     padding: 18px 45px; font-size: 1.4rem; font-weight: 900; font-family: 'Outfit', sans-serif;
     border-radius: 20px; cursor: pointer; text-transform: uppercase; box-shadow: 6px 6px 0 #000;
 }
+#start-btn:hover  { transform: translate(-2px, -2px); box-shadow: 8px 8px 0 #000; }
 #start-btn:active { transform: translate(6px, 6px); box-shadow: 0 0 0 #000; }
+
+/* ═══════════════════════════════════════════════════════
+   NEW UX / VISUAL IMPROVEMENTS
+═══════════════════════════════════════════════════════ */
+
+/* --- Title screen atmosphere --- */
+#title-screen { overflow: hidden; }
+
+.title-scanlines {
+    position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+    background: repeating-linear-gradient(
+        0deg, transparent, transparent 3px,
+        rgba(0,0,0,0.18) 3px, rgba(0,0,0,0.18) 4px
+    );
+    pointer-events: none; z-index: 1;
+    animation: scanlineMove 14s linear infinite;
+}
+@keyframes scanlineMove {
+    from { background-position: 0 0; }
+    to   { background-position: 0 200px; }
+}
+
+.title-content {
+    position: relative; z-index: 2;
+    display: flex; flex-direction: column; align-items: center; text-align: center;
+}
+
+#title-screen h1 { animation: titleGlow 3.5s ease-in-out infinite; }
+@keyframes titleGlow {
+    0%,100% { text-shadow: 6px 6px 0 var(--accent-hot); }
+    50%     { text-shadow: 6px 6px 0 var(--accent-hot), 0 0 30px var(--accent-hot), 0 0 70px rgba(255,0,85,0.3); }
+}
+
+.tagline {
+    color: rgba(255,255,255,0.38); font-size: 0.78rem; font-weight: 400;
+    letter-spacing: 2px; text-transform: uppercase;
+    margin: 0 0 50px 0; background: transparent; padding: 0; border-radius: 0;
+}
+.hint-text {
+    color: rgba(255,255,255,0.22); font-size: 0.68rem; font-weight: 400;
+    letter-spacing: 1px; margin: 20px 0 0 0; background: transparent; padding: 0; border-radius: 0;
+}
+
+/* --- Scene crossfade --- */
+#fade-overlay {
+    position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+    background: #000; opacity: 0;
+    transition: opacity 0.22s ease;
+    pointer-events: none; z-index: 5;
+}
+#fade-overlay.active { opacity: 1; }
+
+/* --- Loading bar (trap scene) --- */
+#loading-bar-container {
+    position: absolute; bottom: 22%; left: 50%; transform: translateX(-50%);
+    width: 78%; display: none; flex-direction: column; gap: 10px; z-index: 6;
+}
+#loading-bar-container.active { display: flex; }
+#loading-label {
+    color: var(--priya-cyan); font-size: 0.72rem; font-weight: 900;
+    letter-spacing: 3px; text-align: center; text-transform: uppercase;
+    animation: labelBlink 0.7s step-end infinite;
+}
+@keyframes labelBlink { 0%,100% { opacity: 1; } 50% { opacity: 0; } }
+#loading-bar-track {
+    height: 16px; background: rgba(0,0,0,0.7);
+    border: 3px solid var(--priya-cyan); border-radius: 4px; overflow: hidden;
+    box-shadow: 0 0 14px rgba(0,229,255,0.45), inset 0 0 6px rgba(0,229,255,0.1);
+}
+#loading-bar-fill {
+    height: 100%; width: 0%;
+    background: linear-gradient(90deg, var(--priya-cyan), var(--success-green));
+}
+@keyframes loadProgress {
+    0%   { width: 0%;  }
+    15%  { width: 38%; }
+    40%  { width: 65%; }
+    65%  { width: 83%; }
+    85%  { width: 93%; }
+    100% { width: 99%; }
+}
+
+/* --- HUD danger states --- */
+#quality-bar.bar-warning  { background: var(--tarun-yellow); }
+#quality-bar.bar-danger   { background: var(--system-alert); animation: pulseBar 0.55s ease infinite alternate; }
+#patience-bar.bar-warning { background: #ff8c00; }
+#patience-bar.bar-danger  { background: var(--system-alert); animation: pulseBar 0.55s ease infinite alternate; }
+@keyframes pulseBar { from { opacity: 1; } to { opacity: 0.3; } }
+
+#clock-display.clock-warning { color: var(--tarun-yellow); }
+#clock-display.clock-danger  { color: var(--system-alert); animation: pulseBar 0.42s ease infinite alternate; }
+
+/* --- Tap hint --- */
+#tap-hint {
+    text-align: center; color: var(--priya-cyan);
+    font-size: 0.76rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.3s ease; margin: 6px 0 0 0;
+}
+#tap-hint.visible { opacity: 1; animation: tapBlink 1.3s ease-in-out infinite; pointer-events: auto; }
+@keyframes tapBlink { 0%,100% { opacity: 1; } 50% { opacity: 0.15; } }
+
+/* --- Ending stats card --- */
+#ending-card { display: none; margin: 10px 0 4px 0; }
+.ending-stats {
+    border: 2px solid rgba(255,255,255,0.15); border-radius: 10px;
+    padding: 10px 14px; font-size: 0.77rem; font-weight: 700; letter-spacing: 0.4px;
+    background: rgba(0,0,0,0.28);
+    animation: cardFadeIn 0.4s ease forwards;
+}
+.victory-stats { border-color: var(--success-green); color: var(--success-green); box-shadow: 0 0 14px rgba(0,255,170,0.2); }
+.bad-stats     { border-color: var(--system-alert);  color: var(--system-alert);  box-shadow: 0 0 14px rgba(255,71,87,0.2); }
+.ending-stats-title { font-size: 0.63rem; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 7px; opacity: 0.6; }
+.ending-stats-row   { display: flex; justify-content: space-between; padding: 2px 0; }
+@keyframes cardFadeIn { from { opacity: 0; transform: translateY(7px); } to { opacity: 1; transform: translateY(0); } }
+
+/* --- Choice cost badges --- */
+.choice-text  { display: block; }
+.cost-badges  { display: flex; gap: 5px; margin-top: 7px; flex-wrap: wrap; }
+.cost-badge   {
+    font-size: 0.67rem; font-weight: 700;
+    padding: 2px 8px; border-radius: 20px; letter-spacing: 0.3px;
+    font-family: 'Outfit', sans-serif;
+}
+.cost-badge.cost-time { background: rgba(255,71,87,0.1);  color: var(--system-alert);  border: 1.5px solid var(--system-alert); }
+.cost-badge.cost-bad  { background: rgba(255,71,87,0.1);  color: var(--system-alert);  border: 1.5px solid var(--system-alert); }
+.cost-badge.cost-good { background: rgba(0,255,170,0.1);  color: var(--success-green); border: 1.5px solid var(--success-green); }
+
+/* --- Ending flash effects --- */
+.glitch-flash, .victory-flash {
+    position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+    pointer-events: none; z-index: 100;
+}
+@keyframes glitchFlash {
+    0%   { background: transparent; transform: translate(0); }
+    8%   { background: rgba(255,71,87,0.65); clip-path: inset(15% 0 55% 0); transform: translate(-4px,0); }
+    14%  { background: transparent; transform: translate(0); }
+    20%  { background: rgba(255,255,255,0.18); clip-path: inset(65% 0 12% 0); transform: translate(3px,0); }
+    28%  { background: rgba(255,71,87,0.35); clip-path: inset(5% 0 78% 0); transform: translate(-2px,0); }
+    36%  { background: transparent; transform: translate(0); clip-path: none; }
+    100% { background: transparent; }
+}
+.glitch-flash { animation: glitchFlash 0.7s ease forwards; }
+
+@keyframes victoryFlash {
+    0%   { background: transparent; }
+    12%  { background: rgba(0,255,170,0.32); }
+    28%  { background: transparent; }
+    48%  { background: rgba(0,255,170,0.14); }
+    100% { background: transparent; }
+}
+.victory-flash { animation: victoryFlash 0.85s ease forwards; }
+
+#game-container.ending-victory #terminal { border-top-color: var(--success-green); box-shadow: 0 -4px 22px rgba(0,255,170,0.25); }
+#game-container.ending-bad    #terminal { border-top-color: var(--system-alert);  box-shadow: 0 -4px 22px rgba(255,71,87,0.25); }
+
+/* --- HUD onboarding tooltips --- */
+.hud-tooltip {
+    position: absolute; right: 0; bottom: -22px;
+    background: rgba(0,0,0,0.88); color: rgba(255,255,255,0.9);
+    font-size: 0.63rem; font-weight: 400; padding: 3px 8px;
+    border-radius: 6px; white-space: nowrap; pointer-events: none;
+    animation: tooltipFade 3.6s ease forwards; z-index: 50; letter-spacing: 0.5px;
+}
+@keyframes tooltipFade {
+    0%   { opacity: 0; transform: translateY(-3px); }
+    12%  { opacity: 1; transform: translateY(0); }
+    75%  { opacity: 1; }
+    100% { opacity: 0; }
+}

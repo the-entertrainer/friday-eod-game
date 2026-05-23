@@ -124,5 +124,17 @@ const storyData = {
         image: "assets/images/5_2_winner.jpg",
         text: "Tarun nods slowly. 'Ah yes, the polymorphic hooks. Good work, Priya.' You weaponized his technical ignorance. You caught an Uber with no surge pricing. You are an E-Learning Goddess. \n\n[TRUE ENDING: THE SME WHISPERER]",
         choices: [ { text: "Play Again (Restart Shift)", action: "restart" } ]
+    },
+    "rage_quit": {
+        speaker: "System", color: "var(--system-alert)", textColor: "#fff",
+        image: "assets/images/1_1_bsod.jpg",
+        text: "Your patience hits zero. Without a word, you slam the laptop shut, grab your bag, and walk out. Tarun sends four Slack messages. You don't read any of them.\n\n[ENDING: RAGE QUIT]",
+        choices: [ { text: "Restart Shift", action: "restart" } ]
+    },
+    "martyr": {
+        speaker: "System", color: "var(--system-alert)", textColor: "#fff",
+        image: "assets/images/5_1_martyr.jpg",
+        text: "It's 6:30 PM. The LMS is still timing out. You're still here. You're always still here. The cleaner is mopping around your chair. She doesn't even ask anymore.\n\n[ENDING: OVERTIME MARTYRDOM]",
+        choices: [ { text: "Restart Shift", action: "restart" } ]
     }
 };

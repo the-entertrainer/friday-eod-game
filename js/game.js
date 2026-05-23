@@ -26,6 +26,20 @@ const uiLoadingBar  = document.getElementById('loading-bar-container');
 const uiLoadingFill = document.getElementById('loading-bar-fill');
 const uiGameCont    = document.getElementById('game-container');
 
+// ─── Universal scaling ────────────────────────────────────────────────────────
+function scaleGame() {
+    const w = window.innerWidth, h = window.innerHeight;
+    if (w > 500) {
+        // Desktop/tablet: scale up to fill available space (never scale down)
+        const scale = Math.max(1, Math.min(w / 450, h / 850));
+        uiGameCont.style.transform = `scale(${scale})`;
+    } else {
+        uiGameCont.style.transform = '';
+    }
+}
+scaleGame();
+window.addEventListener('resize', scaleGame);
+
 // ─── Audio ────────────────────────────────────────────────────────────────────
 let audioCtx = null;
 
@@ -73,31 +87,65 @@ function playSound(type) {
     } catch(e) {}
 }
 
-// ─── Typewriter click (per-character) ────────────────────────────────────────
+// ─── Typewriter click (per-character, throttled) ─────────────────────────────
+let _lastClickT = 0;
 function playTypeClick() {
     if (!audioCtx) return;
+    const now = audioCtx.currentTime;
+    if (now - _lastClickT < 0.06) return; // max ~16 clicks/sec — prevents tractor sound
+    _lastClickT = now;
     try {
-        // 14ms white-noise burst through a bandpass — sounds like a key strike
-        const bufLen = Math.floor(audioCtx.sampleRate * 0.014);
+        const bufLen = Math.floor(audioCtx.sampleRate * 0.011);
         const buf = audioCtx.createBuffer(1, bufLen, audioCtx.sampleRate);
-        const data = buf.getChannelData(0);
-        for (let j = 0; j < bufLen; j++) data[j] = Math.random() * 2 - 1;
+        const d = buf.getChannelData(0);
+        for (let j = 0; j < bufLen; j++) d[j] = Math.random() * 2 - 1;
 
         const src = audioCtx.createBufferSource();
         src.buffer = buf;
 
         const bp = audioCtx.createBiquadFilter();
         bp.type = 'bandpass';
-        bp.frequency.value = 2600 + Math.random() * 600; // slight pitch variation
-        bp.Q.value = 1.0;
+        bp.frequency.value = 1400 + Math.random() * 500; // lower, softer register
+        bp.Q.value = 0.7;
 
         const g = audioCtx.createGain();
-        g.gain.setValueAtTime(0.045, audioCtx.currentTime);
-        g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.014);
+        g.gain.setValueAtTime(0.02, now);
+        g.gain.exponentialRampToValueAtTime(0.001, now + 0.011);
 
         src.connect(bp); bp.connect(g); g.connect(audioCtx.destination);
         src.start();
     } catch(e) {}
+}
+
+// ─── Contextual pop effects ───────────────────────────────────────────────────
+const _CTX_IMPACTS = [
+    { re: /\bCRASH\b/i,           label: 'CRASH!',  cls: 'ctx-bad' },
+    { re: /\bBSOD\b/i,             label: 'BSOD!',   cls: 'ctx-bad' },
+    { re: /\bSLAM\b/i,             label: 'SLAM!',   cls: 'ctx-bad' },
+    { re: /not responding/i,       label: 'FROZEN!', cls: 'ctx-bad' },
+    { re: /\bfrozen?\b/i,          label: 'FROZEN!', cls: 'ctx-bad' },
+    { re: /\bERROR\b/,             label: 'ERROR!',  cls: 'ctx-bad' },
+    { re: /\byikes\b/i,            label: 'YIKES!',  cls: 'ctx-bad' },
+    { re: /\boh no\b/i,            label: 'OH NO!',  cls: 'ctx-bad' },
+    { re: /WHAT\?!/,               label: 'WHAT?!',  cls: 'ctx-q'   },
+];
+function showContextualEffect(text) {
+    let label = null, cls = null;
+    for (const p of _CTX_IMPACTS) {
+        if (p.re.test(text)) { label = p.label; cls = p.cls; break; }
+    }
+    if (!label) {
+        if (/!{2,}/.test(text))  { label = '!!';  cls = 'ctx-exclaim'; }
+        else if (/\?!/.test(text)){ label = '?!';  cls = 'ctx-q';      }
+    }
+    if (!label) return;
+    const el = document.createElement('div');
+    el.className = `context-pop ${cls}`;
+    el.textContent = label;
+    el.style.left = (12 + Math.random() * 58) + '%';
+    el.style.top  = (8  + Math.random() * 32) + '%';
+    uiViewport.appendChild(el);
+    setTimeout(() => el.parentNode && el.parentNode.removeChild(el), 1100);
 }
 
 // ─── Game BGM System ──────────────────────────────────────────────────────────
@@ -407,16 +455,16 @@ function transitionScene(newUrl, skipAnim) {
     uiSceneImage.style.backgroundImage = `url('${newUrl}')`;
 
     requestAnimationFrame(() => {
-        uiSceneOut.classList.add('slide-out');
-        uiSceneImage.classList.add('slide-in');
+        uiSceneOut.classList.add('film-out');
+        uiSceneImage.classList.add('film-in');
     });
 
     setTimeout(() => {
-        uiSceneOut.classList.remove('slide-out');
-        uiSceneImage.classList.remove('slide-in');
+        uiSceneOut.classList.remove('film-out');
+        uiSceneImage.classList.remove('film-in');
         uiSceneOut.style.backgroundImage = '';
         sceneTransitioning = false;
-    }, 540);
+    }, 570);
 }
 
 // ─── Scene loading ─────────────────────────────────────────────────────────────
@@ -485,9 +533,12 @@ function spawnEndingEffect(type) {
 function typewriterEffect(text, choices) {
     clearInterval(gameState.typeInterval);
     gameState.isTyping = true;
+    _lastClickT = 0; // reset throttle for fresh sentence
     let i = 0;
 
     if (choices && choices.length > 0) uiTapHint.classList.add('visible');
+
+    showContextualEffect(text);
 
     gameState.typeInterval = setInterval(() => {
         const ch = text[i];

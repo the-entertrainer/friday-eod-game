@@ -72,7 +72,7 @@ body {
 }
 
 #viewport {
-    flex: 6; position: relative; display: flex; justify-content: center; align-items: center;
+    flex: 1; position: relative; display: flex; justify-content: center; align-items: center;
     background-color: var(--bg-game);
 }
 
@@ -111,16 +111,22 @@ body {
 
 #viewport::after {
     content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-    box-shadow: inset 0 -40px 60px rgba(0,0,0,0.8); pointer-events: none;
+    box-shadow: inset 0 -60px 100px rgba(0,0,0,0.85); pointer-events: none;
 }
 
 #trap-overlay { position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: none; cursor: pointer; z-index: 20; }
 
 #terminal {
-    flex: 4; background: var(--ui-card); border-top: var(--border-thick);
+    position: absolute; bottom: 0; left: 0; right: 0;
+    max-height: 50%;
+    overflow-y: auto; scrollbar-width: none; -ms-overflow-style: none;
+    background: rgba(13, 13, 26, 0.95);
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+    border-top: var(--border-thick);
     display: flex; flex-direction: column; padding: 30px 20px 20px 20px;
-    box-sizing: border-box; position: relative; z-index: 30; cursor: pointer;
+    box-sizing: border-box; z-index: 30; cursor: pointer;
 }
+#terminal::-webkit-scrollbar { display: none; }
 
 #speaker-name {
     position: absolute; top: -20px; left: 20px; background: var(--priya-cyan); color: #000;

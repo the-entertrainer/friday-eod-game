@@ -108,32 +108,32 @@ const storyData = {
         choices: [ { text: "Restart Shift", action: "restart" } ]
     },
     "ppt_promotion": {
-        speaker: "System", color: "var(--tarun-yellow)", textColor: "#000", 
-        image: "assets/images/2_2_diplomatic.jpg",
+        speaker: "System", color: "var(--tarun-yellow)", textColor: "#000",
+        image: "assets/images/6_1_ppt_promotion.jpg",
         text: "You gave up. You exported it as a static PowerPoint and emailed it to Dr. Ravi. He replied: 'Wow! This is exactly the gamified synergy I was looking for! So easy to click next!' You are immediately promoted to Director of Strategy. You hate yourself. \n\n[ENDING: THE CORPORATE SELLOUT]",
         choices: [ { text: "Restart Shift", action: "restart" } ]
     },
     "true_winner": {
-        speaker: "Priya", color: "var(--priya-cyan)", textColor: "#000", 
-        image: "assets/images/5_2_winner.jpg",
+        speaker: "Priya", color: "var(--priya-cyan)", textColor: "#000",
+        image: "assets/images/6_2_true_winner.jpg",
         text: "Actually Tarun, the SCORM wrapper is compiled on a polymorphic CSS framework. Once the LMS server cache clears at midnight GMT, the stylesheet hooks will dynamically force-override the blue arrays into Trustworthy Teal. It's an automated Web3 integration.",
         choices: [ { text: "Watch Tarun pretend to understand.", target: "victory_screen" } ]
     },
     "victory_screen": {
         speaker: "System", color: "var(--success-green)", textColor: "#000",
-        image: "assets/images/5_2_winner.jpg",
+        image: "assets/images/6_3_victory.jpg",
         text: "Tarun nods slowly. 'Ah yes, the polymorphic hooks. Good work, Priya.' You weaponized his technical ignorance. You caught an Uber with no surge pricing. You are an E-Learning Goddess. \n\n[TRUE ENDING: THE SME WHISPERER]",
         choices: [ { text: "Play Again (Restart Shift)", action: "restart" } ]
     },
     "rage_quit": {
         speaker: "System", color: "var(--system-alert)", textColor: "#fff",
-        image: "assets/images/1_1_bsod.jpg",
+        image: "assets/images/6_4_rage_quit.jpg",
         text: "Your patience hits zero. Without a word, you slam the laptop shut, grab your bag, and walk out. Tarun sends four Slack messages. You don't read any of them.\n\n[ENDING: RAGE QUIT]",
         choices: [ { text: "Restart Shift", action: "restart" } ]
     },
     "martyr": {
         speaker: "System", color: "var(--system-alert)", textColor: "#fff",
-        image: "assets/images/5_1_martyr.jpg",
+        image: "assets/images/6_5_martyr.jpg",
         text: "It's 6:30 PM. The LMS is still timing out. You're still here. You're always still here. The cleaner is mopping around your chair. She doesn't even ask anymore.\n\n[ENDING: OVERTIME MARTYRDOM]",
         choices: [ { text: "Restart Shift", action: "restart" } ]
     }

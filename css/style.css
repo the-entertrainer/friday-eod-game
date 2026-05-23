@@ -157,32 +157,34 @@ body {
     to   { transform: translateX(-50%); }
 }
 
-/* L3 — Characters */
+/* L3 — Characters: bottom-anchored, always fills full width */
 .ts-characters {
     position: absolute; bottom: 0;
-    left: 0; right: 0; height: 56%;
-    display: flex; justify-content: center; align-items: flex-end;
+    left: 0; right: 0; height: 64%;
     z-index: 3; pointer-events: none;
 }
 .ts-characters > img {
-    height: 100%; width: auto; display: block;
-    pointer-events: none;
+    position: absolute; bottom: 0; left: 0;
+    width: 100%; height: auto;
+    display: block; pointer-events: none;
 }
 
-/* Character tap zones (absolute within .ts-characters) */
+/* Character tap zones — absolute within .ts-characters, anchored to bottom */
 .char-zone {
     position: absolute; bottom: 0; cursor: pointer; pointer-events: all;
-    /* uncomment to debug: outline: 2px solid red; */
+    /* outline: 2px solid red; */ /* debug toggle */
 }
-#zone-priya { left: 4%;  width: 38%; height: 72%; }
-#zone-tarun { right: 2%; width: 46%; height: 95%; }
+/* Priya: left character — covers left ~44% of screen, bottom 72% of char container */
+#zone-priya { left: 2%; width: 44%; height: 72%; }
+/* Tarun: right character — covers right ~48% of screen, nearly full container height */
+#zone-tarun { right: 1%; width: 48%; height: 96%; }
 
 /* Chat bubbles */
 .char-bubble {
     position: absolute;
     background: #fff; color: #1a1a1a;
     border: 2.5px solid #1a1a1a; border-radius: 16px;
-    padding: 12px 15px; max-width: 58%;
+    padding: 12px 15px; max-width: 56%;
     font-family: 'Outfit', sans-serif; font-size: 0.83rem;
     font-weight: 700; line-height: 1.45;
     box-shadow: 3px 3px 0 rgba(0,0,0,0.22);
@@ -198,17 +200,19 @@ body {
     content: ''; position: absolute; width: 0; height: 0; border-style: solid;
     bottom: -13px;
 }
-#bubble-priya { bottom: 50%; left: 4%; }
+/* Priya bubble: sits above her, left side — bottom at ~42% of screen from bottom */
+#bubble-priya { bottom: 42%; left: 3%; }
 #bubble-priya::after {
     border-width: 13px 8px 0 8px;
     border-color: #1a1a1a transparent transparent transparent;
-    left: 24%;
+    left: 22%;
 }
-#bubble-tarun { bottom: 56%; right: 4%; text-align: right; }
+/* Tarun bubble: sits above him, right side */
+#bubble-tarun { bottom: 46%; right: 3%; text-align: right; }
 #bubble-tarun::after {
     border-width: 13px 8px 0 8px;
     border-color: #1a1a1a transparent transparent transparent;
-    right: 24%;
+    right: 22%;
 }
 @keyframes bubblePop {
     from { transform: scale(0.5); opacity: 0; }
@@ -219,7 +223,7 @@ body {
 .ts-logo-wrap {
     position: absolute; top: 3%;
     left: 0; right: 0; margin: 0 auto;
-    width: 90%; z-index: 6; opacity: 0;
+    width: 78%; z-index: 6; opacity: 0;
 }
 .ts-logo-wrap img { width: 100%; height: auto; display: block; }
 
@@ -244,12 +248,12 @@ body {
     50%     { transform: translateY(-10px); }
 }
 
-/* Subtitle + button */
+/* Subtitle + button — sits above the character zone */
 .ts-ui {
-    position: absolute; top: 46%;
+    position: absolute; top: 34%;
     left: 0; right: 0;
     display: flex; flex-direction: column;
-    align-items: center; gap: 20px; z-index: 7;
+    align-items: center; gap: 16px; z-index: 7;
 }
 .ts-subtitle {
     color: rgba(255,255,255,0.93); margin: 0;

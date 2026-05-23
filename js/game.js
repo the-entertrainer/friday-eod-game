@@ -377,14 +377,64 @@ function handleChoice(choice) {
 // ─── Title Screen ──────────────────────────────────────────────────────────────
 let bubbleDismissTimeout = null;
 
+const charQuotes = {
+    priya: [
+        "My SCORM package has been 'Publishing…' for 14 minutes. I am legally not allowed to feel things anymore.",
+        "Storyline crashed. My auto-save is from Tuesday. I will not be taking questions.",
+        "The SME wants 40 more slides. The module is about washing hands.",
+        "I spent 3 hours on a branching scenario. They asked me to make it linear.",
+        "Synthesia gave my AI avatar a British accent. The client is in Mumbai. This is fine.",
+        "The LMS says SCORM 1.2 is supported. The LMS is lying.",
+        "I have 6 layers of triggers on this slide and I am not okay.",
+        "They said 'make it interactive.' I added a hover state. Done. Interactive.",
+        "My Storyline file is 2.3 GB. It has 12 slides. I don't want to talk about it.",
+        "The client wants a 3D avatar. My budget is zero. My patience is also zero.",
+        "I just published to Review 360 for the 11th time today. Same feedback. 'Make it pop.'",
+        "The learner will skip the audio anyway. I spent 4 hours scripting it. Wonderful.",
+        "They approved the storyboard. They are now un-approving it. On a Friday.",
+        "My Synthesia presenter blinked at the wrong time. Re-rendering. At 5 PM.",
+        "Someone requested a knowledge check after every slide. There are 68 slides.",
+        "'Can you just make it feel more… gamified?' I will not. I am going home.",
+        "The completion trigger fires on slide 1. Nobody will ever know. Nobody.",
+        "SCORM cloud says 'Completed.' The client says 'It's not tracking.' I have left my body.",
+    ],
+    tarun: [
+        "Have you considered more synergy? Also 12 more slides. Also a 3D escape room. You're welcome, team!",
+        "The learner needs to FEEL the content. Can we add a drum roll to the quiz reveal?",
+        "Dr. Ravi feels the module lacks 'wow factor.' Can Synthesia do a backflip?",
+        "What if every wrong answer triggered a sad trombone? Just spitballing. Write it down.",
+        "I showed this to my 6-year-old. He didn't click Next. We need to fix the UX.",
+        "Great work on the branching scenario! Now make it linear. But keep the branches. Both.",
+        "Can we add a leaderboard? It's a compliance module about data privacy. Even better.",
+        "The CEO watched 8 seconds of the Synthesia video. He said 'something feels off.' Reshoot.",
+        "I sent your Storyline file to a vendor. They opened it in PowerPoint. Same difference, right?",
+        "Dr. Ravi says the font is 'aggressive.' The font is Arial. It is 12pt.",
+        "We need this to feel like Netflix. But also like LinkedIn. But make it fun. By Monday.",
+        "What if we gamified the loading screen? It's sitting at 99% anyway, might as well.",
+        "The client wants a Synthesia presenter who 'doesn't look AI.' I'll escalate that feedback.",
+        "Can we get a voiceover? Yes. Budget? No. Can Priya just record it on her phone?",
+        "I've aligned 14 stakeholders on the learning objective. It is now 6 objectives. Progress!",
+        "The completion certificate needs to feel more premium. Add a gold border. And a wax seal.",
+        "What if we just… made it a PDF? A very INTERACTIVE PDF? I'll put it in the deck.",
+        "The module plays perfectly in Chrome. The client uses IE. This is an opportunity.",
+    ]
+};
+
+const charQuoteIndex = { priya: 0, tarun: 0 };
+
 function showCharBubble(char, event) {
     if (event) event.stopPropagation();
     hideCharBubbles();
     const bubble = document.getElementById(`bubble-${char}`);
     if (!bubble) return;
+    const pool = charQuotes[char];
+    if (pool) {
+        bubble.textContent = pool[charQuoteIndex[char] % pool.length];
+        charQuoteIndex[char]++;
+    }
     bubble.classList.add('visible');
     clearTimeout(bubbleDismissTimeout);
-    bubbleDismissTimeout = setTimeout(hideCharBubbles, 3800);
+    bubbleDismissTimeout = setTimeout(hideCharBubbles, 4500);
     playSound('pop');
 }
 

@@ -73,53 +73,31 @@ function playSound(type) {
     } catch(e) {}
 }
 
-// ─── Typing Melody (8-bit loop played during typewriter) ─────────────────────
-// D-minor pentatonic: D5 F5 G5 A5 C6 — urgent office-coder rhythm
-const TYPING_NOTES = [
-    [587,90],[698,90],[784,90],[0,55],
-    [784,90],[880,90],[784,90],[0,55],
-    [698,90],[587,90],[0,110],
-    [587,90],[698,90],[880,90],[784,90],[698,175],[0,140]
-];
-let typingMel = { timers: [], idx: 0, running: false };
-
-function startTypingMelody() {
+// ─── Typewriter click (per-character) ────────────────────────────────────────
+function playTypeClick() {
     if (!audioCtx) return;
-    stopTypingMelody(false);
-    typingMel.idx = 0;
-    typingMel.running = true;
-    if (bgm.masterGain) {
-        bgm.masterGain.gain.cancelScheduledValues(audioCtx.currentTime);
-        bgm.masterGain.gain.linearRampToValueAtTime(0.012, audioCtx.currentTime + 0.1);
-    }
-    scheduleMelNote();
-}
+    try {
+        // 14ms white-noise burst through a bandpass — sounds like a key strike
+        const bufLen = Math.floor(audioCtx.sampleRate * 0.014);
+        const buf = audioCtx.createBuffer(1, bufLen, audioCtx.sampleRate);
+        const data = buf.getChannelData(0);
+        for (let j = 0; j < bufLen; j++) data[j] = Math.random() * 2 - 1;
 
-function stopTypingMelody(unduck = true) {
-    typingMel.timers.forEach(clearTimeout);
-    typingMel.timers = [];
-    typingMel.running = false;
-    if (unduck && bgm.masterGain && audioCtx) {
-        bgm.masterGain.gain.cancelScheduledValues(audioCtx.currentTime);
-        bgm.masterGain.gain.linearRampToValueAtTime(0.05, audioCtx.currentTime + 0.35);
-    }
-}
+        const src = audioCtx.createBufferSource();
+        src.buffer = buf;
 
-function scheduleMelNote() {
-    if (!typingMel.running || !audioCtx) return;
-    const [freq, dur] = TYPING_NOTES[typingMel.idx % TYPING_NOTES.length];
-    typingMel.idx++;
-    if (freq > 0) {
-        try {
-            const o = audioCtx.createOscillator(), g = audioCtx.createGain();
-            o.type = 'square'; o.frequency.value = freq;
-            g.gain.setValueAtTime(0.055, audioCtx.currentTime);
-            g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + dur / 1000 * 0.82);
-            o.connect(g); g.connect(audioCtx.destination);
-            o.start(); o.stop(audioCtx.currentTime + dur / 1000);
-        } catch(e) {}
-    }
-    typingMel.timers.push(setTimeout(scheduleMelNote, dur));
+        const bp = audioCtx.createBiquadFilter();
+        bp.type = 'bandpass';
+        bp.frequency.value = 2600 + Math.random() * 600; // slight pitch variation
+        bp.Q.value = 1.0;
+
+        const g = audioCtx.createGain();
+        g.gain.setValueAtTime(0.045, audioCtx.currentTime);
+        g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.014);
+
+        src.connect(bp); bp.connect(g); g.connect(audioCtx.destination);
+        src.start();
+    } catch(e) {}
 }
 
 // ─── Game BGM System ──────────────────────────────────────────────────────────
@@ -512,16 +490,15 @@ function typewriterEffect(text, choices) {
 
     if (choices && choices.length > 0) uiTapHint.classList.add('visible');
 
-    startTypingMelody();
-
     gameState.typeInterval = setInterval(() => {
+        const ch = text[i];
         uiText.innerHTML = text.substring(0, i + 1) + '<span class="cursor"></span>';
+        if (ch && ch !== ' ') playTypeClick();
         i++;
         if (i >= text.length) {
             clearInterval(gameState.typeInterval);
             uiText.innerHTML = text;
             gameState.isTyping = false;
-            stopTypingMelody();
             renderChoices(choices);
         }
     }, 26);
@@ -534,7 +511,6 @@ function advanceDialogue() {
         uiText.innerHTML = node.text;
         gameState.isTyping = false;
         uiTapHint.classList.remove('visible');
-        stopTypingMelody();
         renderChoices(node.choices);
     }
 }

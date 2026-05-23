@@ -9,16 +9,46 @@
 </head>
 <body>
     <div id="game-container">
+
+        <!-- ══ TITLE SCREEN ══════════════════════════════════════ -->
         <div id="title-screen">
-            <div class="title-scanlines"></div>
-            <div class="title-content">
-                <h1>Friday<br>EOD</h1>
-                <p class="episode-label">EPISODE 1: FINAL_V7</p>
-                <p class="tagline">An Interactive Workplace Horror</p>
-                <button id="start-btn" onclick="startGame()">Start Shift</button>
-                <p class="hint-text">tap dialogue to skip &nbsp;·&nbsp; choices have consequences</p>
+            <!-- L1: Static gradient background -->
+            <img class="ts-bg" src="assets/images/Title_mainBG.png" alt="">
+
+            <!-- L2: Scrolling city (two copies for seamless loop) -->
+            <div class="ts-city-scroll">
+                <img src="assets/images/Scrolling_BG_City.png" alt="">
+                <img src="assets/images/Scrolling_BG_City.png" alt="">
+            </div>
+
+            <!-- L3: Characters (tappable) -->
+            <div class="ts-characters">
+                <img src="assets/images/Title_Characters.png" alt="Characters">
+                <div class="char-zone" id="zone-priya" onclick="showCharBubble('priya', event)"></div>
+                <div class="char-zone" id="zone-tarun" onclick="showCharBubble('tarun', event)"></div>
+            </div>
+
+            <!-- Chat bubbles -->
+            <div class="char-bubble" id="bubble-priya" onclick="hideCharBubbles()">
+                My SCORM package has been 'Publishing…' for 14 minutes. I am legally not allowed to feel things anymore.
+            </div>
+            <div class="char-bubble" id="bubble-tarun" onclick="hideCharBubbles()">
+                Have you considered more synergy? Also 12 more slides. Also a 3D escape room. You're welcome, team!
+            </div>
+
+            <!-- L4: Logo (AAA slam-in + float) -->
+            <div class="ts-logo-wrap" id="ts-logo-wrap">
+                <img src="assets/images/Logo.png" alt="Friday EOD">
+            </div>
+
+            <!-- Subtitle + CTA -->
+            <div class="ts-ui">
+                <p class="ts-subtitle">Vol 1 : Instructional Disaster</p>
+                <button class="ts-btn" onclick="startGame()">START SHIFT</button>
             </div>
         </div>
+
+        <!-- ══ GAME UI ════════════════════════════════════════════ -->
         <div id="hud">
             <div class="hud-left">
                 <div id="clock-display">4:00 PM</div>
@@ -49,6 +79,7 @@
             <div id="ending-card"></div>
             <div id="choices-container"></div>
         </div>
+
     </div>
     <script src="js/story.js"></script>
     <script src="js/game.js"></script>

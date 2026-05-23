@@ -373,3 +373,49 @@ function handleChoice(choice) {
         loadNode(choice.target);
     }
 }
+
+// ─── Title Screen ──────────────────────────────────────────────────────────────
+let bubbleDismissTimeout = null;
+
+function showCharBubble(char, event) {
+    if (event) event.stopPropagation();
+    hideCharBubbles();
+    const bubble = document.getElementById(`bubble-${char}`);
+    if (!bubble) return;
+    bubble.classList.add('visible');
+    clearTimeout(bubbleDismissTimeout);
+    bubbleDismissTimeout = setTimeout(hideCharBubbles, 3800);
+    playSound('pop');
+}
+
+function hideCharBubbles() {
+    document.querySelectorAll('.char-bubble').forEach(b => {
+        b.classList.remove('visible');
+        b.style.display = '';
+    });
+    clearTimeout(bubbleDismissTimeout);
+}
+
+function initTitleScreen() {
+    const logoWrap = document.getElementById('ts-logo-wrap');
+    if (!logoWrap) return;
+
+    setTimeout(() => {
+        logoWrap.classList.add('logo-slam');
+        logoWrap.addEventListener('animationend', () => {
+            logoWrap.classList.remove('logo-slam');
+            logoWrap.classList.add('logo-float');
+        }, { once: true });
+    }, 250);
+
+    const titleScreen = document.getElementById('title-screen');
+    if (titleScreen) {
+        titleScreen.addEventListener('click', (e) => {
+            if (!e.target.closest('.char-zone') && !e.target.closest('.char-bubble')) {
+                hideCharBubbles();
+            }
+        });
+    }
+}
+
+window.addEventListener('load', initTitleScreen);

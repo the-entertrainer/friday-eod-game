@@ -123,70 +123,151 @@ body {
 
 #title-screen {
     position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-    background: var(--bg-page); z-index: 50; display: flex; flex-direction: column;
-    justify-content: center; align-items: center; color: white; text-align: center; padding: 20px;
+    z-index: 50; overflow: hidden;
 }
-
-#title-screen h1 { 
-    margin: 0 0 5px 0; color: var(--text-main); text-transform: uppercase; 
-    font-size: 3.5rem; font-weight: 900; line-height: 1; -webkit-text-stroke: 2px #000;
-    text-shadow: 6px 6px 0 var(--accent-hot); transform: rotate(-2deg);
-}
-
-#title-screen .episode-label {
-    color: var(--priya-cyan); margin-bottom: 8px; font-size: 1.2rem; font-weight: 900;
-    letter-spacing: 2px; background: #000; padding: 5px 15px; border-radius: 20px;
-}
-
-#start-btn {
-    background: var(--tarun-yellow); color: #000; border: var(--border-thick);
-    padding: 18px 45px; font-size: 1.4rem; font-weight: 900; font-family: 'Outfit', sans-serif;
-    border-radius: 20px; cursor: pointer; text-transform: uppercase; box-shadow: 6px 6px 0 #000;
-}
-#start-btn:hover  { transform: translate(-2px, -2px); box-shadow: 8px 8px 0 #000; }
-#start-btn:active { transform: translate(6px, 6px); box-shadow: 0 0 0 #000; }
 
 /* ═══════════════════════════════════════════════════════
    NEW UX / VISUAL IMPROVEMENTS
 ═══════════════════════════════════════════════════════ */
 
-/* --- Title screen atmosphere --- */
-#title-screen { overflow: hidden; }
+/* ─── TITLE SCREEN REDESIGN ──────────────────────────────────────────────── */
 
-.title-scanlines {
-    position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-    background: repeating-linear-gradient(
-        0deg, transparent, transparent 3px,
-        rgba(0,0,0,0.18) 3px, rgba(0,0,0,0.18) 4px
-    );
-    pointer-events: none; z-index: 1;
-    animation: scanlineMove 14s linear infinite;
-}
-@keyframes scanlineMove {
-    from { background-position: 0 0; }
-    to   { background-position: 0 200px; }
+/* L1 — Static background */
+.ts-bg {
+    position: absolute; top: 0; left: 0;
+    width: 100%; height: 100%;
+    object-fit: cover; z-index: 1; pointer-events: none;
 }
 
-.title-content {
-    position: relative; z-index: 2;
-    display: flex; flex-direction: column; align-items: center; text-align: center;
+/* L2 — Scrolling city */
+.ts-city-scroll {
+    position: absolute; bottom: 0; left: 0;
+    width: 200%; height: 22%;
+    display: flex; z-index: 2;
+    animation: cityScroll 40s linear infinite;
+    pointer-events: none;
+}
+.ts-city-scroll img {
+    width: 50%; height: 100%;
+    object-fit: cover; object-position: bottom;
+    flex-shrink: 0; display: block;
+}
+@keyframes cityScroll {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
 }
 
-#title-screen h1 { animation: titleGlow 3.5s ease-in-out infinite; }
-@keyframes titleGlow {
-    0%,100% { text-shadow: 6px 6px 0 var(--accent-hot); }
-    50%     { text-shadow: 6px 6px 0 var(--accent-hot), 0 0 30px var(--accent-hot), 0 0 70px rgba(255,0,85,0.3); }
+/* L3 — Characters */
+.ts-characters {
+    position: absolute; bottom: 0;
+    left: 0; right: 0; height: 56%;
+    display: flex; justify-content: center; align-items: flex-end;
+    z-index: 3; pointer-events: none;
+}
+.ts-characters > img {
+    height: 100%; width: auto; display: block;
+    pointer-events: none;
 }
 
-.tagline {
-    color: rgba(255,255,255,0.38); font-size: 0.78rem; font-weight: 400;
-    letter-spacing: 2px; text-transform: uppercase;
-    margin: 0 0 50px 0; background: transparent; padding: 0; border-radius: 0;
+/* Character tap zones (absolute within .ts-characters) */
+.char-zone {
+    position: absolute; bottom: 0; cursor: pointer; pointer-events: all;
+    /* uncomment to debug: outline: 2px solid red; */
 }
-.hint-text {
-    color: rgba(255,255,255,0.22); font-size: 0.68rem; font-weight: 400;
-    letter-spacing: 1px; margin: 20px 0 0 0; background: transparent; padding: 0; border-radius: 0;
+#zone-priya { left: 4%;  width: 38%; height: 72%; }
+#zone-tarun { right: 2%; width: 46%; height: 95%; }
+
+/* Chat bubbles */
+.char-bubble {
+    position: absolute;
+    background: #fff; color: #1a1a1a;
+    border: 2.5px solid #1a1a1a; border-radius: 16px;
+    padding: 12px 15px; max-width: 58%;
+    font-family: 'Outfit', sans-serif; font-size: 0.83rem;
+    font-weight: 700; line-height: 1.45;
+    box-shadow: 3px 3px 0 rgba(0,0,0,0.22);
+    z-index: 15; cursor: pointer;
+    transform-origin: bottom center;
+    display: none;
 }
+.char-bubble.visible {
+    display: block;
+    animation: bubblePop 0.28s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
+}
+.char-bubble::after {
+    content: ''; position: absolute; width: 0; height: 0; border-style: solid;
+    bottom: -13px;
+}
+#bubble-priya { bottom: 50%; left: 4%; }
+#bubble-priya::after {
+    border-width: 13px 8px 0 8px;
+    border-color: #1a1a1a transparent transparent transparent;
+    left: 24%;
+}
+#bubble-tarun { bottom: 56%; right: 4%; text-align: right; }
+#bubble-tarun::after {
+    border-width: 13px 8px 0 8px;
+    border-color: #1a1a1a transparent transparent transparent;
+    right: 24%;
+}
+@keyframes bubblePop {
+    from { transform: scale(0.5); opacity: 0; }
+    to   { transform: scale(1);   opacity: 1; }
+}
+
+/* L4 — Logo (animated) */
+.ts-logo-wrap {
+    position: absolute; top: 3%;
+    left: 0; right: 0; margin: 0 auto;
+    width: 90%; z-index: 6; opacity: 0;
+}
+.ts-logo-wrap img { width: 100%; height: auto; display: block; }
+
+.ts-logo-wrap.logo-slam {
+    animation: logoSlam 1.1s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+.ts-logo-wrap.logo-float {
+    opacity: 1;
+    animation: logoFloat 3.2s ease-in-out infinite;
+}
+@keyframes logoSlam {
+    0%   { transform: translateY(-240px) scale(1.4);   opacity: 0; }
+    50%  { opacity: 1; }
+    62%  { transform: translateY(20px)   scale(0.93); }
+    76%  { transform: translateY(-10px)  scale(1.04); }
+    86%  { transform: translateY(6px)    scale(0.985); }
+    93%  { transform: translateY(-3px)   scale(1.008); }
+    100% { transform: translateY(0)      scale(1);    opacity: 1; }
+}
+@keyframes logoFloat {
+    0%,100% { transform: translateY(0px); }
+    50%     { transform: translateY(-10px); }
+}
+
+/* Subtitle + button */
+.ts-ui {
+    position: absolute; top: 46%;
+    left: 0; right: 0;
+    display: flex; flex-direction: column;
+    align-items: center; gap: 20px; z-index: 7;
+}
+.ts-subtitle {
+    color: rgba(255,255,255,0.93); margin: 0;
+    font-family: 'Outfit', sans-serif;
+    font-size: 1.05rem; font-weight: 600; letter-spacing: 0.4px;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.45);
+}
+.ts-btn {
+    background: #F5C518; color: #1a1a1a;
+    border: 3px solid #1a1a1a; border-radius: 16px;
+    padding: 16px 56px; font-size: 1.2rem; font-weight: 900;
+    font-family: 'Outfit', sans-serif; cursor: pointer;
+    letter-spacing: 1.5px; text-transform: uppercase;
+    box-shadow: 4px 4px 0 #1a1a1a;
+    transition: transform 0.1s, box-shadow 0.1s;
+}
+.ts-btn:hover  { transform: translate(-2px,-2px); box-shadow: 6px 6px 0 #1a1a1a; }
+.ts-btn:active { transform: translate(4px, 4px);  box-shadow: 0   0   0 #1a1a1a; }
 
 /* --- Scene crossfade --- */
 #fade-overlay {

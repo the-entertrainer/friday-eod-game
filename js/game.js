@@ -16,6 +16,7 @@ const uiName        = document.getElementById('speaker-name');
 const uiText        = document.getElementById('dialogue-text');
 const uiChoices     = document.getElementById('choices-container');
 const uiViewport    = document.getElementById('viewport');
+const uiSceneImage  = document.getElementById('scene-image');
 const uiTrap        = document.getElementById('trap-overlay');
 const uiFade        = document.getElementById('fade-overlay');
 const uiTapHint     = document.getElementById('tap-hint');
@@ -28,6 +29,7 @@ const uiGameCont    = document.getElementById('game-container');
 let audioCtx = null;
 
 function initAudio() {
+    if (audioCtx) return;
     try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
     catch(e) { audioCtx = null; }
 }
@@ -41,12 +43,17 @@ function playSound(type) {
         gain.connect(audioCtx.destination);
         const t = audioCtx.currentTime;
         switch (type) {
-            case 'tick':
-                osc.frequency.value = 880;
-                gain.gain.setValueAtTime(0.025, t);
-                gain.gain.exponentialRampToValueAtTime(0.001, t + 0.028);
-                osc.start(t); osc.stop(t + 0.028);
+            case 'tick': {
+                // Varied pitch + short decay — typewriter key clack
+                const base = 240 + Math.random() * 140;
+                osc.type = 'square';
+                osc.frequency.setValueAtTime(base, t);
+                osc.frequency.exponentialRampToValueAtTime(base * 0.62, t + 0.038);
+                gain.gain.setValueAtTime(0.028, t);
+                gain.gain.exponentialRampToValueAtTime(0.001, t + 0.038);
+                osc.start(t); osc.stop(t + 0.038);
                 break;
+            }
             case 'pop':
                 osc.type = 'sine';
                 osc.frequency.setValueAtTime(480, t);
@@ -84,6 +91,178 @@ function playSound(type) {
     } catch(e) {}
 }
 
+// ─── BGM System ───────────────────────────────────────────────────────────────
+const SCENE_MOODS = {
+    start: 'office', setup: 'office', upload: 'office',
+    ambush: 'tense', meta_moment: 'tense', diplomatic: 'tense',
+    aggressive: 'tense', technical_pushback: 'tense',
+    compromise: 'defeated', loading_bar: 'suspense',
+    crash: 'horror', meta_escape: 'matrix', rogue_export: 'action',
+    martyr_office: 'defeated', ppt_promotion: 'victory',
+    true_winner: 'victory', victory_screen: 'victory',
+    rage_quit: 'action', martyr: 'defeated'
+};
+
+let bgm = { nodes: [], masterGain: null, mood: null, timerId: null, startId: 0 };
+
+function stopBGM() {
+    clearTimeout(bgm.timerId);
+    const nodesToStop = [...bgm.nodes];
+    const gainToFade  = bgm.masterGain;
+    bgm.nodes = []; bgm.masterGain = null; bgm.mood = null;
+    if (gainToFade && audioCtx) {
+        try { gainToFade.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.4); } catch(e) {}
+    }
+    setTimeout(() => {
+        nodesToStop.forEach(n => { try { n.stop(); } catch(e) {} });
+        if (gainToFade) { try { gainToFade.disconnect(); } catch(e) {} }
+    }, 450);
+}
+
+function startBGM(mood) {
+    if (!audioCtx || bgm.mood === mood) return;
+    stopBGM();
+    bgm.mood = mood;
+    const myId = ++bgm.startId;
+    setTimeout(() => {
+        if (bgm.mood !== mood || bgm.startId !== myId || !audioCtx) return;
+        const master = audioCtx.createGain();
+        master.gain.setValueAtTime(0, audioCtx.currentTime);
+        master.gain.linearRampToValueAtTime(0.05, audioCtx.currentTime + 1.4);
+        master.connect(audioCtx.destination);
+        bgm.masterGain = master;
+        switch (mood) {
+            case 'office':   buildOfficeBGM(master);   break;
+            case 'tense':    buildTenseBGM(master);    break;
+            case 'suspense': buildSuspenseBGM(master); break;
+            case 'horror':   buildHorrorBGM(master);   break;
+            case 'matrix':   buildMatrixBGM(master);   break;
+            case 'victory':  buildVictoryBGM(master);  break;
+            case 'defeated': buildDefeatedBGM(master); break;
+            case 'action':   buildActionBGM(master);   break;
+        }
+    }, 320);
+}
+
+function bgmOsc(type, freq) {
+    const o = audioCtx.createOscillator();
+    o.type = type; o.frequency.value = freq;
+    o.start(); bgm.nodes.push(o); return o;
+}
+function bgmGain(val) {
+    const g = audioCtx.createGain(); g.gain.value = val;
+    bgm.nodes.push(g); return g;
+}
+function bgmFilter(type, freq, q) {
+    const f = audioCtx.createBiquadFilter();
+    f.type = type; f.frequency.value = freq; if (q) f.Q.value = q;
+    bgm.nodes.push(f); return f;
+}
+
+function buildOfficeBGM(out) {
+    // Warm office hum: 60 Hz + harmonics + slow LFO breathe
+    const filt = bgmFilter('lowpass', 340);
+    filt.connect(out);
+    [[60, 1], [120, 0.22], [180, 0.07]].forEach(([f, v]) => {
+        const g = bgmGain(v); bgmOsc('sine', f).connect(g); g.connect(filt);
+    });
+    const lfoG = bgmGain(0.009); bgmOsc('sine', 0.13).connect(lfoG);
+    lfoG.connect(out.gain);
+}
+
+function buildTenseBGM(out) {
+    // Filtered sawtooth + tremolo — mounting dread
+    const filt = bgmFilter('bandpass', 88, 2.5);
+    filt.connect(out);
+    bgmOsc('sawtooth', 55).connect(filt);
+    bgmOsc('sawtooth', 82.4).connect(filt);
+    const tG = bgmGain(0.22); bgmOsc('sine', 4.4).connect(tG);
+    tG.connect(out.gain);
+}
+
+function buildSuspenseBGM(out) {
+    // Pulsing drone that slowly rises in pitch
+    const ctx = audioCtx;
+    const osc = bgmOsc('sine', 42);
+    osc.connect(out);
+    function rise() {
+        if (!bgm.nodes.includes(osc)) return;
+        try {
+            osc.frequency.setValueAtTime(42, ctx.currentTime);
+            osc.frequency.linearRampToValueAtTime(62, ctx.currentTime + 9);
+            bgm.timerId = setTimeout(rise, 9000);
+        } catch(e) {}
+    }
+    rise();
+    const gateG = bgmGain(0.38); bgmOsc('square', 0.7).connect(gateG);
+    gateG.connect(out.gain);
+}
+
+function buildHorrorBGM(out) {
+    // Two detuned saws → beating dissonance
+    const filt = bgmFilter('lowpass', 620); filt.connect(out);
+    bgmOsc('sawtooth', 110).connect(filt);
+    bgmOsc('sawtooth', 116.54).connect(filt); // tritone dissonance
+    const wob = bgmGain(0.028); bgmOsc('sine', 0.38).connect(wob);
+    wob.connect(out.gain);
+}
+
+function buildMatrixBGM(out) {
+    // A-minor pentatonic square-wave arpeggio — digital glitch feel
+    const ctx = audioCtx;
+    const pat = [110, 165, 220, 165, 110, 146.8, 110, 123.5];
+    let idx = 0;
+    function fire() {
+        if (!bgm.masterGain) return;
+        const o = ctx.createOscillator(), g = ctx.createGain();
+        o.type = 'square'; o.frequency.value = pat[idx % pat.length];
+        g.gain.setValueAtTime(0.65, ctx.currentTime);
+        g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.075);
+        o.connect(g); g.connect(out);
+        o.start(); o.stop(ctx.currentTime + 0.075);
+        idx++;
+        bgm.timerId = setTimeout(fire, 158);
+    }
+    fire();
+}
+
+function buildVictoryBGM(out) {
+    // C-major pentatonic ascending arpeggio
+    const ctx = audioCtx;
+    const pat = [523.25, 659.25, 783.99, 1046.5, 783.99, 659.25, 523.25, 659.25];
+    let idx = 0;
+    function fire() {
+        if (!bgm.masterGain) return;
+        const o = ctx.createOscillator(), g = ctx.createGain();
+        o.type = 'sine'; o.frequency.value = pat[idx % pat.length];
+        g.gain.setValueAtTime(0.55, ctx.currentTime);
+        g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.24);
+        o.connect(g); g.connect(out);
+        o.start(); o.stop(ctx.currentTime + 0.24);
+        idx++;
+        bgm.timerId = setTimeout(fire, 230);
+    }
+    fire();
+}
+
+function buildDefeatedBGM(out) {
+    // C2 + Eb2 minor third drone — hollow and tired
+    const filt = bgmFilter('lowpass', 240); filt.connect(out);
+    bgmOsc('sine', 65.41).connect(filt); // C2
+    bgmOsc('sine', 77.78).connect(filt); // Eb2
+    const lG = bgmGain(0.014); bgmOsc('sine', 0.06).connect(lG);
+    lG.connect(out.gain);
+}
+
+function buildActionBGM(out) {
+    // Driving sawtooth + fast square gate — rage energy
+    const filt = bgmFilter('lowpass', 900); filt.connect(out);
+    bgmOsc('sawtooth', 110).connect(filt);
+    const harm = bgmGain(0.28); bgmOsc('square', 220).connect(harm); harm.connect(filt);
+    const gateG = bgmGain(0.32); bgmOsc('square', 4.2).connect(gateG);
+    gateG.connect(out.gain);
+}
+
 // ─── Endings ──────────────────────────────────────────────────────────────────
 const VICTORY_ENDINGS = new Set(['true_winner', 'victory_screen', 'meta_escape']);
 const BAD_ENDINGS     = new Set(['crash', 'rogue_export', 'martyr_office', 'ppt_promotion', 'rage_quit', 'martyr']);
@@ -117,13 +296,17 @@ function startGame() {
 }
 
 function resetState() {
-    gameState.minutes      = 960;
-    gameState.quality      = 100;
-    gameState.patience     = 50;
-    gameState.previousNode = null;
+    clearInterval(gameState.typeInterval);
+    gameState.isTyping      = false;
+    gameState.minutes       = 960;
+    gameState.quality       = 100;
+    gameState.patience      = 50;
+    gameState.previousNode  = null;
     uiEndingCard.style.display = 'none';
     uiEndingCard.innerHTML     = '';
     uiGameCont.classList.remove('ending-victory', 'ending-bad');
+    stopBGM();
+    resetSceneZoom();
     updateHUD();
 }
 
@@ -165,13 +348,12 @@ function spawnFloatingText(elementId, text, color) {
     setTimeout(() => anchor.contains(floater) && anchor.removeChild(floater), 1200);
 }
 
-// ─── Scene loading ─────────────────────────────────────────────────────────────
+// ─── Scene loading ────────────────────────────────────────────────────────────
 function loadNode(nodeId) {
     const node = storyData[nodeId];
     if (!node) { console.error('Missing story node:', nodeId); return; }
     gameState.currentNode = nodeId;
 
-    // Reset state
     uiTrap.style.display = 'none';
     clearTimeout(gameState.trapTimeout);
     uiLoadingBar.classList.remove('active');
@@ -182,7 +364,6 @@ function loadNode(nodeId) {
     uiChoices.innerHTML = '';
     uiText.innerHTML    = '';
 
-    // Ending effects
     uiGameCont.classList.remove('ending-victory', 'ending-bad');
     if (VICTORY_ENDINGS.has(nodeId)) {
         uiGameCont.classList.add('ending-victory');
@@ -192,15 +373,19 @@ function loadNode(nodeId) {
         spawnEndingEffect('bad');
     }
 
-    // Crossfade scene
+    // Scene BGM
+    startBGM(SCENE_MOODS[nodeId] || 'office');
+
+    // Crossfade scene image
     playSound('scene');
     uiFade.classList.add('active');
     setTimeout(() => {
-        uiViewport.style.backgroundImage = `url('${node.image}')`;
+        uiSceneImage.style.backgroundImage = `url('${node.image}')`;
+        resetSceneZoom();
         uiFade.classList.remove('active');
     }, 220);
 
-    // Speaker name
+    // Speaker name pop
     uiName.innerText = node.speaker;
     uiName.style.backgroundColor = node.color;
     uiName.style.color = node.textColor;
@@ -230,19 +415,19 @@ function spawnEndingEffect(type) {
     setTimeout(() => el.parentNode && el.parentNode.removeChild(el), 900);
 }
 
-// ─── Dialogue ──────────────────────────────────────────────────────────────────
+// ─── Dialogue ─────────────────────────────────────────────────────────────────
 function typewriterEffect(text, choices) {
     clearInterval(gameState.typeInterval);
     gameState.isTyping = true;
     let i = 0;
 
-    if (choices && choices.length > 0) {
-        uiTapHint.classList.add('visible');
-    }
+    if (choices && choices.length > 0) uiTapHint.classList.add('visible');
 
     gameState.typeInterval = setInterval(() => {
         uiText.innerHTML = text.substring(0, i + 1) + '<span class="cursor"></span>';
-        if (i % 5 === 0) playSound('tick');
+        const ch = text[i];
+        // Tick only on printable non-space chars, every 8th to keep rhythm pleasant
+        if (ch && ch !== ' ' && ch !== '\n' && (i % 8 === 0)) playSound('tick');
         i++;
         if (i >= text.length) {
             clearInterval(gameState.typeInterval);
@@ -271,7 +456,7 @@ function triggerTrap() {
     loadNode("crash");
 }
 
-// ─── Choices ───────────────────────────────────────────────────────────────────
+// ─── Choices ──────────────────────────────────────────────────────────────────
 function renderChoices(choices) {
     if (!choices || choices.length === 0) return;
     uiTapHint.classList.remove('visible');
@@ -310,7 +495,8 @@ function renderChoices(choices) {
             btn.appendChild(row);
         }
 
-        btn.onclick = (e) => {
+        btn.addEventListener('pointerdown', () => btn.classList.add('clicked'));
+        btn.addEventListener('pointerup', (e) => {
             e.stopPropagation();
             btn.classList.add('clicked');
 
@@ -327,8 +513,8 @@ function renderChoices(choices) {
             if (choice.patienceCost)
                 spawnFloatingText('wrap-patience', `${choice.patienceCost > 0 ? '+' : ''}${choice.patienceCost}`, choice.patienceCost > 0 ? 'var(--success-green)' : 'var(--system-alert)');
 
-            setTimeout(() => handleChoice(choice), 400);
-        };
+            setTimeout(() => handleChoice(choice), 340);
+        });
 
         uiChoices.appendChild(btn);
     });
@@ -348,18 +534,17 @@ function showEndingCard() {
     uiEndingCard.style.display = 'block';
 }
 
-// ─── Choice resolution ─────────────────────────────────────────────────────────
+// ─── Choice resolution ────────────────────────────────────────────────────────
 function handleChoice(choice) {
     if (choice.timeCost)     gameState.minutes  += choice.timeCost;
     if (choice.qualityCost)  gameState.quality  += choice.qualityCost;
     if (choice.patienceCost) gameState.patience += choice.patienceCost;
     updateHUD();
 
-    if (gameState.patience <= 0 && gameState.currentNode !== "rage_quit") {
-        loadNode("rage_quit"); return;
-    }
-    if (gameState.minutes >= 1110 && gameState.currentNode !== "martyr") {
-        loadNode("martyr"); return;
+    // Overflow endings only fire when NOT already at an ending node
+    if (!ALL_ENDINGS.has(gameState.currentNode)) {
+        if (gameState.patience <= 0)   { loadNode("rage_quit"); return; }
+        if (gameState.minutes >= 1110) { loadNode("martyr");    return; }
     }
 
     if (choice.action === "restart") {
@@ -374,7 +559,113 @@ function handleChoice(choice) {
     }
 }
 
-// ─── Title Screen ──────────────────────────────────────────────────────────────
+// ─── Scene Zoom ───────────────────────────────────────────────────────────────
+const zoom = { scale: 1, x: 0, y: 0, startX: 0, startY: 0, lastTap: 0, dragging: false };
+
+function initSceneZoom() {
+    const el = uiSceneImage;
+    if (!el) return;
+    el.addEventListener('touchstart', onZoomStart, { passive: false });
+    el.addEventListener('touchmove',  onZoomMove,  { passive: false });
+    el.addEventListener('touchend',   onZoomEnd,   { passive: false });
+}
+
+function onZoomStart(e) {
+    if (e.touches.length !== 1) return;
+    const t = e.touches[0];
+    const now = Date.now();
+    if (now - zoom.lastTap < 280) {
+        e.preventDefault();
+        toggleZoom(t.clientX, t.clientY);
+    }
+    zoom.lastTap = now;
+    zoom.startX  = t.clientX - zoom.x;
+    zoom.startY  = t.clientY - zoom.y;
+    zoom.dragging = true;
+}
+
+function onZoomMove(e) {
+    if (!zoom.dragging || zoom.scale <= 1 || e.touches.length !== 1) return;
+    e.preventDefault();
+    zoom.x = e.touches[0].clientX - zoom.startX;
+    zoom.y = e.touches[0].clientY - zoom.startY;
+    applyZoom(false);
+}
+
+function onZoomEnd() {
+    zoom.dragging = false;
+    if (zoom.scale > 1) clampZoom();
+}
+
+function toggleZoom(cx, cy) {
+    if (zoom.scale > 1) {
+        zoom.scale = 1; zoom.x = 0; zoom.y = 0;
+    } else {
+        zoom.scale = 1.85;
+        const rect = uiSceneImage.getBoundingClientRect();
+        const rx = cx - rect.left - rect.width  / 2;
+        const ry = cy - rect.top  - rect.height / 2;
+        zoom.x = -rx * (zoom.scale - 1);
+        zoom.y = -ry * (zoom.scale - 1);
+    }
+    applyZoom(true);
+    clampZoom();
+}
+
+function applyZoom(animate) {
+    if (!uiSceneImage) return;
+    uiSceneImage.style.transition = animate ? 'transform 0.28s ease' : 'none';
+    uiSceneImage.style.transform  = `translate(${zoom.x}px, ${zoom.y}px) scale(${zoom.scale})`;
+}
+
+function clampZoom() {
+    if (zoom.scale <= 1) { zoom.x = 0; zoom.y = 0; applyZoom(true); return; }
+    const rect  = uiSceneImage.getBoundingClientRect();
+    const maxX  = rect.width  * (zoom.scale - 1) / 2;
+    const maxY  = rect.height * (zoom.scale - 1) / 2;
+    zoom.x = Math.max(-maxX, Math.min(maxX, zoom.x));
+    zoom.y = Math.max(-maxY, Math.min(maxY, zoom.y));
+    applyZoom(true);
+}
+
+function resetSceneZoom() {
+    zoom.scale = 1; zoom.x = 0; zoom.y = 0;
+    if (uiSceneImage) { uiSceneImage.style.transition = 'none'; uiSceneImage.style.transform = ''; }
+}
+
+// ─── Title Screen ─────────────────────────────────────────────────────────────
+const CHAR_ASPECT = 1024 / 693; // Title_Characters.png natural aspect ratio
+
+// Head positions measured from image bottom (as fraction of image height):
+// Priya head top: (693-185)/693 = 0.733
+// Tarun eyes:     (693-95)/693  = 0.863
+const PRIYA_HEAD_FRAC = (693 - 185) / 693;
+const TARUN_HEAD_FRAC = (693 - 95)  / 693;
+
+function positionTitleElements() {
+    const screen = document.getElementById('title-screen');
+    if (!screen) return;
+    const cW = screen.clientWidth;
+    const cH = screen.clientHeight;
+    const imgH = cW / CHAR_ASPECT;
+
+    // ts-ui: just above character image top
+    const tsUi = screen.querySelector('.ts-ui');
+    if (tsUi) {
+        tsUi.style.bottom = (imgH + 20) + 'px';
+        tsUi.style.top    = 'auto';
+    }
+
+    // Bubbles: at character head level
+    const priyaBottom = imgH * PRIYA_HEAD_FRAC + 8;
+    const tarunBottom = Math.min(imgH * TARUN_HEAD_FRAC + 8, cH - 90);
+
+    const bp = document.getElementById('bubble-priya');
+    const bt = document.getElementById('bubble-tarun');
+    if (bp) { bp.style.bottom = priyaBottom + 'px'; bp.style.top = 'auto'; }
+    if (bt) { bt.style.bottom = tarunBottom + 'px'; bt.style.top = 'auto'; }
+}
+
 let bubbleDismissTimeout = null;
 
 const charQuotes = {
@@ -434,38 +725,37 @@ function showCharBubble(char, event) {
     }
     bubble.classList.add('visible');
     clearTimeout(bubbleDismissTimeout);
-    bubbleDismissTimeout = setTimeout(hideCharBubbles, 4500);
+    bubbleDismissTimeout = setTimeout(hideCharBubbles, 4800);
     playSound('pop');
 }
 
 function hideCharBubbles() {
-    document.querySelectorAll('.char-bubble').forEach(b => {
-        b.classList.remove('visible');
-        b.style.display = '';
-    });
+    document.querySelectorAll('.char-bubble').forEach(b => b.classList.remove('visible'));
     clearTimeout(bubbleDismissTimeout);
 }
 
 function initTitleScreen() {
+    positionTitleElements();
+    window.addEventListener('resize', positionTitleElements);
+
     const logoWrap = document.getElementById('ts-logo-wrap');
-    if (!logoWrap) return;
-
-    setTimeout(() => {
-        logoWrap.classList.add('logo-slam');
-        logoWrap.addEventListener('animationend', () => {
-            logoWrap.classList.remove('logo-slam');
-            logoWrap.classList.add('logo-float');
-        }, { once: true });
-    }, 250);
-
-    const titleScreen = document.getElementById('title-screen');
-    if (titleScreen) {
-        titleScreen.addEventListener('click', (e) => {
-            if (!e.target.closest('.char-zone') && !e.target.closest('.char-bubble')) {
-                hideCharBubbles();
-            }
-        });
+    if (logoWrap) {
+        setTimeout(() => {
+            logoWrap.classList.add('logo-slam');
+            logoWrap.addEventListener('animationend', () => {
+                logoWrap.classList.remove('logo-slam');
+                logoWrap.classList.add('logo-float');
+            }, { once: true });
+        }, 250);
     }
+
+    document.getElementById('title-screen')?.addEventListener('click', (e) => {
+        if (!e.target.closest('.char-zone') && !e.target.closest('.char-bubble')) {
+            hideCharBubbles();
+        }
+    });
+
+    initSceneZoom();
 }
 
 window.addEventListener('load', initTitleScreen);

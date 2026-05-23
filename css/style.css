@@ -74,8 +74,14 @@ body {
 #viewport {
     flex: 6; position: relative; display: flex; justify-content: center; align-items: center;
     background-color: var(--bg-game);
-    background-size: cover; background-position: center; background-repeat: no-repeat;
-    transition: background-image 0.3s ease; 
+}
+
+/* Scene image layer — zoom/pan applied here only */
+#scene-image {
+    position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+    background-size: cover; background-position: center top; background-repeat: no-repeat;
+    transform-origin: center center;
+    will-change: transform;
 }
 
 #viewport::after {
@@ -157,36 +163,37 @@ body {
     to   { transform: translateX(-50%); }
 }
 
-/* L3 — Characters: bottom-anchored, always fills full width */
+/* L3 — Characters: intrinsic height — image defines container size */
 .ts-characters {
     position: absolute; bottom: 0;
-    left: 0; right: 0; height: 64%;
+    left: 0; right: 0;
+    /* NO fixed height — wraps to image natural height */
     z-index: 3; pointer-events: none;
 }
 .ts-characters > img {
-    position: absolute; bottom: 0; left: 0;
+    display: block;                 /* normal flow so container gets image height */
     width: 100%; height: auto;
-    display: block; pointer-events: none;
+    pointer-events: none;
 }
 
-/* Character tap zones — absolute within .ts-characters, anchored to bottom */
+/* Character tap zones — pixel-accurate from 1024×693 image analysis */
 .char-zone {
     position: absolute; bottom: 0; cursor: pointer; pointer-events: all;
-    /* outline: 2px solid red; */ /* debug toggle */
+    /* outline: 2px solid rgba(255,0,0,0.5); */ /* debug */
 }
-/* Priya: left character — covers left ~44% of screen, bottom 72% of char container */
-#zone-priya { left: 2%; width: 44%; height: 72%; }
-/* Tarun: right character — covers right ~48% of screen, nearly full container height */
-#zone-tarun { right: 1%; width: 48%; height: 96%; }
+/* Priya (raccoon): left 0–53%, head top at 73.3% from bottom */
+#zone-priya { left: 0; width: 53%; height: 73%; z-index: 2; }
+/* Tarun (peacock): left 36–99%, eyes at 86.3% from bottom */
+#zone-tarun { left: 36%; width: 63%; height: 86%; z-index: 1; }
 
-/* Chat bubbles */
+/* Chat bubbles — bottom position set by positionTitleElements() in JS */
 .char-bubble {
     position: absolute;
     background: #fff; color: #1a1a1a;
     border: 2.5px solid #1a1a1a; border-radius: 16px;
-    padding: 12px 15px; max-width: 56%;
-    font-family: 'Outfit', sans-serif; font-size: 0.83rem;
-    font-weight: 700; line-height: 1.45;
+    padding: 11px 14px; max-width: 200px;
+    font-family: 'Outfit', sans-serif; font-size: 0.8rem;
+    font-weight: 700; line-height: 1.4;
     box-shadow: 3px 3px 0 rgba(0,0,0,0.22);
     z-index: 15; cursor: pointer;
     transform-origin: bottom center;
@@ -198,21 +205,21 @@ body {
 }
 .char-bubble::after {
     content: ''; position: absolute; width: 0; height: 0; border-style: solid;
-    bottom: -13px;
+    bottom: -12px;
 }
-/* Priya bubble: sits above her, left side — bottom at ~42% of screen from bottom */
-#bubble-priya { bottom: 42%; left: 3%; }
+/* Priya: left side, tail left-of-center */
+#bubble-priya { left: 3%; }
 #bubble-priya::after {
-    border-width: 13px 8px 0 8px;
+    border-width: 12px 7px 0 7px;
     border-color: #1a1a1a transparent transparent transparent;
-    left: 22%;
+    left: 26%;
 }
-/* Tarun bubble: sits above him, right side */
-#bubble-tarun { bottom: 46%; right: 3%; text-align: right; }
+/* Tarun: right side, tail right-of-center */
+#bubble-tarun { right: 3%; text-align: right; }
 #bubble-tarun::after {
-    border-width: 13px 8px 0 8px;
+    border-width: 12px 7px 0 7px;
     border-color: #1a1a1a transparent transparent transparent;
-    right: 22%;
+    right: 26%;
 }
 @keyframes bubblePop {
     from { transform: scale(0.5); opacity: 0; }
@@ -248,9 +255,9 @@ body {
     50%     { transform: translateY(-10px); }
 }
 
-/* Subtitle + button — sits above the character zone */
+/* Subtitle + button — JS sets bottom dynamically; fallback keeps it visible */
 .ts-ui {
-    position: absolute; top: 34%;
+    position: absolute; bottom: 32%;
     left: 0; right: 0;
     display: flex; flex-direction: column;
     align-items: center; gap: 16px; z-index: 7;

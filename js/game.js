@@ -344,7 +344,6 @@ function startGame() {
 
 function resetState() {
     clearInterval(gameState.typeInterval);
-    stopTypingMelody(false);
     gameState.isTyping     = false;
     gameState.minutes      = 960;
     gameState.quality      = 100;

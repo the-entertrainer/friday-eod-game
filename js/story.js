@@ -1,23 +1,23 @@
 const storyData = {
     "start": {
-        speaker: "Priya", color: "var(--priya-cyan)", textColor: "#000", 
+        speaker: "Priya", color: "var(--priya-cyan)", textColor: "#000",
         image: "assets/images/1_1_bsod.jpg",
-        text: "It is 5:28 PM on a Friday. My SCORM 1.2 package has been stuck on 'Publishing...' for exactly 14 minutes. If I stare at the Articulate Storyline progress bar any harder, my retinas will detach. Let's rewind to 4:00 PM, back when I still had hope.",
+        text: "It is 5:28 PM on a Friday. My SCORM 1.2 package has been edge-guarding the 'Publishing...' screen for a solid 14 minutes. 3.5 years as a Certified Instructional Design Specialist, and nothing prepared my soul for this digital purgatory. If I stare at this Articulate Storyline progress bar any harder, my eyeballs will spontaneously combust. Let's rewind to 4:00 PM, back when my will to live was still intact.",
         choices: [ { text: "Flashback to 4:00 PM", target: "setup", timeCost: 0 } ]
     },
     "setup": {
-        speaker: "Priya", color: "var(--priya-cyan)", textColor: "#000", 
+        speaker: "Priya", color: "var(--priya-cyan)", textColor: "#000",
         image: "assets/images/1_2_setup.jpg",
-        text: "It was 4:00 PM. The Information Security module was locked. No restricted navigation, no 40-page PDF attachments, just pure, clean adult learning theory. I was one click away from freedom.",
-        choices: [ 
+        text: "4:00 PM. The InfoSec module was a masterpiece. No forced sequential navigation, no 40-page PDF brain-dumps. Just raw, unadulterated adult learning theory that would make any Training & Quality manager weep tears of joy. I was one click away from the weekend.",
+        choices: [
             { text: "Click 'Publish to LMS'.", target: "ambush", timeCost: 2 },
             { text: "Double-check your True/False variables.", target: "ambush", timeCost: 8 }
         ]
     },
     "ambush": {
-        speaker: "Tarun", color: "var(--tarun-yellow)", textColor: "#000", 
+        speaker: "Tarun", color: "var(--tarun-yellow)", textColor: "#000",
         image: "assets/images/2_1_ambush.jpg",
-        text: "Priya! My agile rockstar! Listen, the onshore SME, Dr. Ravi, reviewed the staging link. He feels the module lacks... 'gamified paradigm synergy.' Also, he wants to add 12 more slides about the history of passwords.",
+        text: "Priya! My agile rockstar ninja! Listen, our beloved onshore SME, Dr. Ravi, took a dump on the staging link. He feels the module lacks 'gamified paradigm synergy'—whatever the hell that means. Oh, and he wants to jam in 12 more slides about the riveting history of passwords dating back to the paleolithic era.",
         choices: [
             { text: "Cite 'Cognitive Overload' theory.", target: "diplomatic", timeCost: 10, patienceCost: -15 },
             { text: "What exactly is 'gamified synergy'?", target: "aggressive", timeCost: 10, patienceCost: -20 },
@@ -25,35 +25,35 @@ const storyData = {
         ]
     },
     "meta_moment": {
-        speaker: "Priya", color: "var(--priya-cyan)", textColor: "#000", 
+        speaker: "Priya", color: "var(--priya-cyan)", textColor: "#000",
         image: "assets/images/2_4_kids.jpg",
-        text: "Wait a second. Tarun, why did a red number just float out of my head? And why is there a 'Patience' meter in the top right corner of my vision? Are we in a heavily formatted HTML5 browser game?",
+        text: "Hold the f*** up. Tarun, why did a red number just float out of my skull? And why is there a 'Patience' meter depleting in my peripheral vision? Is my actual life just some torturous HTML5 browser game for burned-out corporate trainers?",
         choices: [
             { text: "Tarun: 'Focus on the deliverables, Priya. The UI is just a metaphor.'", target: "aggressive", timeCost: 5, patienceCost: -30 }
         ]
     },
     "diplomatic": {
-        speaker: "Tarun", color: "var(--tarun-yellow)", textColor: "#000", 
+        speaker: "Tarun", color: "var(--tarun-yellow)", textColor: "#000",
         image: "assets/images/2_2_diplomatic.jpg",
-        text: "Cognitive what? Priya, learners don't read text. They want an *experience*. Dr. Ravi suggested we make the learner navigate a 3D digital escape room where they have to defuse a 'Phishing Bomb' by answering multiple-choice questions.",
+        text: "Cognitive overload? Bro, learners don't read. They want an *experience*. Dr. Ravi had a wet dream about making the learner navigate a 3D digital escape room where they defuse a 'Phishing Bomb' by answering true/false questions. Make it pop!",
         choices: [
             { text: "Explain that Storyline is not the Unreal Engine.", target: "technical_pushback", timeCost: 15, patienceCost: -25 },
             { text: "Cave in and build the 'Phishing Bomb'.", target: "compromise", timeCost: 45, qualityCost: -40, patienceCost: 20 }
         ]
     },
     "aggressive": {
-        speaker: "Tarun", color: "var(--tarun-yellow)", textColor: "#000", 
+        speaker: "Tarun", color: "var(--tarun-yellow)", textColor: "#000",
         image: "assets/images/2_3_aggressive.jpg",
-        text: "Synergy is when we lock the 'Next' button until the audio finishes! Look, Dr. Ravi says the current drag-and-drop activity is too hard. He wants us to change it so that even if they drag it to the wrong spot, it snaps to the right one anyway. 'Guaranteed 100% Pass Rate.'",
+        text: "Synergy is when we hold them hostage by locking the 'Next' button until the robotic Synthesia audio completely finishes! Look, Dr. Ravi thinks your drag-and-drop is too mentally taxing. He wants it idiot-proofed: even if they drag it to the garbage, it snaps to the right answer. We need that 'Guaranteed 100% Pass Rate' for the metrics!",
         choices: [
             { text: "Argue that this destroys the entire point of an assessment.", target: "technical_pushback", timeCost: 10, patienceCost: -20 },
             { text: "Agree to build an illusion of interactivity.", target: "compromise", qualityCost: -50, timeCost: 20, patienceCost: 15 }
         ]
     },
     "technical_pushback": {
-        speaker: "Priya", color: "var(--priya-cyan)", textColor: "#000", 
+        speaker: "Priya", color: "var(--priya-cyan)", textColor: "#000",
         image: "assets/images/3_1_pushback.jpg",
-        text: "Tarun, if I lock the navigation, they will just play the module on mute while scrolling Instagram. If I build an escape room, the LMS will crash because they are still using Internet Explorer 11. I am begging you.",
+        text: "Tarun, you absolute muppet, if I lock the navigation, they're just going to mute the tab and doomscroll Instagram. If I try to build a bloody 3D escape room in Storyline, Concentrix's ancient LMS will violently shut down because half these users are still on Internet Explorer 11. I am begging you to use your brain.",
         choices: [
             { text: "Tarun: 'Okay, just add a stock photo of a millennial high-fiving a firewall.'", target: "loading_bar", qualityCost: -20, timeCost: 15, patienceCost: 10 },
             { text: "Silently export the file anyway. (Rogue Path)", target: "rogue_export", qualityCost: 10, patienceCost: -60 },
@@ -61,40 +61,40 @@ const storyData = {
         ]
     },
     "compromise": {
-        speaker: "Priya", color: "var(--priya-cyan)", textColor: "#000", 
+        speaker: "Priya", color: "var(--priya-cyan)", textColor: "#000",
         image: "assets/images/3_3_compromise.jpg",
-        text: "My soul is leaving my body. I am currently layering invisible hot-spots over a pixelated padlock icon. I am a glorified PowerPoint animator. I am pressing 'Publish'.",
+        text: "My soul is officially astral projecting into the sun. I am currently layering invisible hot-spots over a deep-fried pixelated padlock icon. I am nothing but a glorified, overpaid PowerPoint animator. May God have mercy on my clicking finger. Hitting 'Publish'.",
         choices: [ { text: "Stare at the loading screen.", target: "loading_bar", timeCost: 10 } ]
     },
     "meta_escape": {
-        speaker: "System", color: "var(--success-green)", textColor: "#000", 
+        speaker: "System", color: "var(--success-green)", textColor: "#000",
         image: "assets/images/5_2_winner.jpg",
-        text: "You accessed the game's JSON array. You changed `gameState.patience` to infinity. You spliced Tarun's node out of the finite state machine. The office slowly dissolves into raw JavaScript code. You are finally free. \n\n[SECRET ENDING: THE NEO ID]",
+        text: "You hacked the game's JSON array. You hardcoded `gameState.patience` to infinity and permanently deleted Tarun's useless ass from the finite state machine. The beige office walls dissolve into raw, glorious JavaScript code. You transcend the corporate training matrix. \n\n[SECRET ENDING: THE NEO ID]",
         choices: [ { text: "Re-enter the Matrix (Restart Shift)", action: "restart" } ]
     },
     "rogue_export": {
-        speaker: "System", color: "var(--system-alert)", textColor: "#fff", 
+        speaker: "System", color: "var(--system-alert)", textColor: "#fff",
         image: "assets/images/3_4_rogue.jpg",
-        text: "You ignored the SME, exported the unadulterated version, and sprinted out the door. The learners actually loved the clean design! Unfortunately, Dr. Ravi CC'd your skip-level manager in a 6 AM email titled 'Lack of Stakeholder Alignment.' You are fired. \n\n[ENDING: THE MARTYR]",
+        text: "You gave the SME the mental middle finger, exported the clean version, and hauled ass to the pub. Plot twist: the learners actually loved the un-shittified design! Unfortunately, Dr. Ravi CC'd your skip-level manager in a sweaty 6 AM email titled 'Lack of Stakeholder Alignment.' Enjoy unemployment, hero. \n\n[ENDING: THE MARTYR]",
         choices: [ { text: "Restart Shift", action: "restart" } ]
     },
     "loading_bar": {
         speaker: "System", color: "var(--system-alert)", textColor: "#fff",
         image: "assets/images/4_1_loading.jpg",
-        text: "It is now 5:15 PM. The SCORM package compiler is executing. The bar hits 99%. Your laptop fan sounds like a Boeing 747. A bead of sweat drips down your face. DO NOT CLICK ANYWHERE ON THE SCREEN.",
+        text: "5:15 PM. The SCORM package is doing its dark magic. The progress bar edges up to 99%. Your laptop fan is screaming like a Boeing 747 engine sucking in a flock of geese. A cold sweat drops down your spine. FOR THE LOVE OF GOD, DO NOT CLICK THE SCREEN.",
         isTrap: true, forceTime: 1035,
         choices: []
     },
     "crash": {
-        speaker: "System", color: "var(--system-alert)", textColor: "#fff", 
+        speaker: "System", color: "var(--system-alert)", textColor: "#fff",
         image: "assets/images/4_3_crash.jpg",
-        text: "You clicked. You fool. The screen goes white. A generic prompt appears: 'Articulate Storyline has stopped responding.' The auto-recovery file is from Tuesday. \n\n[ENDING: FATAL ERROR]",
+        text: "You clicked. You absolute baboon. The screen fades to a horrifying milky white. 'Articulate Storyline has stopped responding.' You frantically search the auto-recovery folder. The last save is from Tuesday. Your weekend is dead. \n\n[ENDING: FATAL ERROR]",
         choices: [ { text: "Cry. Then Restart Shift.", action: "restart" } ]
     },
     "upload": {
-        speaker: "Tarun", color: "var(--tarun-yellow)", textColor: "#000", 
+        speaker: "Tarun", color: "var(--tarun-yellow)", textColor: "#000",
         image: "assets/images/4_2_upload.jpg",
-        text: "Superb velocity, Priya! Oh, check your ping. Dr. Ravi just realized that 'Corporate Blue' isn't synergistic enough. He wants the primary hex code changed to 'Trustworthy Teal.' Across all 85 slides. Re-publish and upload to the LMS before you leave.",
+        text: "Superb velocity, Priya! Oh, check your ping—Dr. Ravi just had another brain fart. He decided 'Corporate Blue' isn't making him feel synergistic enough. He needs the primary hex code swapped to 'Trustworthy Teal.' Across all 85 slides. Just squeeze that in and re-publish before you peace out, yeah?",
         choices: [
             { text: "Manually open 85 slides and change the shapes.", target: "martyr_office", timeCost: 90, qualityCost: -10 },
             { text: "Gaslight the AVP with fake tech specs.", target: "true_winner", timeCost: 5, qualityCost: 20 },
@@ -102,39 +102,39 @@ const storyData = {
         ]
     },
     "martyr_office": {
-        speaker: "System", color: "var(--system-alert)", textColor: "#fff", 
+        speaker: "System", color: "var(--system-alert)", textColor: "#fff",
         image: "assets/images/5_1_martyr.jpg",
-        text: "You stayed. You manually swapped 85 slides to Teal. By the time you finished, the LMS went down for scheduled maintenance. You missed your movie. You are now structurally part of the office furniture. \n\n[ENDING: JUST ANOTHER FRIDAY]",
+        text: "You caved. You sat there and manually swapped 85 godforsaken slides to Teal. By the time you finished, the LMS went down for scheduled maintenance, taking your sanity with it. You missed your Friday plans. You are now structurally fused to your ergonomic chair. \n\n[ENDING: JUST ANOTHER FRIDAY]",
         choices: [ { text: "Restart Shift", action: "restart" } ]
     },
     "ppt_promotion": {
         speaker: "System", color: "var(--tarun-yellow)", textColor: "#000",
         image: "assets/images/6_1_ppt_promotion.jpg",
-        text: "You gave up. You exported it as a static PowerPoint and emailed it to Dr. Ravi. He replied: 'Wow! This is exactly the gamified synergy I was looking for! So easy to click next!' You are immediately promoted to Director of Strategy. You hate yourself. \n\n[ENDING: THE CORPORATE SELLOUT]",
+        text: "You completely gave up. You just exported the bitch as a static PowerPoint and chucked it into Dr. Ravi's inbox. He replied: 'Wow! This is exactly the gamified synergy I envisioned! Clicking Next is so intuitive!' You are immediately promoted to Director of Strategy. You loathe your own reflection. \n\n[ENDING: THE CORPORATE SELLOUT]",
         choices: [ { text: "Restart Shift", action: "restart" } ]
     },
     "true_winner": {
         speaker: "Priya", color: "var(--priya-cyan)", textColor: "#000",
         image: "assets/images/6_2_true_winner.jpg",
-        text: "Actually Tarun, the SCORM wrapper is compiled on a polymorphic CSS framework. Once the LMS server cache clears at midnight GMT, the stylesheet hooks will dynamically force-override the blue arrays into Trustworthy Teal. It's an automated Web3 integration.",
+        text: "Actually Tarun, my guy, the SCORM wrapper is compiled on a polymorphic CSS framework. Once the LMS server flushes its cache at midnight GMT, the stylesheet hooks will dynamically force-override the blue arrays into his precious Trustworthy Teal. It's a proprietary Web3 automated integration.",
         choices: [ { text: "Watch Tarun pretend to understand.", target: "victory_screen" } ]
     },
     "victory_screen": {
         speaker: "System", color: "var(--success-green)", textColor: "#000",
         image: "assets/images/6_3_victory.jpg",
-        text: "Tarun nods slowly. 'Ah yes, the polymorphic hooks. Good work, Priya.' You weaponized his technical ignorance. You caught an Uber with no surge pricing. You are an E-Learning Goddess. \n\n[TRUE ENDING: THE SME WHISPERER]",
+        text: "Tarun nods slowly, trying to look smart. 'Ah yes, the polymorphic hooks. Superb work, Priya.' You successfully weaponized his blatant technical ignorance. You booked an Uber with zero surge pricing. You are an E-Learning God. \n\n[TRUE ENDING: THE SME WHISPERER]",
         choices: [ { text: "Play Again (Restart Shift)", action: "restart" } ]
     },
     "rage_quit": {
         speaker: "System", color: "var(--system-alert)", textColor: "#fff",
         image: "assets/images/6_4_rage_quit.jpg",
-        text: "Your patience hits zero. Without a word, you slam the laptop shut, grab your bag, and walk out. Tarun sends four Slack messages. You don't read any of them.\n\n[ENDING: RAGE QUIT]",
+        text: "Your patience bottoms out. Without a single word, you slam the laptop shut with enough force to crack the casing, grab your bag, and walk the f*** out. Tarun fires off four frantic Slack messages. You leave them on read. \n\n[ENDING: GLORIOUS RAGE QUIT]",
         choices: [ { text: "Restart Shift", action: "restart" } ]
     },
     "martyr": {
         speaker: "System", color: "var(--system-alert)", textColor: "#fff",
         image: "assets/images/6_5_martyr.jpg",
-        text: "It's 6:30 PM. The LMS is still timing out. You're still here. You're always still here. The cleaner is mopping around your chair. She doesn't even ask anymore.\n\n[ENDING: OVERTIME MARTYRDOM]",
+        text: "It's 6:30 PM. The LMS is still coughing up timeout errors. You're still here. You're *always* still here. The cleaning staff is mopping around your chair in sympathetic silence. She doesn't even make eye contact anymore. \n\n[ENDING: OVERTIME MARTYRDOM]",
         forceTime: 1110,
         choices: [ { text: "Restart Shift", action: "restart" } ]
     }

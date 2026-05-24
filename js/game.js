@@ -277,7 +277,7 @@ let _typingAudio = null;
 function startTypingSound() {
     try {
         if (!_typingAudio) {
-            _typingAudio = new Audio('assets/audio/typing.mp3');
+            _typingAudio = new Audio('assets/audio/Typing.mp3');
             _typingAudio.loop   = true;
             _typingAudio.volume = 0.28;
         }

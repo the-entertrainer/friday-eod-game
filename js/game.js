@@ -40,6 +40,33 @@ function scaleGame() {
 scaleGame();
 window.addEventListener('resize', scaleGame);
 
+// ─── Drawer peek gesture (drag top of terminal down to peek at scene) ─────────
+let _peekActive = false;
+(function initDrawer() {
+    const term = document.getElementById('terminal');
+    let startY = 0, moved = false, dragging = false;
+    term.addEventListener('touchstart', e => {
+        const localY = e.touches[0].clientY - term.getBoundingClientRect().top;
+        if (localY > 44) return; // only the handle strip triggers drag
+        dragging = true; moved = false; startY = e.touches[0].clientY;
+        term.style.transition = 'none';
+    }, { passive: true });
+    window.addEventListener('touchmove', e => {
+        if (!dragging) return;
+        const dy = e.touches[0].clientY - startY;
+        if (Math.abs(dy) > 6) moved = true;
+        const peek = Math.max(0, Math.min(88, dy)); // max 88px down
+        term.style.transform = `translateY(${peek}px)`;
+    }, { passive: true });
+    window.addEventListener('touchend', () => {
+        if (!dragging) return;
+        dragging = false;
+        term.style.transition = '';
+        term.style.transform = '';
+        if (moved) { _peekActive = true; setTimeout(() => _peekActive = false, 350); }
+    });
+})();
+
 // ─── Audio ────────────────────────────────────────────────────────────────────
 let audioCtx = null;
 
@@ -87,35 +114,7 @@ function playSound(type) {
     } catch(e) {}
 }
 
-// ─── Typewriter click (per-character, throttled) ─────────────────────────────
-let _lastClickT = 0;
-function playTypeClick() {
-    if (!audioCtx) return;
-    const now = audioCtx.currentTime;
-    if (now - _lastClickT < 0.06) return; // max ~16 clicks/sec — prevents tractor sound
-    _lastClickT = now;
-    try {
-        const bufLen = Math.floor(audioCtx.sampleRate * 0.011);
-        const buf = audioCtx.createBuffer(1, bufLen, audioCtx.sampleRate);
-        const d = buf.getChannelData(0);
-        for (let j = 0; j < bufLen; j++) d[j] = Math.random() * 2 - 1;
-
-        const src = audioCtx.createBufferSource();
-        src.buffer = buf;
-
-        const bp = audioCtx.createBiquadFilter();
-        bp.type = 'bandpass';
-        bp.frequency.value = 1400 + Math.random() * 500; // lower, softer register
-        bp.Q.value = 0.7;
-
-        const g = audioCtx.createGain();
-        g.gain.setValueAtTime(0.02, now);
-        g.gain.exponentialRampToValueAtTime(0.001, now + 0.011);
-
-        src.connect(bp); bp.connect(g); g.connect(audioCtx.destination);
-        src.start();
-    } catch(e) {}
-}
+// (typing sound now handled by startTypingSound / stopTypingSound above)
 
 // ─── Contextual pop effects ───────────────────────────────────────────────────
 const _CTX_IMPACTS = [
@@ -306,55 +305,38 @@ function playEndingJingle(type) {
     setTimeout(() => { try { master.disconnect(); } catch(e) {} }, totalMs);
 }
 
-// ─── Title Screen BGM ────────────────────────────────────────────────────────
-// Trademark 8-bit corporate march — C major, satirically upbeat
-const TITLE_NOTES = [
-    [523,140],[659,140],[784,140],[1047,280],[0,70],
-    [784,140],[698,140],[659,280],[0,70],
-    [523,140],[587,140],[698,140],[784,140],[698,280],[0,70],
-    [659,140],[523,140],[494,140],[440,280],[0,140],
-    [392,140],[440,140],[523,140],[659,280],[0,70],
-    [784,140],[659,140],[523,280],[0,140],
-    [587,140],[698,140],[784,140],[880,280],[0,70],
-    [784,140],[698,140],[659,140],[523,420],[0,210],
-];
-let titleBGM = { timerId: null, masterGain: null, idx: 0 };
-
+// ─── Title Screen BGM — points to assets/audio/theme.mp3 ────────────────────
+let _themeAudio = null;
 function startTitleBGM() {
-    if (!audioCtx || titleBGM.masterGain) return;
-    const master = audioCtx.createGain();
-    master.gain.setValueAtTime(0, audioCtx.currentTime);
-    master.gain.linearRampToValueAtTime(0.075, audioCtx.currentTime + 1.8);
-    master.connect(audioCtx.destination);
-    titleBGM.masterGain = master;
-    titleBGM.idx = 0;
-
-    function fireNote() {
-        if (!titleBGM.masterGain) return;
-        const [freq, dur] = TITLE_NOTES[titleBGM.idx++ % TITLE_NOTES.length];
-        if (freq > 0 && audioCtx) {
-            try {
-                const o = audioCtx.createOscillator(), g = audioCtx.createGain();
-                o.type = 'square'; o.frequency.value = freq;
-                g.gain.setValueAtTime(0.6, audioCtx.currentTime);
-                g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + dur / 1000 * 0.8);
-                o.connect(g); g.connect(master);
-                o.start(); o.stop(audioCtx.currentTime + dur / 1000);
-            } catch(e) {}
+    try {
+        if (!_themeAudio) {
+            _themeAudio = new Audio('assets/audio/theme.mp3');
+            _themeAudio.loop = true;
+            _themeAudio.volume = 0.45;
         }
-        titleBGM.timerId = setTimeout(fireNote, dur);
-    }
-    fireNote();
+        _themeAudio.currentTime = 0;
+        _themeAudio.play().catch(() => {});
+    } catch(e) {}
+}
+function stopTitleBGM() {
+    try { if (_themeAudio) { _themeAudio.pause(); _themeAudio.currentTime = 0; } } catch(e) {}
 }
 
-function stopTitleBGM() {
-    clearTimeout(titleBGM.timerId);
-    if (titleBGM.masterGain && audioCtx) {
-        try { titleBGM.masterGain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.35); } catch(e) {}
-        setTimeout(() => { try { titleBGM.masterGain.disconnect(); } catch(e) {} titleBGM = { timerId: null, masterGain: null, idx: 0 }; }, 400);
-    } else {
-        titleBGM = { timerId: null, masterGain: null, idx: 0 };
-    }
+// ─── Typing sound — points to assets/audio/typing.mp3 ───────────────────────
+let _typingAudio = null;
+function startTypingSound() {
+    try {
+        if (!_typingAudio) {
+            _typingAudio = new Audio('assets/audio/typing.mp3');
+            _typingAudio.loop = true;
+            _typingAudio.volume = 0.28;
+        }
+        _typingAudio.currentTime = 0;
+        _typingAudio.play().catch(() => {});
+    } catch(e) {}
+}
+function stopTypingSound() {
+    try { if (_typingAudio && !_typingAudio.paused) { _typingAudio.pause(); _typingAudio.currentTime = 0; } } catch(e) {}
 }
 
 // ─── Endings ──────────────────────────────────────────────────────────────────
@@ -392,6 +374,7 @@ function startGame() {
 
 function resetState() {
     clearInterval(gameState.typeInterval);
+    stopTypingSound();
     gameState.isTyping     = false;
     gameState.minutes      = 960;
     gameState.quality      = 100;
@@ -473,6 +456,7 @@ function loadNode(nodeId) {
     if (!node) { console.error('Missing story node:', nodeId); return; }
     gameState.currentNode = nodeId;
 
+    document.getElementById('terminal').classList.remove('with-choices');
     uiTrap.style.display = 'none';
     clearTimeout(gameState.trapTimeout);
     uiLoadingBar.classList.remove('active');
@@ -533,30 +517,31 @@ function spawnEndingEffect(type) {
 function typewriterEffect(text, choices) {
     clearInterval(gameState.typeInterval);
     gameState.isTyping = true;
-    _lastClickT = 0; // reset throttle for fresh sentence
     let i = 0;
 
     if (choices && choices.length > 0) uiTapHint.classList.add('visible');
 
     showContextualEffect(text);
+    startTypingSound();
 
     gameState.typeInterval = setInterval(() => {
-        const ch = text[i];
         uiText.innerHTML = text.substring(0, i + 1) + '<span class="cursor"></span>';
-        if (ch && ch !== ' ') playTypeClick();
         i++;
         if (i >= text.length) {
             clearInterval(gameState.typeInterval);
             uiText.innerHTML = text;
             gameState.isTyping = false;
+            stopTypingSound();
             renderChoices(choices);
         }
     }, 26);
 }
 
 function advanceDialogue() {
+    if (_peekActive) return; // swallow tap after a drawer drag
     if (gameState.isTyping) {
         clearInterval(gameState.typeInterval);
+        stopTypingSound();
         const node = storyData[gameState.currentNode];
         uiText.innerHTML = node.text;
         gameState.isTyping = false;
@@ -576,6 +561,7 @@ function triggerTrap() {
 function renderChoices(choices) {
     if (!choices || choices.length === 0) return;
     uiTapHint.classList.remove('visible');
+    document.getElementById('terminal').classList.add('with-choices');
 
     if (ALL_ENDINGS.has(gameState.currentNode)) showEndingCard();
     setTimeout(() => playSound('pop'), 80);

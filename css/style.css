@@ -107,13 +107,22 @@ body {
     position: absolute; top: 0; left: 0; right: 0; bottom: 0;
     background-size: cover; background-position: center center; background-repeat: no-repeat;
 }
+.scene-layer::after {
+    content: ''; position: absolute; inset: 0;
+    background-image:
+        repeating-linear-gradient(0deg, rgba(0,0,0,0.08) 0px, rgba(0,0,0,0.08) 2px, transparent 2px, transparent 4px),
+        radial-gradient(ellipse at center, transparent 0%, rgba(0,0,0,0.15) 100%);
+    pointer-events: none; z-index: 10;
+}
 #scene-image {
     transform-origin: center center;
     will-change: transform;
     z-index: 2;
+    filter: contrast(1.08) brightness(0.98) saturate(0.95);
 }
 #scene-image-out {
     z-index: 1; pointer-events: none;
+    filter: contrast(1.08) brightness(0.98) saturate(0.95);
 }
 
 /* ── Warp-slide transition ── */

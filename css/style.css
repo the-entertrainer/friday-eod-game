@@ -106,29 +106,44 @@ body {
     z-index: 1; pointer-events: none;
 }
 
-/* ── Film reel transitions ── */
-@keyframes filmFrameOut {
-    0%   { transform: translateY(0);      opacity: 1;   }
-    18%  { transform: translateY(-4px);   opacity: 0.8; }
-    32%  { transform: translateY(3px);    opacity: 0.5; }
-    50%  { transform: translateY(0);      opacity: 0;   }
-    100% { transform: translateY(-108%);  opacity: 0;   }
+/* ── Warp-slide transition ── */
+@keyframes warpSlideOut {
+    0%   { transform: translateX(0)     scaleY(1);     opacity: 1;   filter: brightness(1); }
+    14%  { transform: translateX(0)     scaleY(1);     opacity: 1;   filter: brightness(1.9) saturate(0.3); }
+    48%  { transform: translateX(-30%)  scaleY(0.984); opacity: 0.45; filter: brightness(0.7) blur(2px); }
+    100% { transform: translateX(-112%) scaleY(0.95);  opacity: 0;   filter: brightness(0.3) blur(5px); }
 }
-@keyframes filmFrameIn {
-    0%   { transform: translateY(108%);   opacity: 0;   }
-    44%  { transform: translateY(108%);   opacity: 0;   }
-    56%  { transform: translateY(-6px);   opacity: 1;   }
-    68%  { transform: translateY(4px);    opacity: 1;   }
-    80%  { transform: translateY(-2px);   opacity: 1;   }
-    90%  { transform: translateY(1px);    opacity: 1;   }
-    100% { transform: translateY(0);      opacity: 1;   }
+@keyframes warpSlideIn {
+    0%   { transform: translateX(112%) scaleY(0.95);  opacity: 0;   filter: brightness(0.3) blur(5px); }
+    38%  { transform: translateX(7%)   scaleY(1.010); opacity: 0.92; filter: brightness(1.6) blur(0.5px); }
+    56%  { transform: translateX(-5%)  scaleY(1.003); opacity: 1;   filter: brightness(1.25); }
+    70%  { transform: translateX(3%)   scaleY(1);     opacity: 1;   filter: brightness(1.08); }
+    84%  { transform: translateX(-1%)  scaleY(1);     opacity: 1;   filter: brightness(1); }
+    100% { transform: translateX(0)    scaleY(1);     opacity: 1;   filter: brightness(1); }
 }
-#scene-image.film-in {
-    animation: filmFrameIn 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+#scene-image.warp-in {
+    animation: warpSlideIn 0.56s cubic-bezier(0.22, 1, 0.36, 1) forwards;
     z-index: 3;
 }
-#scene-image-out.film-out {
-    animation: filmFrameOut 0.45s cubic-bezier(0.6, 0, 0.8, 0) forwards;
+#scene-image-out.warp-out {
+    animation: warpSlideOut 0.46s cubic-bezier(0.55, 0, 0.95, 0.38) forwards;
+}
+/* Luminance scan line that sweeps across the viewport on each warp */
+.warp-scan {
+    position: absolute; top: 0; left: -65%; width: 65%; height: 100%;
+    background: linear-gradient(90deg,
+        transparent 0%,
+        rgba(0,229,255,0.05) 25%,
+        rgba(255,255,255,0.20) 50%,
+        rgba(0,229,255,0.05) 75%,
+        transparent 100%
+    );
+    pointer-events: none; z-index: 50;
+    animation: warpScan 0.50s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+@keyframes warpScan {
+    from { transform: translateX(0); }
+    to   { transform: translateX(254%); }
 }
 
 /* ── Contextual pop effects (!, ?, CRASH!, etc.) ── */
@@ -546,7 +561,7 @@ body {
 
 /* ── C1 / C3: Title screen standalone buttons ── */
 .ts-credits-btn {
-    position: absolute; bottom: 16px; left: 50%; transform: translateX(-50%);
+    position: absolute; bottom: 14px; left: 14px;
     z-index: 8; background: none; border: none;
     color: rgba(255,255,255,0.6);
     font-family: 'Outfit', sans-serif; font-size: 0.78rem; font-weight: 700;

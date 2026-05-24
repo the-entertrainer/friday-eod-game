@@ -481,17 +481,22 @@ function transitionScene(newUrl, skipAnim) {
     uiSceneOut.style.transform = '';
     uiSceneImage.style.backgroundImage = `url('${newUrl}')`;
 
+    const scan = document.createElement('div');
+    scan.className = 'warp-scan';
+    uiViewport.appendChild(scan);
+
     requestAnimationFrame(() => {
-        uiSceneOut.classList.add('film-out');
-        uiSceneImage.classList.add('film-in');
+        uiSceneOut.classList.add('warp-out');
+        uiSceneImage.classList.add('warp-in');
     });
 
     setTimeout(() => {
-        uiSceneOut.classList.remove('film-out');
-        uiSceneImage.classList.remove('film-in');
+        uiSceneOut.classList.remove('warp-out');
+        uiSceneImage.classList.remove('warp-in');
         uiSceneOut.style.backgroundImage = '';
         sceneTransitioning = false;
-    }, 570);
+        if (scan.parentNode) scan.parentNode.removeChild(scan);
+    }, 580);
 }
 
 function preloadThenTransition(url, skipAnim) {

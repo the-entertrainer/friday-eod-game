@@ -43,6 +43,54 @@
             <div class="ts-ui">
                 <p class="ts-subtitle">Vol 1 : Instructional Disaster</p>
                 <button class="ts-btn" onclick="startGame()">START SHIFT</button>
+                <div class="ts-lower-btns">
+                    <button class="ts-credits-btn" onclick="openCredits()">CREDITS</button>
+                    <button class="ts-settings-btn" onclick="openSettings()">⚙</button>
+                </div>
+            </div>
+
+            <!-- C1: Settings panel -->
+            <div id="settings-panel">
+                <div class="sp-card">
+                    <div class="sp-header">
+                        <span>SETTINGS</span>
+                        <button class="sp-close" onclick="closeSettings()">✕</button>
+                    </div>
+                    <div class="sp-row">
+                        <span>Audio</span>
+                        <button id="sp-mute-btn" class="sp-toggle" onclick="toggleMuteFromSettings()">🔊 ON</button>
+                    </div>
+                    <div class="sp-row">
+                        <span>Text Speed</span>
+                        <button id="sp-speed-btn" class="sp-toggle" onclick="cycleSpeedFromSettings()">1×</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- C3: Credits modal -->
+            <div id="credits-modal">
+                <button class="credits-close" onclick="closeCredits()">✕</button>
+                <div id="credits-scroll-wrap">
+                    <div id="credits-scroll">
+                        <div class="credits-title">FRIDAY EOD: EPISODE 1</div>
+                        <div class="credits-subtitle">Instructional Disaster</div>
+                        <div class="credits-body">A story about surviving corporate L&amp;D<br>one bad stakeholder at a time.</div>
+                        <div class="credits-section">— WRITTEN &amp; DESIGNED BY —</div>
+                        <div class="credits-body">[Your Name Here]</div>
+                        <div class="credits-section">— ART &amp; ILLUSTRATION —</div>
+                        <div class="credits-body">[Artist Name]</div>
+                        <div class="credits-section">— MUSIC —</div>
+                        <div class="credits-body">[Composer Name]</div>
+                        <div class="credits-section">— SPECIAL THANKS —</div>
+                        <div class="credits-body">Every instructional designer who has ever<br>had a module sent back on a Friday at 4 PM.<br><br>You know who you are.<br>The moth remembers.</div>
+                        <div class="credits-footer">© 2025 Friday EOD</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- C2: Audio unlock overlay (iOS Safari) -->
+            <div id="audio-unlock-overlay">
+                <span>▶ Tap anywhere to start</span>
             </div>
         </div>
 

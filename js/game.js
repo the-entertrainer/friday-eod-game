@@ -88,7 +88,7 @@ let _muted = false;
 const _TW_SPEEDS   = [26, 45, 12];
 const _TW_DISPLAY  = ['1×', '½×', '2×'];
 const _TW_COLORS   = ['white', 'rgba(255,255,255,0.55)', '#00e5ff'];
-let   _twSpeedIdx  = 0;
+let   _twSpeedIdx  = parseInt(localStorage.getItem('twSpeedIdx') || '0') % _TW_SPEEDS.length;
 
 function initAudio() {
     if (audioCtx) return;
@@ -98,7 +98,7 @@ function initAudio() {
 
 // One-shot sound effects
 function playSound(type) {
-    if (!audioCtx) return;
+    if (_muted || !audioCtx) return;
     try {
         const osc = audioCtx.createOscillator();
         const gain = audioCtx.createGain();
@@ -162,7 +162,9 @@ function showContextualEffect(text) {
     el.className = `context-pop ${cls}`;
     el.textContent = label;
     el.style.left = (12 + Math.random() * 56) + '%';
-    el.style.top  = (8  + Math.random() * 27) + '%'; // cap at ~35% to stay above terminal
+    const termH = document.getElementById('terminal')?.offsetHeight || 280;
+    const safeTopMax = ((window.innerHeight - termH - 60) / window.innerHeight) * 100;
+    el.style.top  = (8 + Math.random() * Math.max(0, safeTopMax - 8)) + '%';
     uiViewport.appendChild(el);
     setTimeout(() => el.parentNode && el.parentNode.removeChild(el), 1100);
 }
@@ -174,7 +176,7 @@ const SCENE_MOODS = {
     aggressive: 'tense', technical_pushback: 'tense',
     compromise: 'defeated', loading_bar: 'suspense',
     crash: 'horror', meta_escape: 'matrix', rogue_export: 'action',
-    martyr_office: 'defeated', ppt_promotion: 'victory',
+    martyr_office: 'defeated', ppt_promotion: 'office',
     true_winner: 'victory', victory_screen: 'victory',
     rage_quit: 'action', martyr: 'defeated'
 };
@@ -232,7 +234,7 @@ const VICTORY_JINGLE = [[523,80],[659,80],[784,80],[1047,320],[0,60],[784,100],[
 const BAD_JINGLE     = [[440,180],[415,180],[392,180],[370,180],[349,360],[0,80],[330,180],[311,180],[294,600]];
 
 function playEndingJingle(type) {
-    if (!audioCtx) return;
+    if (_muted || !audioCtx) return;
     const notes = type === 'victory' ? VICTORY_JINGLE : BAD_JINGLE;
     const master = audioCtx.createGain();
     master.gain.value = 0.13;
@@ -301,6 +303,7 @@ function toggleMute() {
     if (x1)   x1.style.display   = _muted ? ''      : 'none';
     if (x2)   x2.style.display   = _muted ? ''      : 'none';
     if (body) body.setAttribute('fill', _muted ? 'rgba(255,71,87,0.9)' : 'white');
+    document.getElementById('mute-btn').classList.toggle('muted', _muted);
     [_themeAudio, _sceneBGMAudio, _typingAudio, _transitionAudio].forEach(a => {
         if (a) a.muted = _muted;
     });
@@ -309,6 +312,7 @@ function toggleMute() {
 // ─── Typewriter speed cycle ───────────────────────────────────────────────────
 function cycleTypingSpeed() {
     _twSpeedIdx = (_twSpeedIdx + 1) % _TW_SPEEDS.length;
+    localStorage.setItem('twSpeedIdx', _twSpeedIdx);
     const lbl = document.getElementById('speed-label');
     if (lbl) {
         lbl.textContent = _TW_DISPLAY[_twSpeedIdx];
@@ -414,6 +418,8 @@ function resetState() {
     stopTypingSound();
     gameState.isTyping     = false;
     gameState.minutes      = 960;
+    _clkMinAccum           = 0;
+    _nodeLoading           = false;
     gameState.quality      = 100;
     gameState.patience     = 50;
     gameState.previousNode = null;
@@ -491,7 +497,12 @@ function transitionScene(newUrl, skipAnim) {
 function preloadThenTransition(url, skipAnim) {
     uiSceneImage.classList.add('img-loading');
     const tmp = new Image();
+    const failsafe = setTimeout(() => {
+        uiSceneImage.classList.remove('img-loading');
+        transitionScene(url, skipAnim);
+    }, 5000);
     tmp.onload = tmp.onerror = () => {
+        clearTimeout(failsafe);
         uiSceneImage.classList.remove('img-loading');
         transitionScene(url, skipAnim);
     };
@@ -499,7 +510,16 @@ function preloadThenTransition(url, skipAnim) {
 }
 
 // ─── Scene loading ─────────────────────────────────────────────────────────────
+let _nodeLoading = false;
+
 function loadNode(nodeId) {
+    if (_nodeLoading) return;
+    _nodeLoading = true;
+    setTimeout(() => { _nodeLoading = false; }, 400);
+
+    resetSceneZoom();
+    stopTypingSound();
+
     const node = storyData[nodeId];
     if (!node) { console.error('Missing story node:', nodeId); return; }
     gameState.currentNode = nodeId;
@@ -847,8 +867,8 @@ function renderChoices(choices) {
 
 function showEndingCard() {
     const isVictory = VICTORY_ENDINGS.has(gameState.currentNode);
-    const q = Math.max(0, gameState.quality);
-    const p = Math.max(0, gameState.patience);
+    const q = Math.max(0, Math.min(100, Math.round(gameState.quality)));
+    const p = Math.max(0, Math.min(50,  Math.round(gameState.patience)));
     uiEndingCard.innerHTML = `
         <div class="ending-stats ${isVictory ? 'victory-stats' : 'bad-stats'}">
             <div class="ending-stats-title">SHIFT REPORT</div>
@@ -864,6 +884,8 @@ function handleChoice(choice) {
     if (choice.timeCost)     gameState.minutes  += choice.timeCost;
     if (choice.qualityCost)  gameState.quality  += choice.qualityCost;
     if (choice.patienceCost) gameState.patience += choice.patienceCost;
+    gameState.quality  = Math.max(0, Math.min(100, gameState.quality));
+    gameState.patience = Math.max(0, Math.min(50,  gameState.patience));
     updateHUD();
 
     // Overflow endings: skip if already on an ending node, or if the chosen target is itself an ending
@@ -877,12 +899,11 @@ function handleChoice(choice) {
     } else if (choice.action === "mainmenu") {
         showTitleScreen();
     } else if (choice.action === "return_from_cutaway") {
-        loadNode(gameState.previousNode);
-    } else if (choice.target === "cutaway_kids") {
-        gameState.previousNode = gameState.currentNode;
-        loadNode("cutaway_kids");
-    } else {
+        loadNode(gameState.previousNode || "start");
+    } else if (choice.target) {
         loadNode(choice.target);
+    } else {
+        console.warn('Choice has no target or action:', choice);
     }
 }
 
@@ -1110,8 +1131,16 @@ function initTitleScreen() {
         }
     });
 
-    // Start audio + title BGM on first interaction with START SHIFT button
+    // Start audio + title BGM on first interaction with START SHIFT button (fallback)
     document.querySelector('.ts-btn')?.addEventListener('pointerdown', onTitleInteract, { once: true });
+
+    // C2: Audio unlock overlay
+    document.getElementById('audio-unlock-overlay')?.addEventListener('pointerdown', dismissAudioUnlock, { once: true });
+
+    // C1: Settings panel — click outside card to close
+    document.getElementById('settings-panel')?.addEventListener('pointerdown', e => {
+        if (e.target === document.getElementById('settings-panel')) closeSettings();
+    });
 
     initSceneZoom();
 }
@@ -1128,25 +1157,64 @@ window.addEventListener('load', () => {
 
     // Set initial clock position (4:00 PM = 960 min)
     updateClockHands();
+
+    // Restore speed label from saved preference
+    const lbl = document.getElementById('speed-label');
+    if (lbl) { lbl.textContent = _TW_DISPLAY[_twSpeedIdx]; lbl.setAttribute('fill', _TW_COLORS[_twSpeedIdx]); }
 });
 
 // ─── Safari audio unlock ──────────────────────────────────────────────────────
-// Safari blocks Audio.play() until a real user gesture has been processed.
-// Attach capture-phase listeners so we intercept the very first interaction
-// and unlock audio before anything else runs.
+// #audio-unlock-overlay handles the guaranteed-trusted-gesture unlock on first visit.
+// This lightweight fallback resumes a suspended AudioContext on any later interaction
+// (e.g. after returning from a backgrounded tab on iOS).
 (function () {
     function unlock() {
-        document.removeEventListener('touchstart', unlock, true);
-        document.removeEventListener('pointerdown', unlock, true);
-        // Resume Web Audio context if it was created but suspended
-        if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume().catch(() => {});
-        // If still on title screen and BGM hasn't started yet, start it now
-        const ts = document.getElementById('title-screen');
-        if (ts && ts.style.display !== 'none' && !titleAudioInited) onTitleInteract();
+        if (!audioCtx || audioCtx.state !== 'suspended') return;
+        audioCtx.resume().catch(() => {});
     }
-    document.addEventListener('touchstart',  unlock, { capture: true, passive: true });
-    document.addEventListener('pointerdown', unlock, { capture: true });
+    document.addEventListener('pointerdown', unlock, { capture: true, passive: true });
 })();
+
+// ─── C2: Audio unlock overlay dismiss ────────────────────────────────────────
+function dismissAudioUnlock() {
+    const ov = document.getElementById('audio-unlock-overlay');
+    if (ov) ov.remove();
+    initAudio();
+    if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume().catch(() => {});
+    if (!titleAudioInited) {
+        titleAudioInited = true;
+        startTitleBGM();
+    }
+}
+
+// ─── C1: Settings panel ──────────────────────────────────────────────────────
+function openSettings() {
+    updateSettingsDisplay();
+    document.getElementById('settings-panel')?.classList.add('visible');
+}
+function closeSettings() {
+    document.getElementById('settings-panel')?.classList.remove('visible');
+}
+function updateSettingsDisplay() {
+    const muteBtn  = document.getElementById('sp-mute-btn');
+    const speedBtn = document.getElementById('sp-speed-btn');
+    if (muteBtn)  muteBtn.textContent  = _muted ? '🔇 OFF' : '🔊 ON';
+    if (speedBtn) speedBtn.textContent = _TW_DISPLAY[_twSpeedIdx];
+}
+function toggleMuteFromSettings() { toggleMute(); updateSettingsDisplay(); }
+function cycleSpeedFromSettings()  { cycleTypingSpeed(); updateSettingsDisplay(); }
+
+// ─── C3: Credits modal ───────────────────────────────────────────────────────
+function openCredits() {
+    const modal = document.getElementById('credits-modal');
+    if (!modal) return;
+    modal.classList.remove('visible');
+    void modal.offsetWidth; // reset animation
+    modal.classList.add('visible');
+}
+function closeCredits() {
+    document.getElementById('credits-modal')?.classList.remove('visible');
+}
 
 // ─── Keyboard shortcuts (desktop) ────────────────────────────────────────────
 document.addEventListener('keydown', e => {
@@ -1162,5 +1230,9 @@ document.addEventListener('keydown', e => {
         const btns = uiChoices.querySelectorAll('.choice-btn');
         const idx = parseInt(e.key) - 1;
         if (btns[idx]) btns[idx].dispatchEvent(new PointerEvent('pointerup', { bubbles: true }));
+    } else if (e.key.toLowerCase() === 'm') {
+        toggleMute();
+    } else if (e.key.toLowerCase() === 's') {
+        cycleTypingSpeed();
     }
 });

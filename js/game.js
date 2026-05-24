@@ -348,7 +348,7 @@ function syncSceneImageBottom() {
 }
 
 // ─── Endings ──────────────────────────────────────────────────────────────────
-const VICTORY_ENDINGS = new Set(['true_winner', 'victory_screen', 'meta_escape']);
+const VICTORY_ENDINGS = new Set(['victory_screen', 'meta_escape']);
 const BAD_ENDINGS     = new Set(['crash', 'rogue_export', 'martyr_office', 'ppt_promotion', 'rage_quit', 'martyr']);
 const ALL_ENDINGS     = new Set([...VICTORY_ENDINGS, ...BAD_ENDINGS]);
 
@@ -498,11 +498,13 @@ function loadNode(nodeId) {
         spawnEndingEffect('victory');
         playEndingJingle('victory');
         localStorage.setItem('hasPlayed', '1');
+        if (node.endingTitle) showEndingTitle(node.endingTitle, node.endingTitleType || 'victory');
     } else if (BAD_ENDINGS.has(nodeId)) {
         uiGameCont.classList.add('ending-bad');
         spawnEndingEffect('bad');
         playEndingJingle('bad');
         localStorage.setItem('hasPlayed', '1');
+        if (node.endingTitle) showEndingTitle(node.endingTitle, node.endingTitleType || 'bad');
     }
 
     // Scene image (preload then animate)
@@ -531,6 +533,17 @@ function spawnEndingEffect(type) {
     el.className = type === 'victory' ? 'victory-flash' : 'glitch-flash';
     uiGameCont.appendChild(el);
     setTimeout(() => el.parentNode && el.parentNode.removeChild(el), 900);
+}
+
+function showEndingTitle(title, type) {
+    const card = document.getElementById('ending-title-card');
+    if (!card) return;
+    card.className = '';
+    const cat = type === 'secret' ? 'SECRET ENDING' : type === 'victory' ? 'TRUE ENDING' : 'ENDING';
+    card.innerHTML = `<div class="etc-inner etc-${type}"><div class="etc-cat">${cat}</div><div class="etc-name">${title}</div></div>`;
+    void card.offsetWidth;
+    card.classList.add('etc-active');
+    card.addEventListener('animationend', () => { card.className = ''; card.innerHTML = ''; }, { once: true });
 }
 
 // ─── Dialogue ─────────────────────────────────────────────────────────────────
@@ -748,8 +761,8 @@ function handleChoice(choice) {
     if (choice.patienceCost) gameState.patience += choice.patienceCost;
     updateHUD();
 
-    // Overflow endings fire only when NOT already at an ending node
-    if (!ALL_ENDINGS.has(gameState.currentNode)) {
+    // Overflow endings: skip if already on an ending node, or if the chosen target is itself an ending
+    if (!ALL_ENDINGS.has(gameState.currentNode) && !ALL_ENDINGS.has(choice.target)) {
         if (gameState.patience <= 0)   { loadNode("rage_quit"); return; }
         if (gameState.minutes >= 1110) { loadNode("martyr");    return; }
     }

@@ -69,13 +69,15 @@ const storyData = {
     "meta_escape": {
         speaker: "System", color: "var(--success-green)", textColor: "#000",
         image: "assets/images/5_2_winner.jpg",
-        text: "You hacked the game's JSON array. You hardcoded `gameState.patience` to infinity and permanently deleted Tarun's useless ass from the finite state machine. The beige office walls dissolve into raw, glorious JavaScript code. You transcend the corporate training matrix. \n\n[SECRET ENDING: THE NEO ID]",
+        text: "You hacked the game's JSON array. You hardcoded `gameState.patience` to infinity and permanently deleted Tarun's useless ass from the finite state machine. The beige office walls dissolve into raw, glorious JavaScript code. You transcend the corporate training matrix.",
+        endingTitle: "THE NEO ID", endingTitleType: "secret",
         choices: [ { text: "Re-enter the Matrix (Restart Shift)", action: "restart" } ]
     },
     "rogue_export": {
         speaker: "System", color: "var(--system-alert)", textColor: "#fff",
         image: "assets/images/3_4_rogue.jpg",
-        text: "You gave the SME the mental middle finger, exported the clean version, and hauled ass to the pub. Plot twist: the learners actually loved the un-shittified design! Unfortunately, Dr. Ravi CC'd your skip-level manager in a sweaty 6 AM email titled 'Lack of Stakeholder Alignment.' Enjoy unemployment, hero. \n\n[ENDING: THE MARTYR]",
+        text: "You gave the SME the mental middle finger, exported the clean version, and hauled ass to the pub. Plot twist: the learners actually loved the un-shittified design! Unfortunately, Dr. Ravi CC'd your skip-level manager in a sweaty 6 AM email titled 'Lack of Stakeholder Alignment.' Enjoy unemployment, hero.",
+        endingTitle: "THE MARTYR",
         choices: [ { text: "Restart Shift", action: "restart" } ]
     },
     "loading_bar": {
@@ -88,7 +90,8 @@ const storyData = {
     "crash": {
         speaker: "System", color: "var(--system-alert)", textColor: "#fff",
         image: "assets/images/4_3_crash.jpg",
-        text: "You clicked. You absolute baboon. The screen fades to a horrifying milky white. 'Articulate Storyline has stopped responding.' You frantically search the auto-recovery folder. The last save is from Tuesday. Your weekend is dead. \n\n[ENDING: FATAL ERROR]",
+        text: "You clicked. You absolute baboon. The screen fades to a horrifying milky white. 'Articulate Storyline has stopped responding.' You frantically search the auto-recovery folder. The last save is from Tuesday. Your weekend is dead.",
+        endingTitle: "FATAL ERROR",
         choices: [ { text: "Cry. Then Restart Shift.", action: "restart" } ]
     },
     "upload": {
@@ -104,13 +107,15 @@ const storyData = {
     "martyr_office": {
         speaker: "System", color: "var(--system-alert)", textColor: "#fff",
         image: "assets/images/5_1_martyr.jpg",
-        text: "You caved. You sat there and manually swapped 85 godforsaken slides to Teal. By the time you finished, the LMS went down for scheduled maintenance, taking your sanity with it. You missed your Friday plans. You are now structurally fused to your ergonomic chair. \n\n[ENDING: JUST ANOTHER FRIDAY]",
+        text: "You caved. You sat there and manually swapped 85 godforsaken slides to Teal. By the time you finished, the LMS went down for scheduled maintenance, taking your sanity with it. You missed your Friday plans. You are now structurally fused to your ergonomic chair.",
+        endingTitle: "JUST ANOTHER FRIDAY",
         choices: [ { text: "Restart Shift", action: "restart" } ]
     },
     "ppt_promotion": {
         speaker: "System", color: "var(--tarun-yellow)", textColor: "#000",
         image: "assets/images/6_1_ppt_promotion.jpg",
-        text: "You completely gave up. You just exported the bitch as a static PowerPoint and chucked it into Dr. Ravi's inbox. He replied: 'Wow! This is exactly the gamified synergy I envisioned! Clicking Next is so intuitive!' You are immediately promoted to Director of Strategy. You loathe your own reflection. \n\n[ENDING: THE CORPORATE SELLOUT]",
+        text: "You completely gave up. You just exported the bitch as a static PowerPoint and chucked it into Dr. Ravi's inbox. He replied: 'Wow! This is exactly the gamified synergy I envisioned! Clicking Next is so intuitive!' You are immediately promoted to Director of Strategy. You loathe your own reflection.",
+        endingTitle: "THE CORPORATE SELLOUT",
         choices: [ { text: "Restart Shift", action: "restart" } ]
     },
     "true_winner": {
@@ -122,20 +127,22 @@ const storyData = {
     "victory_screen": {
         speaker: "System", color: "var(--success-green)", textColor: "#000",
         image: "assets/images/6_3_victory.jpg",
-        text: "Tarun nods slowly, trying to look smart. 'Ah yes, the polymorphic hooks. Superb work, Priya.' You successfully weaponized his blatant technical ignorance. You booked an Uber with zero surge pricing. You are an E-Learning God. \n\n[TRUE ENDING: THE SME WHISPERER]",
+        text: "Tarun nods slowly, trying to look smart. 'Ah yes, the polymorphic hooks. Superb work, Priya.' You successfully weaponized his blatant technical ignorance. You booked an Uber with zero surge pricing. You are an E-Learning God.",
+        endingTitle: "THE SME WHISPERER", endingTitleType: "victory",
         choices: [ { text: "Play Again (Restart Shift)", action: "restart" } ]
     },
     "rage_quit": {
         speaker: "System", color: "var(--system-alert)", textColor: "#fff",
         image: "assets/images/6_4_rage_quit.jpg",
-        text: "Your patience bottoms out. Without a single word, you slam the laptop shut with enough force to crack the casing, grab your bag, and walk the f*** out. Tarun fires off four frantic Slack messages. You leave them on read. \n\n[ENDING: GLORIOUS RAGE QUIT]",
+        text: "Your patience bottoms out. Without a single word, you slam the laptop shut with enough force to crack the casing, grab your bag, and walk the f*** out. Tarun fires off four frantic Slack messages. You leave them on read.",
+        endingTitle: "GLORIOUS RAGE QUIT",
         choices: [ { text: "Restart Shift", action: "restart" } ]
     },
     "martyr": {
         speaker: "System", color: "var(--system-alert)", textColor: "#fff",
         image: "assets/images/6_5_martyr.jpg",
-        text: "It's 6:30 PM. The LMS is still coughing up timeout errors. You're still here. You're *always* still here. The cleaning staff is mopping around your chair in sympathetic silence. She doesn't even make eye contact anymore. \n\n[ENDING: OVERTIME MARTYRDOM]",
-        forceTime: 1110,
+        text: "It's 6:30 PM. The LMS is still coughing up timeout errors. You're still here. You're *always* still here. The cleaning staff is mopping around your chair in sympathetic silence. She doesn't even make eye contact anymore.",
+        endingTitle: "OVERTIME MARTYRDOM", forceTime: 1110,
         choices: [ { text: "Restart Shift", action: "restart" } ]
     }
 };

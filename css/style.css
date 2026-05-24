@@ -534,6 +534,47 @@ body {
 /* ── Replay hint icon on bad-path choices ── */
 .choice-warn { color: var(--tarun-yellow); font-size: 0.9em; opacity: 0.75; }
 
+/* ── Comic-panel ending title card ── */
+#ending-title-card {
+    position: absolute; inset: 0; z-index: 75; pointer-events: none;
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(0,0,0,0);
+}
+#ending-title-card.etc-active {
+    animation: etcBg 2.7s ease forwards;
+}
+@keyframes etcBg {
+    0%   { background: rgba(0,0,0,0); }
+    10%  { background: rgba(0,0,0,0.9); }
+    72%  { background: rgba(0,0,0,0.9); }
+    100% { background: rgba(0,0,0,0); transform: translateX(55px); opacity: 0; }
+}
+.etc-inner {
+    text-align: center; padding: 22px 32px;
+    border-top: 4px solid; border-bottom: 4px solid;
+    animation: etcStamp 2.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+@keyframes etcStamp {
+    0%   { transform: scale(0.25) rotate(-10deg); opacity: 0; }
+    12%  { transform: scale(1.08) rotate(2.5deg);  opacity: 1; }
+    20%  { transform: scale(0.96) rotate(-1deg);   opacity: 1; }
+    26%  { transform: scale(1)    rotate(0deg);    opacity: 1; }
+    70%  { transform: scale(1)    rotate(0deg);    opacity: 1; }
+    100% { transform: scale(1.25) rotate(4deg);    opacity: 0; }
+}
+.etc-victory { color: var(--success-green); border-color: var(--success-green); }
+.etc-bad     { color: var(--system-alert);  border-color: var(--system-alert);  }
+.etc-secret  { color: var(--priya-cyan);    border-color: var(--priya-cyan);    }
+.etc-cat {
+    font-size: 0.68rem; letter-spacing: 5px; font-weight: 700;
+    text-transform: uppercase; opacity: 0.75; margin-bottom: 10px;
+}
+.etc-name {
+    font-size: clamp(1.9rem, 9vw, 3rem); font-weight: 900;
+    text-transform: uppercase; line-height: 1.08;
+    -webkit-text-stroke: 2px #000; text-shadow: 5px 5px 0 #000;
+}
+
 /* ── Responsive: short viewport (PC / laptop) ── */
 @media (max-height: 780px) and (min-width: 500px) {
     #terminal { padding: 22px 16px 12px; }

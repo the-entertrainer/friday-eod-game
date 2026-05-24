@@ -43,11 +43,13 @@
             <div class="ts-ui">
                 <p class="ts-subtitle">Vol 1 : Instructional Disaster</p>
                 <button class="ts-btn" onclick="startGame()">START SHIFT</button>
-                <div class="ts-lower-btns">
-                    <button class="ts-credits-btn" onclick="openCredits()">CREDITS</button>
-                    <button class="ts-settings-btn" onclick="openSettings()">⚙</button>
-                </div>
             </div>
+
+            <!-- C1: Settings button (fixed bottom-right) -->
+            <button class="ts-settings-btn" onclick="openSettings()">⚙</button>
+
+            <!-- C3: Credits button (fixed bottom-center) -->
+            <button class="ts-credits-btn" onclick="openCredits()">CREDITS</button>
 
             <!-- C1: Settings panel -->
             <div id="settings-panel">

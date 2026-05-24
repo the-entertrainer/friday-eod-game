@@ -58,19 +58,21 @@
                         <span>SETTINGS</span>
                         <button class="sp-close" onclick="closeSettings()">✕</button>
                     </div>
-                    <div class="sp-row">
-                        <span>Audio</span>
-                        <label class="sp-switch" onclick="event.stopPropagation()">
-                            <input type="checkbox" id="sp-audio-toggle" checked onchange="toggleMuteFromSettings()">
-                            <span class="sp-thumb"></span>
-                        </label>
-                    </div>
-                    <div class="sp-row">
-                        <span>Text Speed</span>
-                        <div class="sp-speed-wrap">
-                            <span id="sp-speed-label">1×</span>
-                            <input type="range" id="sp-speed-slider" min="0" max="2" step="1" value="0"
-                                   oninput="setSpeedFromSlider(this.value)" onclick="event.stopPropagation()">
+                    <div class="sp-body">
+                        <div class="sp-row">
+                            <span>Audio</span>
+                            <label class="sp-switch" onclick="event.stopPropagation()">
+                                <input type="checkbox" id="sp-audio-toggle" checked onchange="toggleMuteFromSettings()">
+                                <span class="sp-thumb"></span>
+                            </label>
+                        </div>
+                        <div class="sp-row">
+                            <span>Text Speed</span>
+                            <div class="sp-speed-wrap">
+                                <span id="sp-speed-label">1×</span>
+                                <input type="range" id="sp-speed-slider" min="0" max="2" step="1" value="0"
+                                       oninput="setSpeedFromSlider(this.value)" onclick="event.stopPropagation()">
+                            </div>
                         </div>
                     </div>
                 </div>

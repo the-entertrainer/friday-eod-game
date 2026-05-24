@@ -63,12 +63,22 @@ let _peekActive = false;
         dragging = false;
         term.style.transition = '';
         term.style.transform = '';
-        if (moved) { _peekActive = true; setTimeout(() => _peekActive = false, 350); }
+        if (moved) {
+            _peekActive = true;
+            setTimeout(() => _peekActive = false, 350);
+            navigator.vibrate && navigator.vibrate(18);
+        }
     });
 })();
 
 // ─── Audio ────────────────────────────────────────────────────────────────────
 let audioCtx = null;
+let _muted = false;
+
+// Typewriter speed: normal / slow / fast (ms per char)
+const _TW_SPEEDS     = [26, 45, 12];
+const _TW_LABELS     = ['▶', '🐢', '⚡'];
+let   _twSpeedIdx    = 0;
 
 function initAudio() {
     if (audioCtx) return;
@@ -141,8 +151,8 @@ function showContextualEffect(text) {
     const el = document.createElement('div');
     el.className = `context-pop ${cls}`;
     el.textContent = label;
-    el.style.left = (12 + Math.random() * 58) + '%';
-    el.style.top  = (8  + Math.random() * 32) + '%';
+    el.style.left = (12 + Math.random() * 56) + '%';
+    el.style.top  = (8  + Math.random() * 27) + '%'; // cap at ~35% to stay above terminal
     uiViewport.appendChild(el);
     setTimeout(() => el.parentNode && el.parentNode.removeChild(el), 1100);
 }
@@ -159,122 +169,51 @@ const SCENE_MOODS = {
     rage_quit: 'action', martyr: 'defeated'
 };
 
-let bgm = { nodes: [], masterGain: null, mood: null, timerId: null, startId: 0 };
+// ─── File-based Scene BGM ─────────────────────────────────────────────────────
+const _MOOD_TO_FILE = {
+    office:   'assets/audio/Dialogues Theme.mp3',
+    defeated: 'assets/audio/Dialogues Theme.mp3',
+    tense:    'assets/audio/Anxious.mp3',
+    horror:   'assets/audio/Anxious.mp3',
+    suspense: 'assets/audio/Anxious.mp3',
+    action:   'assets/audio/Anxious.mp3',
+    victory:  'assets/audio/Win.mp3',
+    matrix:   'assets/audio/Win.mp3',
+};
+let _sceneBGMAudio   = null;
+let _sceneBGMCurrent = null;
 
-function stopBGM() {
-    clearTimeout(bgm.timerId);
-    const savedNodes = [...bgm.nodes], savedGain = bgm.masterGain;
-    bgm.nodes = []; bgm.masterGain = null; bgm.mood = null;
-    if (savedGain && audioCtx) {
-        try { savedGain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.4); } catch(e) {}
-    }
-    setTimeout(() => {
-        savedNodes.forEach(n => { try { n.stop(); } catch(e) {} });
-        if (savedGain) { try { savedGain.disconnect(); } catch(e) {} }
-    }, 450);
+function playSceneBGM(mood) {
+    const file = _MOOD_TO_FILE[mood];
+    if (!file) return;
+    if (_sceneBGMCurrent === file && _sceneBGMAudio && !_sceneBGMAudio.paused) return;
+    stopSceneBGM();
+    _sceneBGMCurrent = file;
+    _sceneBGMAudio = new Audio(file);
+    _sceneBGMAudio.loop   = true;
+    _sceneBGMAudio.volume = 0.35;
+    _sceneBGMAudio.muted  = _muted;
+    _sceneBGMAudio.play().catch(() => {});
 }
 
-function startBGM(mood) {
-    if (!audioCtx || bgm.mood === mood) return;
-    stopBGM();
-    bgm.mood = mood;
-    const myId = ++bgm.startId;
-    setTimeout(() => {
-        if (bgm.mood !== mood || bgm.startId !== myId || !audioCtx) return;
-        const master = audioCtx.createGain();
-        master.gain.setValueAtTime(0, audioCtx.currentTime);
-        master.gain.linearRampToValueAtTime(0.05, audioCtx.currentTime + 1.4);
-        master.connect(audioCtx.destination);
-        bgm.masterGain = master;
-        switch (mood) {
-            case 'office':   buildOfficeBGM(master);   break;
-            case 'tense':    buildTenseBGM(master);    break;
-            case 'suspense': buildSuspenseBGM(master); break;
-            case 'horror':   buildHorrorBGM(master);   break;
-            case 'matrix':   buildMatrixBGM(master);   break;
-            case 'victory':  buildVictoryBGM(master);  break;
-            case 'defeated': buildDefeatedBGM(master); break;
-            case 'action':   buildActionBGM(master);   break;
+function stopSceneBGM() {
+    try { if (_sceneBGMAudio) { _sceneBGMAudio.pause(); _sceneBGMAudio.currentTime = 0; } } catch(e) {}
+    _sceneBGMAudio   = null;
+    _sceneBGMCurrent = null;
+}
+
+// ─── Transition sound (plays once on scene switch) ────────────────────────────
+let _transitionAudio = null;
+function playTransitionSound() {
+    try {
+        if (!_transitionAudio) {
+            _transitionAudio = new Audio('assets/audio/Transition.mp3');
+            _transitionAudio.volume = 0.6;
         }
-    }, 320);
-}
-
-function bgmOsc(type, freq) {
-    const o = audioCtx.createOscillator();
-    o.type = type; o.frequency.value = freq;
-    o.start(); bgm.nodes.push(o); return o;
-}
-function bgmGain(val) {
-    const g = audioCtx.createGain(); g.gain.value = val;
-    bgm.nodes.push(g); return g;
-}
-function bgmFilter(type, freq, q) {
-    const f = audioCtx.createBiquadFilter();
-    f.type = type; f.frequency.value = freq; if (q) f.Q.value = q;
-    bgm.nodes.push(f); return f;
-}
-
-function buildOfficeBGM(out) {
-    const filt = bgmFilter('lowpass', 340); filt.connect(out);
-    [[60, 1], [120, 0.22], [180, 0.07]].forEach(([f, v]) => {
-        const g = bgmGain(v); bgmOsc('sine', f).connect(g); g.connect(filt);
-    });
-    const lfoG = bgmGain(0.009); bgmOsc('sine', 0.13).connect(lfoG); lfoG.connect(out.gain);
-}
-function buildTenseBGM(out) {
-    const filt = bgmFilter('bandpass', 88, 2.5); filt.connect(out);
-    bgmOsc('sawtooth', 55).connect(filt);
-    bgmOsc('sawtooth', 82.4).connect(filt);
-    const tG = bgmGain(0.22); bgmOsc('sine', 4.4).connect(tG); tG.connect(out.gain);
-}
-function buildSuspenseBGM(out) {
-    const ctx = audioCtx, osc = bgmOsc('sine', 42); osc.connect(out);
-    function rise() {
-        if (!bgm.nodes.includes(osc)) return;
-        try { osc.frequency.setValueAtTime(42, ctx.currentTime); osc.frequency.linearRampToValueAtTime(62, ctx.currentTime + 9); bgm.timerId = setTimeout(rise, 9000); } catch(e) {}
-    }
-    rise();
-    const gateG = bgmGain(0.38); bgmOsc('square', 0.7).connect(gateG); gateG.connect(out.gain);
-}
-function buildHorrorBGM(out) {
-    const filt = bgmFilter('lowpass', 620); filt.connect(out);
-    bgmOsc('sawtooth', 110).connect(filt); bgmOsc('sawtooth', 116.54).connect(filt);
-    const wob = bgmGain(0.028); bgmOsc('sine', 0.38).connect(wob); wob.connect(out.gain);
-}
-function buildMatrixBGM(out) {
-    const ctx = audioCtx, pat = [110, 165, 220, 165, 110, 146.8, 110, 123.5]; let idx = 0;
-    function fire() {
-        if (!bgm.masterGain) return;
-        const o = ctx.createOscillator(), g = ctx.createGain();
-        o.type = 'square'; o.frequency.value = pat[idx++ % pat.length];
-        g.gain.setValueAtTime(0.65, ctx.currentTime); g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.075);
-        o.connect(g); g.connect(out); o.start(); o.stop(ctx.currentTime + 0.075);
-        bgm.timerId = setTimeout(fire, 158);
-    }
-    fire();
-}
-function buildVictoryBGM(out) {
-    const ctx = audioCtx, pat = [523.25, 659.25, 783.99, 1046.5, 783.99, 659.25, 523.25, 659.25]; let idx = 0;
-    function fire() {
-        if (!bgm.masterGain) return;
-        const o = ctx.createOscillator(), g = ctx.createGain();
-        o.type = 'sine'; o.frequency.value = pat[idx++ % pat.length];
-        g.gain.setValueAtTime(0.55, ctx.currentTime); g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.24);
-        o.connect(g); g.connect(out); o.start(); o.stop(ctx.currentTime + 0.24);
-        bgm.timerId = setTimeout(fire, 230);
-    }
-    fire();
-}
-function buildDefeatedBGM(out) {
-    const filt = bgmFilter('lowpass', 240); filt.connect(out);
-    bgmOsc('sine', 65.41).connect(filt); bgmOsc('sine', 77.78).connect(filt);
-    const lG = bgmGain(0.014); bgmOsc('sine', 0.06).connect(lG); lG.connect(out.gain);
-}
-function buildActionBGM(out) {
-    const filt = bgmFilter('lowpass', 900); filt.connect(out);
-    bgmOsc('sawtooth', 110).connect(filt);
-    const harm = bgmGain(0.28); bgmOsc('square', 220).connect(harm); harm.connect(filt);
-    const gateG = bgmGain(0.32); bgmOsc('square', 4.2).connect(gateG); gateG.connect(out.gain);
+        _transitionAudio.muted       = _muted;
+        _transitionAudio.currentTime = 0;
+        _transitionAudio.play().catch(() => {});
+    } catch(e) {}
 }
 
 // ─── Ending Jingles ───────────────────────────────────────────────────────────
@@ -305,15 +244,16 @@ function playEndingJingle(type) {
     setTimeout(() => { try { master.disconnect(); } catch(e) {} }, totalMs);
 }
 
-// ─── Title Screen BGM — points to assets/audio/theme.mp3 ────────────────────
+// ─── Title Screen BGM ────────────────────────────────────────────────────────
 let _themeAudio = null;
 function startTitleBGM() {
     try {
         if (!_themeAudio) {
-            _themeAudio = new Audio('assets/audio/theme.mp3');
-            _themeAudio.loop = true;
+            _themeAudio = new Audio('assets/audio/Theme.wav');
+            _themeAudio.loop   = true;
             _themeAudio.volume = 0.45;
         }
+        _themeAudio.muted       = _muted;
         _themeAudio.currentTime = 0;
         _themeAudio.play().catch(() => {});
     } catch(e) {}
@@ -322,21 +262,39 @@ function stopTitleBGM() {
     try { if (_themeAudio) { _themeAudio.pause(); _themeAudio.currentTime = 0; } } catch(e) {}
 }
 
-// ─── Typing sound — points to assets/audio/typing.mp3 ───────────────────────
+// ─── Typing sound ────────────────────────────────────────────────────────────
 let _typingAudio = null;
 function startTypingSound() {
     try {
         if (!_typingAudio) {
             _typingAudio = new Audio('assets/audio/typing.mp3');
-            _typingAudio.loop = true;
+            _typingAudio.loop   = true;
             _typingAudio.volume = 0.28;
         }
+        _typingAudio.muted       = _muted;
         _typingAudio.currentTime = 0;
         _typingAudio.play().catch(() => {});
     } catch(e) {}
 }
 function stopTypingSound() {
     try { if (_typingAudio && !_typingAudio.paused) { _typingAudio.pause(); _typingAudio.currentTime = 0; } } catch(e) {}
+}
+
+// ─── Mute toggle ─────────────────────────────────────────────────────────────
+function toggleMute() {
+    _muted = !_muted;
+    const btn = document.getElementById('mute-btn');
+    if (btn) btn.textContent = _muted ? '🔇' : '🔊';
+    [_themeAudio, _sceneBGMAudio, _typingAudio, _transitionAudio].forEach(a => {
+        if (a) a.muted = _muted;
+    });
+}
+
+// ─── Typewriter speed cycle ───────────────────────────────────────────────────
+function cycleTypingSpeed() {
+    _twSpeedIdx = (_twSpeedIdx + 1) % _TW_SPEEDS.length;
+    const btn = document.getElementById('speed-btn');
+    if (btn) btn.textContent = _TW_LABELS[_twSpeedIdx];
 }
 
 // ─── Endings ──────────────────────────────────────────────────────────────────
@@ -383,7 +341,7 @@ function resetState() {
     uiEndingCard.style.display = 'none';
     uiEndingCard.innerHTML     = '';
     uiGameCont.classList.remove('ending-victory', 'ending-bad');
-    stopBGM();
+    stopSceneBGM();
     resetSceneZoom();
     updateHUD();
 }
@@ -432,6 +390,7 @@ function transitionScene(newUrl, skipAnim) {
         uiSceneImage.style.backgroundImage = `url('${newUrl}')`;
         return;
     }
+    playTransitionSound();
     sceneTransitioning = true;
     uiSceneOut.style.backgroundImage = uiSceneImage.style.backgroundImage;
     uiSceneOut.style.transform = '';
@@ -448,6 +407,16 @@ function transitionScene(newUrl, skipAnim) {
         uiSceneOut.style.backgroundImage = '';
         sceneTransitioning = false;
     }, 570);
+}
+
+function preloadThenTransition(url, skipAnim) {
+    uiSceneImage.classList.add('img-loading');
+    const tmp = new Image();
+    tmp.onload = tmp.onerror = () => {
+        uiSceneImage.classList.remove('img-loading');
+        transitionScene(url, skipAnim);
+    };
+    tmp.src = url;
 }
 
 // ─── Scene loading ─────────────────────────────────────────────────────────────
@@ -472,17 +441,20 @@ function loadNode(nodeId) {
         uiGameCont.classList.add('ending-victory');
         spawnEndingEffect('victory');
         playEndingJingle('victory');
+        localStorage.setItem('hasPlayed', '1');
     } else if (BAD_ENDINGS.has(nodeId)) {
         uiGameCont.classList.add('ending-bad');
         spawnEndingEffect('bad');
         playEndingJingle('bad');
+        localStorage.setItem('hasPlayed', '1');
     }
 
-    // Comic slide transition
-    transitionScene(node.image);
+    // Scene image (preload then animate)
+    preloadThenTransition(node.image);
 
     // BGM
-    startBGM(SCENE_MOODS[nodeId] || 'office');
+    stopTitleBGM();
+    playSceneBGM(SCENE_MOODS[nodeId] || 'office');
 
     // Speaker name
     uiName.innerText = node.speaker;
@@ -534,7 +506,7 @@ function typewriterEffect(text, choices) {
             stopTypingSound();
             renderChoices(choices);
         }
-    }, 26);
+    }, _TW_SPEEDS[_twSpeedIdx]);
 }
 
 function advanceDialogue() {
@@ -566,6 +538,8 @@ function renderChoices(choices) {
     if (ALL_ENDINGS.has(gameState.currentNode)) showEndingCard();
     setTimeout(() => playSound('pop'), 80);
 
+    const hasPlayed = !!localStorage.getItem('hasPlayed');
+
     choices.forEach((choice, index) => {
         const btn = document.createElement('button');
         btn.className = 'choice-btn';
@@ -574,6 +548,13 @@ function renderChoices(choices) {
         const textSpan = document.createElement('span');
         textSpan.className = 'choice-text';
         textSpan.innerText = choice.text;
+        // Subtle warning icon on bad-outcome paths (2nd+ playthrough only)
+        if (hasPlayed && BAD_ENDINGS.has(choice.target)) {
+            const warn = document.createElement('span');
+            warn.className = 'choice-warn';
+            warn.textContent = ' ⚠';
+            textSpan.appendChild(warn);
+        }
         btn.appendChild(textSpan);
 
         const costs = [];
@@ -596,6 +577,7 @@ function renderChoices(choices) {
         btn.addEventListener('pointerdown', () => btn.classList.add('clicked'));
         btn.addEventListener('pointerup', (e) => {
             e.stopPropagation();
+            navigator.vibrate && navigator.vibrate([8, 20, 8]);
             const hasDamage = (choice.qualityCost < 0 || choice.patienceCost < 0);
             const hasGain   = (choice.qualityCost > 0 || choice.patienceCost > 0);
             if (hasDamage)    playSound('damage');
@@ -858,3 +840,20 @@ function initTitleScreen() {
 }
 
 window.addEventListener('load', initTitleScreen);
+
+// ─── Keyboard shortcuts (desktop) ────────────────────────────────────────────
+document.addEventListener('keydown', e => {
+    const titleVisible = document.getElementById('title-screen')?.style.display !== 'none';
+    if (titleVisible) {
+        if (e.key === 'Escape') hideCharBubbles();
+        return;
+    }
+    if (e.key === ' ' || e.key === 'Enter') {
+        e.preventDefault();
+        advanceDialogue();
+    } else if (['1','2','3','4'].includes(e.key)) {
+        const btns = uiChoices.querySelectorAll('.choice-btn');
+        const idx = parseInt(e.key) - 1;
+        if (btns[idx]) btns[idx].dispatchEvent(new PointerEvent('pointerup', { bubbles: true }));
+    }
+});

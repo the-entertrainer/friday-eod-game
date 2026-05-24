@@ -21,12 +21,14 @@
                 <img src="assets/images/Scrolling_BG_City.png" alt="">
             </div>
 
-            <!-- L3: Characters (tappable) -->
+            <!-- L3: Characters -->
             <div class="ts-characters">
                 <img src="assets/images/Title_Characters.png" alt="Characters">
-                <div class="char-zone" id="zone-priya" onclick="showCharBubble('priya', event)"></div>
-                <div class="char-zone" id="zone-tarun" onclick="showCharBubble('tarun', event)"></div>
             </div>
+
+            <!-- Tap zones — positioned relative to #title-screen using pixel-accurate bounding boxes -->
+            <div id="zone-priya" onclick="showCharBubble('priya', event)"></div>
+            <div id="zone-tarun" onclick="showCharBubble('tarun', event)"></div>
 
             <!-- Chat bubbles — text injected by showCharBubble() in game.js -->
             <div class="char-bubble" id="bubble-priya" onclick="hideCharBubbles()"></div>
@@ -48,6 +50,10 @@
         <div id="hud">
             <div class="hud-left">
                 <div id="clock-display">4:00 PM</div>
+                <div class="hud-controls">
+                    <button id="mute-btn"  class="hud-icon-btn" onclick="toggleMute()"      title="Toggle sound">🔊</button>
+                    <button id="speed-btn" class="hud-icon-btn" onclick="cycleTypingSpeed()" title="Typing speed">▶</button>
+                </div>
             </div>
             <div class="hud-right">
                 <div class="stat-wrapper" id="wrap-quality">

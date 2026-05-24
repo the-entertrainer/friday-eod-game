@@ -39,7 +39,8 @@ body {
     display: flex; justify-content: space-between;
     background: linear-gradient(to bottom, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0) 100%);
     z-index: 10; color: white; font-size: 0.9rem; font-weight: 900;
-    text-transform: uppercase; letter-spacing: 1px; pointer-events: none;
+    text-transform: uppercase; letter-spacing: 1px;
+    pointer-events: none; /* children with pointer-events:all opt in */
 }
 
 .hud-left, .hud-right { display: flex; flex-direction: column; gap: 6px; }
@@ -80,7 +81,7 @@ body {
 /* Scene image layers */
 .scene-layer {
     position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-    background-size: cover; background-position: center top; background-repeat: no-repeat;
+    background-size: cover; background-position: center center; background-repeat: no-repeat;
 }
 #scene-image {
     transform-origin: center center;
@@ -239,15 +240,14 @@ body {
     pointer-events: none;
 }
 
-/* Character tap zones — pixel-accurate from 1024×693 image analysis */
-.char-zone {
-    position: absolute; bottom: 0; cursor: pointer; pointer-events: all;
+/* Character tap zones — positioned relative to #title-screen using user-supplied bounding boxes */
+/* Format [ymin, xmin, ymax, xmax] normalized 0–1000 → Priya [687,480,958,730] Tarun [600,730,966,980] */
+#zone-priya, #zone-tarun {
+    position: absolute; cursor: pointer; pointer-events: all; z-index: 5;
     /* outline: 2px solid rgba(255,0,0,0.5); */ /* debug */
 }
-/* Priya (raccoon): left 0–53%, head top at 73.3% from bottom */
-#zone-priya { left: 0; width: 53%; height: 73%; z-index: 2; }
-/* Tarun (peacock): left 36–99%, eyes at 86.3% from bottom */
-#zone-tarun { left: 36%; width: 63%; height: 86%; z-index: 1; }
+#zone-priya { top: 68.7%; left: 48%;  bottom: 4.2%; right: 27%; }
+#zone-tarun { top: 60%;   left: 73%;  bottom: 3.4%; right: 2%;  }
 
 /* Chat bubbles — bottom position set by positionTitleElements() in JS */
 .char-bubble {
@@ -483,6 +483,36 @@ body {
     75%  { opacity: 1; }
     100% { opacity: 0; }
 }
+
+/* ── HUD icon buttons (mute / speed) ── */
+.hud-controls {
+    display: flex; gap: 4px; margin-top: 4px; pointer-events: all;
+}
+.hud-icon-btn {
+    background: rgba(0,0,0,0.55); border: 1.5px solid rgba(255,255,255,0.18);
+    border-radius: 8px; color: #fff; font-size: 0.85rem;
+    padding: 3px 7px; cursor: pointer; line-height: 1;
+    transition: background 0.15s, transform 0.1s;
+    font-family: 'Outfit', sans-serif; font-weight: 700;
+}
+.hud-icon-btn:active { transform: scale(0.88); background: rgba(255,255,255,0.15); }
+
+/* ── Scene image shimmer while loading ── */
+@keyframes shimmer {
+    0%   { background-position: -200% 0; }
+    100% { background-position:  200% 0; }
+}
+#scene-image.img-loading::after {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(90deg,
+        transparent 0%, rgba(255,255,255,0.06) 50%, transparent 100%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s ease-in-out infinite;
+    pointer-events: none; z-index: 1;
+}
+
+/* ── Replay hint icon on bad-path choices ── */
+.choice-warn { color: var(--tarun-yellow); font-size: 0.9em; opacity: 0.75; }
 
 /* ── Responsive: short viewport (PC / laptop) ── */
 @media (max-height: 780px) and (min-width: 500px) {

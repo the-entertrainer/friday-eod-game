@@ -73,7 +73,7 @@ body {
 }
 
 #viewport {
-    flex: 6; position: relative; display: flex; justify-content: center; align-items: center;
+    flex: 1; position: relative; display: flex; justify-content: center; align-items: center;
     background-color: var(--bg-game);
 }
 
@@ -144,11 +144,21 @@ body {
 #trap-overlay { position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: none; cursor: pointer; z-index: 20; }
 
 #terminal {
-    flex: 4; background: var(--ui-card); border-top: var(--border-thick);
+    position: absolute; bottom: 0; left: 0; right: 0;
+    min-height: 38%; background: var(--ui-card);
+    border-top: var(--border-thick); border-radius: 20px 20px 0 0;
     display: flex; flex-direction: column; padding: 30px 20px 20px 20px;
-    box-sizing: border-box; position: relative; z-index: 30; cursor: pointer;
-    overflow: hidden;
+    box-sizing: border-box; z-index: 30; cursor: pointer;
+    transition: min-height 0.38s cubic-bezier(0.22, 1, 0.36, 1),
+                transform  0.3s  cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: transform;
 }
+#terminal::before {
+    content: ''; display: block; width: 36px; height: 4px;
+    background: rgba(255,255,255,0.25); border-radius: 2px;
+    margin: -14px auto 12px; flex-shrink: 0;
+}
+#terminal.with-choices { min-height: 54%; }
 
 #speaker-name {
     position: absolute; top: -20px; left: 20px; background: var(--priya-cyan); color: #000;

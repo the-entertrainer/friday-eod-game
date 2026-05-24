@@ -79,11 +79,11 @@ const storyData = {
         choices: [ { text: "Restart Shift", action: "restart" } ]
     },
     "loading_bar": {
-        speaker: "System", color: "var(--system-alert)", textColor: "#fff", 
+        speaker: "System", color: "var(--system-alert)", textColor: "#fff",
         image: "assets/images/4_1_loading.jpg",
         text: "It is now 5:15 PM. The SCORM package compiler is executing. The bar hits 99%. Your laptop fan sounds like a Boeing 747. A bead of sweat drips down your face. DO NOT CLICK ANYWHERE ON THE SCREEN.",
-        isTrap: true, 
-        choices: [] 
+        isTrap: true, forceTime: 1035,
+        choices: []
     },
     "crash": {
         speaker: "System", color: "var(--system-alert)", textColor: "#fff", 
@@ -135,6 +135,7 @@ const storyData = {
         speaker: "System", color: "var(--system-alert)", textColor: "#fff",
         image: "assets/images/6_5_martyr.jpg",
         text: "It's 6:30 PM. The LMS is still timing out. You're still here. You're always still here. The cleaner is mopping around your chair. She doesn't even ask anymore.\n\n[ENDING: OVERTIME MARTYRDOM]",
+        forceTime: 1110,
         choices: [ { text: "Restart Shift", action: "restart" } ]
     }
 };

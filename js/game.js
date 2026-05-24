@@ -382,6 +382,7 @@ function startGame() {
 
 function resetState() {
     clearInterval(gameState.typeInterval);
+    clearTrapTimers();
     stopTypingSound();
     gameState.isTyping     = false;
     gameState.minutes      = 960;
@@ -474,12 +475,17 @@ function loadNode(nodeId) {
     const node = storyData[nodeId];
     if (!node) { console.error('Missing story node:', nodeId); return; }
     gameState.currentNode = nodeId;
+    if (node.forceTime !== undefined) { gameState.minutes = node.forceTime; updateClockHands(); }
 
     document.getElementById('terminal').classList.remove('with-choices');
     uiTrap.style.display = 'none';
-    clearTimeout(gameState.trapTimeout);
+    clearTrapTimers();
     uiLoadingBar.classList.remove('active');
+    uiLoadingFill.style.width = '0%';
+    uiLoadingFill.style.transition = 'none';
     uiLoadingFill.style.animation = 'none';
+    const uiLoadingLabel = document.getElementById('loading-label');
+    if (uiLoadingLabel) { uiLoadingLabel.textContent = 'PUBLISHING... 99%'; uiLoadingLabel.style.color = ''; uiLoadingLabel.style.animationDuration = ''; }
     uiTapHint.classList.remove('visible');
     uiEndingCard.style.display = 'none';
     uiEndingCard.innerHTML = '';
@@ -514,15 +520,7 @@ function loadNode(nodeId) {
     setTimeout(() => { uiName.style.transform = 'rotate(-3deg) scale(1)'; }, 200);
 
     if (node.isTrap) {
-        uiLoadingBar.classList.add('active');
-        void uiLoadingFill.offsetWidth;
-        uiLoadingFill.style.animation = 'loadProgress 4s ease-out forwards';
-        uiTrap.style.display = 'block';
-        gameState.trapTimeout = setTimeout(() => {
-            uiTrap.style.display = 'none';
-            uiLoadingBar.classList.remove('active');
-            loadNode("upload");
-        }, 4000);
+        runTrapSequence();
     }
 
     typewriterEffect(node.text, node.choices);
@@ -573,10 +571,91 @@ function advanceDialogue() {
 }
 
 function triggerTrap() {
-    clearTimeout(gameState.trapTimeout);
+    clearTrapTimers();
     uiTrap.style.display = 'none';
     uiLoadingBar.classList.remove('active');
     loadNode("crash");
+}
+
+// ─── Loading bar trap sequence (15-second tension build) ──────────────────────
+let _trapController = null;
+
+function clearTrapTimers() {
+    if (_trapController) {
+        _trapController.timers.forEach(id => clearTimeout(id));
+        if (_trapController.interval) clearInterval(_trapController.interval);
+        _trapController = null;
+    }
+    clearTimeout(gameState.trapTimeout);
+}
+
+function runTrapSequence() {
+    clearTrapTimers();
+    _trapController = { timers: [], interval: null };
+    uiLoadingBar.classList.add('active');
+    uiTrap.style.display = 'block';
+
+    const label = document.getElementById('loading-label');
+
+    // Phase 1: crawl 0 → 92% over 5.2s
+    uiLoadingFill.style.transition = 'none';
+    uiLoadingFill.style.width = '0%';
+    void uiLoadingFill.offsetWidth;
+    uiLoadingFill.style.transition = 'width 5.2s cubic-bezier(0.08, 0.5, 0.25, 0.98)';
+    uiLoadingFill.style.width = '92%';
+    label.textContent = 'PUBLISHING... 0%';
+
+    let p1 = 0;
+    const lTimer1 = setInterval(() => {
+        p1 = Math.min(91, p1 + Math.floor(Math.random() * 7 + 2));
+        label.textContent = `PUBLISHING... ${p1}%`;
+    }, 550);
+    _trapController.interval = lTimer1;
+
+    // Phase 2: NOT RESPONDING — crash scare at 5.3s
+    _trapController.timers.push(setTimeout(() => {
+        clearInterval(lTimer1);
+        _trapController.interval = null;
+        uiLoadingFill.style.transition = 'none';
+        label.textContent = 'NOT RESPONDING';
+        label.style.color = 'var(--system-alert)';
+        label.style.animationDuration = '0.32s';
+        const glitch = document.createElement('div');
+        glitch.className = 'glitch-flash';
+        uiGameCont.appendChild(glitch);
+        setTimeout(() => glitch.parentNode && glitch.parentNode.removeChild(glitch), 700);
+        navigator.vibrate && navigator.vibrate([60, 120, 60]);
+    }, 5300));
+
+    // Phase 3: recovering at 8.9s
+    _trapController.timers.push(setTimeout(() => {
+        label.textContent = 'RECOVERING...';
+        label.style.color = 'var(--tarun-yellow)';
+        label.style.animationDuration = '0.7s';
+    }, 8900));
+
+    // Phase 4: resume final crawl 92% → 99% at 10.2s
+    _trapController.timers.push(setTimeout(() => {
+        label.style.color = '';
+        label.style.animationDuration = '';
+        uiLoadingFill.style.transition = 'width 4.5s cubic-bezier(0.2, 0.8, 0.35, 1.0)';
+        uiLoadingFill.style.width = '99%';
+        let p2 = 92;
+        const lTimer2 = setInterval(() => {
+            p2 = Math.min(99, p2 + 1);
+            label.textContent = `PUBLISHING... ${p2}%`;
+        }, 500);
+        _trapController.interval = lTimer2;
+
+        const doneTimer = setTimeout(() => {
+            clearInterval(lTimer2);
+            _trapController.interval = null;
+            uiTrap.style.display = 'none';
+            uiLoadingBar.classList.remove('active');
+            loadNode("upload");
+        }, 5000);
+        _trapController.timers.push(doneTimer);
+    }, 10200));
 }
 
 // ─── Choices ──────────────────────────────────────────────────────────────────

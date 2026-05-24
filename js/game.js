@@ -3,6 +3,7 @@ let gameState = {
     quality: 100,
     patience: 50,
     currentNode: "start",
+    resolvedText: '',
     previousNode: null,
     isTyping: false,
     typeInterval: null,
@@ -25,6 +26,74 @@ const uiEndingCard  = document.getElementById('ending-card');
 const uiLoadingBar  = document.getElementById('loading-bar-container');
 const uiLoadingFill = document.getElementById('loading-bar-fill');
 const uiGameCont    = document.getElementById('game-container');
+
+// ─── Butterfly Effect: Dialogue Variation Engine ──────────────────────────────
+const gameHistory = {
+    playCount:       parseInt(localStorage.getItem('playCount') || '0'),
+    seenEndings:     new Set(JSON.parse(localStorage.getItem('seenEndings') || '[]')),
+    visitedThisRun:  new Set(),
+    variantsSeen:    new Set(JSON.parse(localStorage.getItem('variantsSeen') || '[]'))
+};
+
+function _numCmp(v, expr) {
+    const m = String(expr).trim().match(/^([<>]=?|==)\s*(\d+)$/);
+    if (!m) return false;
+    const n = parseInt(m[2]);
+    switch (m[1]) {
+        case '>=': return v >= n; case '<=': return v <= n;
+        case '>':  return v >  n; case '<':  return v <  n;
+        case '==': return v === n;
+    }
+    return false;
+}
+
+function _evalCond(cond) {
+    const [key, ...rest] = cond.split(':');
+    const val = rest.join(':');
+    switch (key) {
+        case 'playCount':  return _numCmp(gameHistory.playCount, val);
+        case 'quality':    return _numCmp(gameState.quality, val);
+        case 'patience':   return _numCmp(gameState.patience, val);
+        case 'visited':    return gameHistory.visitedThisRun.has(val);
+        case 'notVisited': return !gameHistory.visitedThisRun.has(val);
+        case 'seenEnding': return gameHistory.seenEndings.has(val);
+    }
+    return false;
+}
+
+function resolveNodeText(nodeId) {
+    const node = storyData[nodeId];
+    if (!node?.variants?.length) return node?.text || '';
+    for (const v of node.variants) {
+        if (!v.conditions || v.conditions.every(_evalCond)) {
+            const key = `${nodeId}__${v.id}`;
+            if (!gameHistory.variantsSeen.has(key)) {
+                gameHistory.variantsSeen.add(key);
+                localStorage.setItem('variantsSeen', JSON.stringify([...gameHistory.variantsSeen]));
+            }
+            return v.text;
+        }
+    }
+    return node.text;
+}
+
+function countTotalVariants() {
+    let t = 0;
+    for (const n of Object.values(storyData)) t += n.variants?.length || 0;
+    return t;
+}
+
+function showRememberToast(text) {
+    const toast = document.createElement('div');
+    toast.className = 'remember-toast';
+    toast.textContent = text;
+    uiGameCont.appendChild(toast);
+    requestAnimationFrame(() => toast.classList.add('visible'));
+    setTimeout(() => {
+        toast.classList.remove('visible');
+        setTimeout(() => toast.parentNode?.removeChild(toast), 400);
+    }, 2800);
+}
 
 // ─── Universal scaling ────────────────────────────────────────────────────────
 function scaleGame() {
@@ -414,6 +483,7 @@ function resetState() {
     gameState.minutes      = 960;
     _clkMinAccum           = 0;
     _nodeLoading           = false;
+    gameHistory.visitedThisRun.clear();
     gameState.quality      = 100;
     gameState.patience     = 50;
     gameState.previousNode = null;
@@ -545,12 +615,24 @@ function loadNode(nodeId) {
         spawnEndingEffect('victory');
         playEndingJingle('victory');
         localStorage.setItem('hasPlayed', '1');
+        if (!gameHistory.seenEndings.has(nodeId)) {
+            gameHistory.seenEndings.add(nodeId);
+            localStorage.setItem('seenEndings', JSON.stringify([...gameHistory.seenEndings]));
+        }
+        gameHistory.playCount++;
+        localStorage.setItem('playCount', String(gameHistory.playCount));
         if (node.endingTitle) showEndingTitle(node.endingTitle, node.endingTitleType || 'victory');
     } else if (BAD_ENDINGS.has(nodeId)) {
         uiGameCont.classList.add('ending-bad');
         spawnEndingEffect('bad');
         playEndingJingle('bad');
         localStorage.setItem('hasPlayed', '1');
+        if (!gameHistory.seenEndings.has(nodeId)) {
+            gameHistory.seenEndings.add(nodeId);
+            localStorage.setItem('seenEndings', JSON.stringify([...gameHistory.seenEndings]));
+        }
+        gameHistory.playCount++;
+        localStorage.setItem('playCount', String(gameHistory.playCount));
         if (node.endingTitle) showEndingTitle(node.endingTitle, node.endingTitleType || 'bad');
     }
 
@@ -572,7 +654,9 @@ function loadNode(nodeId) {
         runTrapSequence();
     }
 
-    typewriterEffect(node.text, node.choices);
+    gameHistory.visitedThisRun.add(nodeId);
+    gameState.resolvedText = resolveNodeText(nodeId);
+    typewriterEffect(gameState.resolvedText, node.choices);
 }
 
 function spawnEndingEffect(type) {
@@ -700,7 +784,7 @@ function advanceDialogue() {
         clearInterval(gameState.typeInterval);
         stopTypingSound();
         const node = storyData[gameState.currentNode];
-        uiText.innerHTML = node.text;
+        uiText.innerHTML = gameState.resolvedText || node.text;
         gameState.isTyping = false;
         uiTapHint.classList.remove('visible');
         renderChoices(node.choices);
@@ -868,12 +952,15 @@ function showEndingCard() {
     const isVictory = VICTORY_ENDINGS.has(gameState.currentNode);
     const q = Math.max(0, Math.min(100, Math.round(gameState.quality)));
     const p = Math.max(0, Math.min(50,  Math.round(gameState.patience)));
+    const totalV = countTotalVariants();
+    const seenV  = gameHistory.variantsSeen.size;
     uiEndingCard.innerHTML = `
         <div class="ending-stats ${isVictory ? 'victory-stats' : 'bad-stats'}">
             <div class="ending-stats-title">SHIFT REPORT</div>
             <div class="ending-stats-row"><span>⏱ Clocked out</span><span>${formatTime(gameState.minutes)}</span></div>
             <div class="ending-stats-row"><span>★ Quality</span><span>${q}/100</span></div>
             <div class="ending-stats-row"><span>♥ Patience</span><span>${p}/50</span></div>
+            <div class="ending-stats-row" style="margin-top:6px;border-top:1px solid rgba(255,255,255,0.12);padding-top:6px"><span>◈ Dialogues found</span><span>${seenV}/${totalV}</span></div>
         </div>`;
     uiEndingCard.style.display = 'block';
 }
@@ -886,6 +973,10 @@ function handleChoice(choice) {
     gameState.quality  = Math.max(0, Math.min(100, gameState.quality));
     gameState.patience = Math.max(0, Math.min(50,  gameState.patience));
     updateHUD();
+
+    if (choice.remember && choice.rememberText) {
+        showRememberToast(choice.rememberText);
+    }
 
     // Overflow endings: skip if already on an ending node, or if the chosen target is itself an ending
     if (!ALL_ENDINGS.has(gameState.currentNode) && !ALL_ENDINGS.has(choice.target)) {

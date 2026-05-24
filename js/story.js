@@ -37,7 +37,7 @@ const storyData = {
         image: "assets/images/2_2_diplomatic.jpg",
         text: "Overload, shmerload. Look, Von Snoutstache wants learners to feel TRANSPORTED. He saw a TED talk. He wants a fully navigable 3D escape room where employees defuse a 'Phishing Bomb' using multiple choice questions. He is calling it 'a Netflix experience for compliance.' He does not own a Netflix account. He describes all streaming as 'the internet television box.' He is very confident.",
         choices: [
-            { text: "Explain that AnimaSlide is not the Unreal Engine.", target: "technical_pushback", timeCost: 15, patienceCost: -25 },
+            { text: "Explain that Articulate is not the Unreal Engine.", target: "technical_pushback", timeCost: 15, patienceCost: -25 },
             { text: "Cave in. Build the Phishing Bomb.", target: "compromise", timeCost: 45, qualityCost: -40, patienceCost: 20 }
         ]
     },
@@ -96,7 +96,7 @@ const storyData = {
     "crash": {
         speaker: "System", color: "var(--system-alert)", textColor: "#fff",
         image: "assets/images/4_3_crash.jpg",
-        text: "You touched something. You absolute chaos gremlin. The screen goes white. 'AnimaSlide Pro 360 has stopped responding.' You check the auto-recovery folder. The last save is from before the branching. Before the narration. Before any of the good decisions. It's just a title slide that says 'Module 3: Security Awareness.' That's all that survived. The moth watched this happen. It feels nothing.",
+        text: "You touched something. You absolute chaos gremlin. The screen goes white. 'Articulate Storyline has stopped responding.' You check the auto-recovery folder. The last save is from before the branching. Before the narration. Before any of the good decisions. It's just a title slide that says 'Module 3: Security Awareness.' That's all that survived. The moth watched this happen. It feels nothing.",
         endingTitle: "FATAL ERROR",
         choices: [
             { text: "Cry. Then Restart Shift.", action: "restart" },
@@ -110,7 +110,7 @@ const storyData = {
         choices: [
             { text: "Manually open 87 slides and change every shape.", target: "martyr_office", timeCost: 90, qualityCost: -10 },
             { text: "Gaslight the VP with fake tech specs.", target: "true_winner", timeCost: 5, qualityCost: 20 },
-            { text: "Export as PowerHoof and email it.", target: "ppt_promotion", timeCost: 5, qualityCost: -100 }
+            { text: "Export as PowerPoint and email it.", target: "ppt_promotion", timeCost: 5, qualityCost: -100 }
         ]
     },
     "martyr_office": {
@@ -142,7 +142,7 @@ const storyData = {
     "victory_screen": {
         speaker: "System", color: "var(--success-green)", textColor: "#000",
         image: "assets/images/6_3_victory.jpg",
-        text: "Tarun blinks slowly, like a lizard absorbing warmth. 'Sprint 6,' he repeats quietly. 'The polymorphic one.' 'That's the one,' you say. He nods for an uncomfortable amount of time. Then he says 'superb alignment.' You close your laptop with the quiet dignity of someone who has weaponised a grown animal's ignorance against him to survive a Friday. You open HoofRide. Two minutes. Zero surge pricing. You leave. You win. This is the true ending.",
+        text: "Tarun blinks slowly, like a lizard absorbing warmth. 'Sprint 6,' he repeats quietly. 'The polymorphic one.' 'That's the one,' you say. He nods for an uncomfortable amount of time. Then he says 'superb alignment.' You close your laptop with the quiet dignity of someone who has weaponised a grown animal's ignorance against him to survive a Friday. You open Uber. Two minutes. Zero surge pricing. You leave. You win. This is the true ending.",
         endingTitle: "THE SME WHISPERER", endingTitleType: "victory",
         choices: [
             { text: "Play Again (Restart Shift)", action: "restart" },
@@ -152,7 +152,7 @@ const storyData = {
     "rage_quit": {
         speaker: "System", color: "var(--system-alert)", textColor: "#fff",
         image: "assets/images/6_4_rage_quit.jpg",
-        text: "Your Patience bar empties completely. You say nothing. You close your laptop like a judge delivering a verdict. You pick up your bag. You look at Tarun. You look at the LMS error screen. You look at the moth. The moth looks back. You nod at the moth. You walk out. Four WoofChat notifications arrive before you reach the lift. The fourth one says 'also re: the teal.' You block the channel. You are already a myth.",
+        text: "Your Patience bar empties completely. You say nothing. You close your laptop like a judge delivering a verdict. You pick up your bag. You look at Tarun. You look at the LMS error screen. You look at the moth. The moth looks back. You nod at the moth. You walk out. Four Slack notifications arrive before you reach the lift. The fourth one says 'also re: the teal.' You block the channel. You are already a myth.",
         endingTitle: "GLORIOUS RAGE QUIT",
         choices: [
             { text: "Restart Shift", action: "restart" },

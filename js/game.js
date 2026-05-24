@@ -383,8 +383,8 @@ function showTitleScreen() {
     // Replay the logo slam animation
     const logoWrap = document.getElementById('ts-logo-wrap');
     if (logoWrap) {
-        logoWrap.style.opacity = '0';
-        logoWrap.className = '';
+        logoWrap.className = 'ts-logo-wrap';
+        void logoWrap.offsetWidth; // force reflow so removing logo-float resets animation state
         setTimeout(() => {
             logoWrap.classList.add('logo-slam');
             logoWrap.addEventListener('animationend', () => {
@@ -393,6 +393,10 @@ function showTitleScreen() {
             }, { once: true });
         }, 200);
     }
+    priyaTapCount = 0;
+    priyaLastTapTime = 0;
+    charQuoteIndex.priya = 0;
+    charQuoteIndex.tarun = 0;
 }
 
 function startGame() {
@@ -996,47 +1000,50 @@ let titleAudioInited = false;
 
 const charQuotes = {
     priya: [
-        "My SCORM package has been 'Publishing…' for 14 minutes. I am legally not allowed to feel things anymore.",
-        "Storyline crashed. My auto-save is from Tuesday. I will not be taking questions.",
-        "The SME wants 40 more slides. The module is about washing hands.",
-        "I spent 3 hours on a branching scenario. They asked me to make it linear.",
-        "Synthesia gave my AI avatar a British accent. The client is in Mumbai. This is fine.",
-        "The LMS says SCORM 1.2 is supported. The LMS is lying.",
-        "I have 6 layers of triggers on this slide and I am not okay.",
-        "They said 'make it interactive.' I added a hover state. Done. Interactive.",
-        "My Storyline file is 2.3 GB. It has 12 slides. I don't want to talk about it.",
-        "The client wants a 3D avatar. My budget is zero. My patience is also zero.",
-        "I just published to Review 360 for the 11th time today. Same feedback. 'Make it pop.'",
-        "The learner will skip the audio anyway. I spent 4 hours scripting it. Wonderful.",
-        "They approved the storyboard. They are now un-approving it. On a Friday.",
-        "My Synthesia presenter blinked at the wrong time. Re-rendering. At 5 PM.",
-        "Someone requested a knowledge check after every slide. There are 68 slides.",
-        "'Can you just make it feel more… gamified?' I will not. I am going home.",
-        "The completion trigger fires on slide 1. Nobody will ever know. Nobody.",
-        "SCORM cloud says 'Completed.' The client says 'It's not tracking.' I have left my body.",
+        "My SCORM is at 99%. It's been at 99% since Thursday. The bar is a liar.",
+        "The SME wants 40 more slides. The module is about washing hands. Forty.",
+        "Storyline crashed. Auto-save is from Tuesday. I am a survivor of something.",
+        "They said 'make it interactive.' I added a hover state. We are done here.",
+        "Baron Von Snoutstache used the word 'synergy' four times in one sentence. I counted.",
+        "The LMS says SCORM 1.2 is supported. The LMS has never met a SCORM package.",
+        "Six layers of triggers. Twelve slides. The file is 2.3 GB. Everything is fine.",
+        "Completion fires on slide one. Nobody will know. This is between me and the moth.",
+        "Review 360 feedback: 'Can it be more immersive?' It's a hand-washing module.",
+        "I built a branching scenario. They want it linear. But keep the branches. I need a moment.",
+        "The learner will skip the audio. I spent four hours scripting it. We're all going to be fine.",
+        "Published to Review 360 eleven times today. Same note each time: 'Make it pop.' Pop.",
+        "The client wants a 3D avatar. My budget is the vibes in this open-plan office.",
+        "'Can you just make it feel more gamified?' I cannot. I am choosing not to. Goodbye.",
     ],
     tarun: [
-        "Have you considered more synergy? Also 12 more slides. Also a 3D escape room. You're welcome, team!",
-        "The learner needs to FEEL the content. Can we add a drum roll to the quiz reveal?",
-        "Dr. Ravi feels the module lacks 'wow factor.' Can Synthesia do a backflip?",
-        "What if every wrong answer triggered a sad trombone? Just spitballing. Write it down.",
-        "I showed this to my 6-year-old. He didn't click Next. We need to fix the UX.",
-        "Great work on the branching scenario! Now make it linear. But keep the branches. Both.",
-        "Can we add a leaderboard? It's a compliance module about data privacy. Even better.",
-        "The CEO watched 8 seconds of the Synthesia video. He said 'something feels off.' Reshoot.",
-        "I sent your Storyline file to a vendor. They opened it in PowerPoint. Same difference, right?",
-        "Dr. Ravi says the font is 'aggressive.' The font is Arial. It is 12pt.",
-        "We need this to feel like Netflix. But also like LinkedIn. But make it fun. By Monday.",
-        "What if we gamified the loading screen? It's sitting at 99% anyway, might as well.",
-        "The client wants a Synthesia presenter who 'doesn't look AI.' I'll escalate that feedback.",
-        "Can we get a voiceover? Yes. Budget? No. Can Priya just record it on her phone?",
-        "I've aligned 14 stakeholders on the learning objective. It is now 6 objectives. Progress!",
-        "The completion certificate needs to feel more premium. Add a gold border. And a wax seal.",
-        "What if we just… made it a PDF? A very INTERACTIVE PDF? I'll put it in the deck.",
-        "The module plays perfectly in Chrome. The client uses IE. This is an opportunity.",
+        "Blake made me a latte this morning with a leaf pattern on top. I almost cried. He's just my roommate, everyone calm down.",
+        "Derek from Solutions walked past my desk. He smells incredible. Very productive scent. For a colleague.",
+        "Blake and I are going to Santorini. For team bonding. It's a professional trip. Eight months of planning. Very professional.",
+        "I don't know why everyone keeps asking if Blake and I are 'okay.' We made risotto last night. From scratch. We are thriving.",
+        "Derek remembered my coffee order. I nearly made him a slide about it. It felt appropriate at the time.",
+        "Blake and I wore coordinating outfits to the company picnic by complete coincidence. Charcoal is just a popular colour.",
+        "I showed Derek my Storyline file. He said 'this is impressive, Tarun.' I have not been the same since.",
+        "Santorini is research. We're documenting the learning architecture of white-washed Greek coastal environments. Blake's idea. He's thorough.",
+        "I don't have a favourite colleague. Derek is just architecturally well-proportioned and very responsive on Slack.",
+        "Blake gave me his hoodie because I was cold. It was 24 degrees. I was not cold. I am keeping the hoodie.",
+        "Derek cc'd me on an email today. Just to keep me in the loop. He thought of me. I'm just noting it.",
+        "Secret Santa is coming. I already know what Blake wants. We discussed it for three hours. On a Sunday. For work reasons.",
+        "Blake and I have a shared Spotify playlist. It started as a joke. It has 214 songs. It is not a joke.",
+        "Derek laughed at something I said in the all-hands. Not a polite laugh. A real one. I've been thinking about it.",
     ]
 };
 const charQuoteIndex = { priya: 0, tarun: 0 };
+
+let priyaTapCount = 0;
+let priyaLastTapTime = 0;
+
+const priyaHRQuotes = [
+    "Okay. You've tapped me four times now. I'm noting that for the record.",
+    "Why are you doing this? I have feelings. Not many left, but some.",
+    "I'm opening an incident report. Six taps. Documented. Timestamped. The moth is my witness.",
+    "This is harassment. I'm filing with HR. Case number: HR-2024-00471. I beg you. Stop.",
+    "I've emailed HR, my union rep, and the moth. The moth replied first. I have a lawyer. He is a beetle. PLEASE."
+];
 
 function onTitleInteract() {
     if (titleAudioInited) return;
@@ -1051,8 +1058,26 @@ function showCharBubble(char, event) {
     hideCharBubbles();
     const bubble = document.getElementById(`bubble-${char}`);
     if (!bubble) return;
-    const pool = charQuotes[char];
-    if (pool) { bubble.textContent = pool[charQuoteIndex[char] % pool.length]; charQuoteIndex[char]++; }
+
+    let text;
+    if (char === 'priya') {
+        const now = Date.now();
+        if (now - priyaLastTapTime > 5000) priyaTapCount = 0;
+        priyaLastTapTime = now;
+        priyaTapCount++;
+        if (priyaTapCount <= 3) {
+            const pool = charQuotes.priya;
+            text = pool[charQuoteIndex.priya % pool.length];
+            charQuoteIndex.priya++;
+        } else {
+            text = priyaHRQuotes[Math.min(priyaTapCount - 4, priyaHRQuotes.length - 1)];
+        }
+    } else {
+        const pool = charQuotes[char];
+        if (pool) { text = pool[charQuoteIndex[char] % pool.length]; charQuoteIndex[char]++; }
+    }
+
+    if (text) bubble.textContent = text;
     bubble.classList.add('visible');
     clearTimeout(bubbleDismissTimeout);
     bubbleDismissTimeout = setTimeout(hideCharBubbles, 4800);

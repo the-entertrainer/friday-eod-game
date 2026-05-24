@@ -371,6 +371,30 @@ function showHUDTooltips() {
 }
 
 // ─── Core ─────────────────────────────────────────────────────────────────────
+function showTitleScreen() {
+    clearInterval(gameState.typeInterval);
+    clearTrapTimers();
+    stopTypingSound();
+    stopSceneBGM();
+    gameState.isTyping = false;
+    const ts = document.getElementById('title-screen');
+    if (ts) ts.style.display = '';
+    startTitleBGM();
+    // Replay the logo slam animation
+    const logoWrap = document.getElementById('ts-logo-wrap');
+    if (logoWrap) {
+        logoWrap.style.opacity = '0';
+        logoWrap.className = '';
+        setTimeout(() => {
+            logoWrap.classList.add('logo-slam');
+            logoWrap.addEventListener('animationend', () => {
+                logoWrap.classList.remove('logo-slam');
+                logoWrap.classList.add('logo-float');
+            }, { once: true });
+        }, 200);
+    }
+}
+
 function startGame() {
     document.getElementById('title-screen').style.display = 'none';
     stopTitleBGM();
@@ -536,14 +560,91 @@ function spawnEndingEffect(type) {
 }
 
 function showEndingTitle(title, type) {
-    const card = document.getElementById('ending-title-card');
-    if (!card) return;
-    card.className = '';
-    const cat = type === 'secret' ? 'SECRET ENDING' : type === 'victory' ? 'TRUE ENDING' : 'ENDING';
-    card.innerHTML = `<div class="etc-inner etc-${type}"><div class="etc-cat">${cat}</div><div class="etc-name">${title}</div></div>`;
-    void card.offsetWidth;
-    card.classList.add('etc-active');
-    card.addEventListener('animationend', () => { card.className = ''; card.innerHTML = ''; }, { once: true });
+    const existing = document.getElementById('_etc_overlay');
+    if (existing) existing.remove();
+
+    const palette = { victory: '#00ffaa', bad: '#ff4757', secret: '#00e5ff' };
+    const color   = palette[type] || palette.bad;
+    const cat     = type === 'secret' ? 'SECRET ENDING' : type === 'victory' ? 'TRUE ENDING' : 'ENDING';
+
+    // Outer overlay — dark bg + dot pattern + perspective container
+    const ov = document.createElement('div');
+    ov.id = '_etc_overlay';
+    Object.assign(ov.style, {
+        position: 'absolute', inset: '0', zIndex: '75', pointerEvents: 'none',
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        perspective: '900px',
+        backgroundImage: `radial-gradient(${color}28 1.5px, transparent 1.5px)`,
+        backgroundSize: '14px 14px',
+        backgroundColor: 'rgba(0,0,0,0)',
+        opacity: '0',
+    });
+
+    // 3D card panel
+    const card = document.createElement('div');
+    Object.assign(card.style, {
+        textAlign: 'center', padding: '22px 34px',
+        borderTop: `5px solid ${color}`, borderBottom: `5px solid ${color}`,
+        background: 'rgba(8,8,18,0.97)',
+        boxShadow: `0 0 50px ${color}44, 10px 10px 0 #000`,
+        maxWidth: '88%', transformStyle: 'preserve-3d',
+        transform: 'rotateY(-90deg) scale(0.6)',
+    });
+
+    const catEl = document.createElement('div');
+    Object.assign(catEl.style, {
+        fontFamily: "'Outfit',sans-serif", fontSize: '0.65rem',
+        letterSpacing: '6px', fontWeight: '700', textTransform: 'uppercase',
+        color: color, opacity: '0.75', marginBottom: '10px',
+    });
+    catEl.textContent = cat;
+
+    const nameEl = document.createElement('div');
+    Object.assign(nameEl.style, {
+        fontFamily: "'Outfit',sans-serif",
+        fontSize: 'clamp(1.9rem, 9vw, 3rem)', fontWeight: '900',
+        textTransform: 'uppercase', lineHeight: '1.08',
+        color: color, WebkitTextStroke: '2px #000',
+        textShadow: `6px 6px 0 #000, -1px -1px 0 #000`,
+    });
+    nameEl.textContent = title;
+
+    card.append(catEl, nameEl);
+    ov.appendChild(card);
+    uiGameCont.appendChild(ov);
+
+    // Pure-JS rAF animation — no CSS keyframes
+    const FLIP_IN  = 360;
+    const BOUNCE   = 240;
+    const HOLD     = 1900;
+    const FLIP_OUT = 300;
+    const t0 = performance.now();
+
+    const eOut = p => 1 - Math.pow(1 - p, 3);
+    const eIn  = p => p * p * p;
+
+    (function frame(now) {
+        const t = now - t0;
+        if (t < FLIP_IN) {
+            const p = eOut(t / FLIP_IN);
+            ov.style.opacity   = p;
+            card.style.transform = `rotateY(${-90 + 90 * p}deg) scale(${0.6 + 0.4 * p})`;
+        } else if (t < FLIP_IN + BOUNCE) {
+            const p = (t - FLIP_IN) / BOUNCE;
+            const overshoot = Math.sin(p * Math.PI) * 0.09;
+            ov.style.opacity   = '1';
+            card.style.transform = `rotateY(0deg) scale(${1 + overshoot})`;
+        } else if (t < FLIP_IN + BOUNCE + HOLD) {
+            card.style.transform = 'rotateY(0deg) scale(1)';
+        } else if (t < FLIP_IN + BOUNCE + HOLD + FLIP_OUT) {
+            const p = eIn((t - FLIP_IN - BOUNCE - HOLD) / FLIP_OUT);
+            ov.style.opacity   = 1 - p;
+            card.style.transform = `rotateY(${90 * p}deg) scale(${1 - p * 0.35})`;
+        } else {
+            ov.remove(); return;
+        }
+        requestAnimationFrame(frame);
+    })(performance.now());
 }
 
 // ─── Dialogue ─────────────────────────────────────────────────────────────────
@@ -769,6 +870,8 @@ function handleChoice(choice) {
 
     if (choice.action === "restart") {
         startGame();
+    } else if (choice.action === "mainmenu") {
+        showTitleScreen();
     } else if (choice.action === "return_from_cutaway") {
         loadNode(gameState.previousNode);
     } else if (choice.target === "cutaway_kids") {
@@ -1001,6 +1104,24 @@ window.addEventListener('load', () => {
     // Set initial clock position (4:00 PM = 960 min)
     updateClockHands();
 });
+
+// ─── Safari audio unlock ──────────────────────────────────────────────────────
+// Safari blocks Audio.play() until a real user gesture has been processed.
+// Attach capture-phase listeners so we intercept the very first interaction
+// and unlock audio before anything else runs.
+(function () {
+    function unlock() {
+        document.removeEventListener('touchstart', unlock, true);
+        document.removeEventListener('pointerdown', unlock, true);
+        // Resume Web Audio context if it was created but suspended
+        if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume().catch(() => {});
+        // If still on title screen and BGM hasn't started yet, start it now
+        const ts = document.getElementById('title-screen');
+        if (ts && ts.style.display !== 'none' && !titleAudioInited) onTitleInteract();
+    }
+    document.addEventListener('touchstart',  unlock, { capture: true, passive: true });
+    document.addEventListener('pointerdown', unlock, { capture: true });
+})();
 
 // ─── Keyboard shortcuts (desktop) ────────────────────────────────────────────
 document.addEventListener('keydown', e => {

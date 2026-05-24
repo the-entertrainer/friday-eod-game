@@ -15,9 +15,10 @@ body {
     margin: 0; padding: 0;
     background-color: var(--bg-page);
     display: flex; justify-content: center; align-items: center;
-    height: 100dvh; 
+    height: 100dvh;
     font-family: 'Outfit', sans-serif;
-    user-select: none; -webkit-user-select: none; touch-action: manipulation; 
+    user-select: none; -webkit-user-select: none; touch-action: manipulation;
+    overscroll-behavior: none; /* prevent pull-to-refresh on mobile browsers */
 }
 
 #game-container {
@@ -55,10 +56,21 @@ body {
 #quality-bar { height: 100%; width: 100%; background: var(--success-green); transition: width 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
 #patience-bar { height: 100%; width: 50%; background: var(--tarun-yellow); transition: width 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
 
-#clock-display { 
-    font-size: 1.8rem; color: #fff; font-weight: 900;
-    -webkit-text-stroke: 1px #000; text-shadow: 3px 3px 0 #000; position: relative;
+/* Analog clock container */
+#clock-display { position: relative; line-height: 0; }
+
+/* Clock hand rotation — pivot at (30,30) in the 60×60 SVG viewBox */
+#clk-h, #clk-m {
+    transform-origin: 30px 30px;
+    transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
 }
+/* Danger / warning states → pulse the clock face stroke */
+#clock-display.clock-warning #analog-clock circle:first-child { stroke: var(--tarun-yellow); stroke-width: 2; }
+#clock-display.clock-danger  #analog-clock circle:first-child {
+    stroke: var(--system-alert); stroke-width: 2.5;
+    animation: pulseBar 0.42s ease infinite alternate;
+}
+#clock-display.clock-danger  #clk-m { stroke: var(--system-alert); }
 
 .floating-text {
     position: absolute; font-size: 1.2rem; font-weight: 900;
@@ -244,6 +256,9 @@ body {
 /* Format [ymin, xmin, ymax, xmax] normalized 0–1000 → Priya [687,480,958,730] Tarun [600,730,966,980] */
 #zone-priya, #zone-tarun {
     position: absolute; cursor: pointer; pointer-events: all; z-index: 5;
+    background: transparent;
+    -webkit-tap-highlight-color: rgba(0,0,0,0); /* suppress black flash on tap */
+    outline: none;
     /* outline: 2px solid rgba(255,0,0,0.5); */ /* debug */
 }
 #zone-priya { top: 68.7%; left: 48%;  bottom: 4.2%; right: 27%; }
@@ -270,15 +285,13 @@ body {
     content: ''; position: absolute; width: 0; height: 0; border-style: solid;
     bottom: -12px;
 }
-/* Priya: left side, tail left-of-center */
-#bubble-priya { left: 3%; }
+/* Horizontal position set by positionTitleElements() in JS */
 #bubble-priya::after {
     border-width: 12px 7px 0 7px;
     border-color: #1a1a1a transparent transparent transparent;
     left: 26%;
 }
-/* Tarun: right side, tail right-of-center */
-#bubble-tarun { right: 3%; text-align: right; }
+#bubble-tarun { text-align: right; }
 #bubble-tarun::after {
     border-width: 12px 7px 0 7px;
     border-color: #1a1a1a transparent transparent transparent;
@@ -486,16 +499,21 @@ body {
 
 /* ── HUD icon buttons (mute / speed) ── */
 .hud-controls {
-    display: flex; gap: 4px; margin-top: 4px; pointer-events: all;
+    display: flex; gap: 5px; margin-top: 5px; pointer-events: all;
 }
 .hud-icon-btn {
-    background: rgba(0,0,0,0.55); border: 1.5px solid rgba(255,255,255,0.18);
-    border-radius: 8px; color: #fff; font-size: 0.85rem;
-    padding: 3px 7px; cursor: pointer; line-height: 1;
-    transition: background 0.15s, transform 0.1s;
-    font-family: 'Outfit', sans-serif; font-weight: 700;
+    background: rgba(0,0,0,0.6); border: 1.5px solid rgba(255,255,255,0.2);
+    border-radius: 9px; color: #fff;
+    padding: 4px 6px; cursor: pointer; line-height: 0;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 2px 0 rgba(0,0,0,0.6);
+    transition: background 0.15s, transform 0.1s, box-shadow 0.1s;
 }
-.hud-icon-btn:active { transform: scale(0.88); background: rgba(255,255,255,0.15); }
+.hud-icon-btn:active {
+    transform: translateY(2px);
+    box-shadow: 0 0 0 rgba(0,0,0,0.6);
+    background: rgba(255,255,255,0.12);
+}
 
 /* ── Scene image shimmer while loading ── */
 @keyframes shimmer {

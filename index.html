@@ -49,10 +49,42 @@
         <!-- ══ GAME UI ════════════════════════════════════════════ -->
         <div id="hud">
             <div class="hud-left">
-                <div id="clock-display">4:00 PM</div>
+                <!-- Analog clock — hands rotated by JS in updateClockHands() -->
+                <div id="clock-display">
+                    <svg id="analog-clock" viewBox="0 0 60 60" width="52" height="52" aria-label="game time">
+                        <!-- Face -->
+                        <circle cx="30" cy="30" r="27" fill="#0a0a14" stroke="rgba(255,255,255,0.14)" stroke-width="1.5"/>
+                        <!-- Cardinal pips -->
+                        <circle cx="30" cy="5.5" r="2.2" fill="rgba(255,255,255,0.65)"/>
+                        <circle cx="54.5" cy="30" r="1.5" fill="rgba(255,255,255,0.3)"/>
+                        <circle cx="30" cy="54.5" r="1.5" fill="rgba(255,255,255,0.3)"/>
+                        <circle cx="5.5"  cy="30" r="1.5" fill="rgba(255,255,255,0.3)"/>
+                        <!-- Hour hand (points at 12, pivot at 30,30) -->
+                        <line id="clk-h" x1="30" y1="32" x2="30" y2="18"
+                              stroke="white" stroke-width="3.5" stroke-linecap="round"/>
+                        <!-- Minute hand -->
+                        <line id="clk-m" x1="30" y1="33" x2="30" y2="11"
+                              stroke="#00e5ff" stroke-width="2.2" stroke-linecap="round"/>
+                        <!-- Center cap -->
+                        <circle cx="30" cy="30" r="2.8" fill="#00e5ff"/>
+                    </svg>
+                </div>
                 <div class="hud-controls">
-                    <button id="mute-btn"  class="hud-icon-btn" onclick="toggleMute()"      title="Toggle sound">🔊</button>
-                    <button id="speed-btn" class="hud-icon-btn" onclick="cycleTypingSpeed()" title="Typing speed">▶</button>
+                    <button id="mute-btn" class="hud-icon-btn" onclick="toggleMute()">
+                        <svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <polygon id="spk-body" points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" fill="white" stroke="none"/>
+                            <path id="spk-wave" d="M15.5 8.5a5 5 0 0 1 0 7"/>
+                            <line id="spk-x1" x1="22" y1="9" x2="16" y2="15" display="none"/>
+                            <line id="spk-x2" x1="16" y1="9" x2="22" y2="15" display="none"/>
+                        </svg>
+                    </button>
+                    <button id="speed-btn" class="hud-icon-btn" onclick="cycleTypingSpeed()">
+                        <svg id="speed-icon" viewBox="0 0 36 22" width="36" height="22">
+                            <text id="speed-label" x="18" y="16"
+                                  font-family="Outfit,sans-serif" font-weight="900"
+                                  font-size="13" fill="white" text-anchor="middle">1×</text>
+                        </svg>
+                    </button>
                 </div>
             </div>
             <div class="hud-right">

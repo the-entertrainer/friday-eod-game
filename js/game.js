@@ -42,27 +42,36 @@ window.addEventListener('resize', scaleGame);
 
 // ─── Drawer peek gesture (drag top of terminal down to peek at scene) ─────────
 let _peekActive = false;
+let _termBaseH  = 0; // cached terminal height for drag calculations
 (function initDrawer() {
     const term = document.getElementById('terminal');
     let startY = 0, moved = false, dragging = false;
     term.addEventListener('touchstart', e => {
         const localY = e.touches[0].clientY - term.getBoundingClientRect().top;
-        if (localY > 44) return; // only the handle strip triggers drag
+        if (localY > 44) return;
+        e.preventDefault(); // prevent pull-to-refresh during handle drag
+        _termBaseH = term.offsetHeight;
         dragging = true; moved = false; startY = e.touches[0].clientY;
         term.style.transition = 'none';
-    }, { passive: true });
+    }, { passive: false }); // must be non-passive to allow preventDefault
     window.addEventListener('touchmove', e => {
         if (!dragging) return;
+        e.preventDefault(); // prevent page scroll while dragging
         const dy = e.touches[0].clientY - startY;
         if (Math.abs(dy) > 6) moved = true;
-        const peek = Math.max(0, Math.min(88, dy)); // max 88px down
+        const peek = Math.max(0, Math.min(88, dy));
         term.style.transform = `translateY(${peek}px)`;
-    }, { passive: true });
+        // Expand scene image into the peeked gap so image center stays visible
+        const newBot = Math.max(0, _termBaseH - peek);
+        if (uiSceneImage) uiSceneImage.style.bottom = newBot + 'px';
+        if (uiSceneOut)   uiSceneOut.style.bottom   = newBot + 'px';
+    }, { passive: false });
     window.addEventListener('touchend', () => {
         if (!dragging) return;
         dragging = false;
         term.style.transition = '';
         term.style.transform = '';
+        syncSceneImageBottom(); // restore bounds after drag
         if (moved) {
             _peekActive = true;
             setTimeout(() => _peekActive = false, 350);
@@ -76,9 +85,10 @@ let audioCtx = null;
 let _muted = false;
 
 // Typewriter speed: normal / slow / fast (ms per char)
-const _TW_SPEEDS     = [26, 45, 12];
-const _TW_LABELS     = ['▶', '🐢', '⚡'];
-let   _twSpeedIdx    = 0;
+const _TW_SPEEDS   = [26, 45, 12];
+const _TW_DISPLAY  = ['1×', '½×', '2×'];
+const _TW_COLORS   = ['white', 'rgba(255,255,255,0.55)', '#00e5ff'];
+let   _twSpeedIdx  = 0;
 
 function initAudio() {
     if (audioCtx) return;
@@ -283,8 +293,14 @@ function stopTypingSound() {
 // ─── Mute toggle ─────────────────────────────────────────────────────────────
 function toggleMute() {
     _muted = !_muted;
-    const btn = document.getElementById('mute-btn');
-    if (btn) btn.textContent = _muted ? '🔇' : '🔊';
+    const wave = document.getElementById('spk-wave');
+    const x1   = document.getElementById('spk-x1');
+    const x2   = document.getElementById('spk-x2');
+    const body = document.getElementById('spk-body');
+    if (wave) wave.style.display = _muted ? 'none'  : '';
+    if (x1)   x1.style.display   = _muted ? ''      : 'none';
+    if (x2)   x2.style.display   = _muted ? ''      : 'none';
+    if (body) body.setAttribute('fill', _muted ? 'rgba(255,71,87,0.9)' : 'white');
     [_themeAudio, _sceneBGMAudio, _typingAudio, _transitionAudio].forEach(a => {
         if (a) a.muted = _muted;
     });
@@ -293,8 +309,42 @@ function toggleMute() {
 // ─── Typewriter speed cycle ───────────────────────────────────────────────────
 function cycleTypingSpeed() {
     _twSpeedIdx = (_twSpeedIdx + 1) % _TW_SPEEDS.length;
-    const btn = document.getElementById('speed-btn');
-    if (btn) btn.textContent = _TW_LABELS[_twSpeedIdx];
+    const lbl = document.getElementById('speed-label');
+    if (lbl) {
+        lbl.textContent = _TW_DISPLAY[_twSpeedIdx];
+        lbl.setAttribute('fill', _TW_COLORS[_twSpeedIdx]);
+    }
+}
+
+// ─── Analog clock ────────────────────────────────────────────────────────────
+let _clkMinAccum = 0;
+
+function updateClockHands() {
+    const h = Math.floor(gameState.minutes / 60) % 12;
+    const m = gameState.minutes % 60;
+    const hourDeg   = h * 30 + m * 0.5;
+    const newMin    = (gameState.minutes - 960) * 6; // cumulative from 4 PM start
+    const ch = document.getElementById('clk-h');
+    const cm = document.getElementById('clk-m');
+    // On game reset (time jumped back), snap hands instantly
+    if (newMin < _clkMinAccum - 180) {
+        if (ch) { ch.style.transition = 'none'; }
+        if (cm) { cm.style.transition = 'none'; }
+        requestAnimationFrame(() => { if (ch) ch.style.transition = ''; if (cm) cm.style.transition = ''; });
+    }
+    _clkMinAccum = newMin;
+    if (ch) ch.style.transform = `rotate(${hourDeg}deg)`;
+    if (cm) cm.style.transform = `rotate(${_clkMinAccum}deg)`;
+}
+
+// ─── Scene image bounds — tracks terminal height so center stays visible ──────
+function syncSceneImageBottom() {
+    const termEl = document.getElementById('terminal');
+    if (!termEl) return;
+    const h = termEl.offsetHeight;
+    _termBaseH = h;
+    if (uiSceneImage)  uiSceneImage.style.bottom  = h + 'px';
+    if (uiSceneOut)    uiSceneOut.style.bottom     = h + 'px';
 }
 
 // ─── Endings ──────────────────────────────────────────────────────────────────
@@ -355,7 +405,7 @@ function formatTime(totalMins) {
 }
 
 function updateHUD() {
-    uiClock.innerText = formatTime(gameState.minutes);
+    updateClockHands();
     const qPct = Math.max(0, Math.min(100, gameState.quality));
     const pPct = Math.max(0, Math.min(100, gameState.patience));
     uiQuality.style.width  = qPct + '%';
@@ -733,10 +783,17 @@ function positionTitleElements() {
     const priyaBottom = imgH * PRIYA_HEAD_FRAC + 6;
     const tarunBottom = Math.min(imgH * TARUN_HEAD_FRAC + 6, cH - 90);
 
+    // Horizontal: center above each character using bounding box data
+    // Priya zone: xmin=48% xmax=73% → center 60.5%
+    // Tarun zone: xmin=73% xmax=98% → center 85.5%
+    const BUBBLE_W = 200;
+    const priyaLeft = Math.max(4, Math.min(cW - BUBBLE_W - 4, cW * 0.605 - BUBBLE_W / 2));
+    const tarunLeft = Math.max(4, Math.min(cW - BUBBLE_W - 4, cW * 0.855 - BUBBLE_W / 2));
+
     const bp = document.getElementById('bubble-priya');
     const bt = document.getElementById('bubble-tarun');
-    if (bp) { bp.style.bottom = priyaBottom + 'px'; bp.style.top = 'auto'; }
-    if (bt) { bt.style.bottom = tarunBottom + 'px'; bt.style.top = 'auto'; }
+    if (bp) { bp.style.bottom = priyaBottom + 'px'; bp.style.top = 'auto'; bp.style.left = priyaLeft + 'px'; bp.style.right = 'auto'; }
+    if (bt) { bt.style.bottom = tarunBottom + 'px'; bt.style.top = 'auto'; bt.style.left = tarunLeft + 'px'; bt.style.right = 'auto'; }
 }
 
 let bubbleDismissTimeout = null;
@@ -828,7 +885,7 @@ function initTitleScreen() {
     }
 
     document.getElementById('title-screen')?.addEventListener('click', (e) => {
-        if (!e.target.closest('.char-zone') && !e.target.closest('.char-bubble')) {
+        if (!e.target.closest('#zone-priya') && !e.target.closest('#zone-tarun') && !e.target.closest('.char-bubble')) {
             hideCharBubbles();
         }
     });
@@ -839,7 +896,19 @@ function initTitleScreen() {
     initSceneZoom();
 }
 
-window.addEventListener('load', initTitleScreen);
+window.addEventListener('load', () => {
+    initTitleScreen();
+
+    // Keep scene image clipped to the visible area above the terminal
+    syncSceneImageBottom();
+    const termEl = document.getElementById('terminal');
+    if (termEl && window.ResizeObserver) {
+        new ResizeObserver(syncSceneImageBottom).observe(termEl);
+    }
+
+    // Set initial clock position (4:00 PM = 960 min)
+    updateClockHands();
+});
 
 // ─── Keyboard shortcuts (desktop) ────────────────────────────────────────────
 document.addEventListener('keydown', e => {

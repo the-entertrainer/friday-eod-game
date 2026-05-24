@@ -561,24 +561,19 @@ body {
 
 /* ── C1 / C3: Title screen standalone buttons ── */
 .ts-credits-btn {
-    position: absolute; bottom: 14px; left: 14px;
-    z-index: 8; background: none; border: none;
-    color: rgba(255,255,255,0.6);
-    font-family: 'Outfit', sans-serif; font-size: 0.78rem; font-weight: 700;
-    letter-spacing: 2px; text-transform: uppercase; cursor: pointer;
-    padding: 6px 16px; text-decoration: underline; text-underline-offset: 3px;
-    transition: color 0.15s; white-space: nowrap;
+    position: absolute; bottom: 10px; left: 10px;
+    z-index: 8; background: none; border: none; padding: 0;
+    cursor: pointer; line-height: 0;
+    transition: transform 0.15s, opacity 0.15s;
 }
-.ts-credits-btn:hover { color: rgba(255,255,255,0.95); }
+.ts-credits-btn:hover { transform: scale(1.1); opacity: 0.9; }
 .ts-settings-btn {
-    position: absolute; bottom: 14px; right: 14px; z-index: 8;
-    background: rgba(0,0,0,0.55); border: 1.5px solid rgba(255,255,255,0.25);
-    border-radius: 9px; color: rgba(255,255,255,0.75);
-    font-size: 1.1rem; width: 34px; height: 30px;
-    cursor: pointer; display: flex; align-items: center; justify-content: center;
-    transition: background 0.15s, color 0.15s; line-height: 1; padding: 0;
+    position: absolute; bottom: 10px; right: 10px; z-index: 8;
+    background: none; border: none; padding: 0;
+    cursor: pointer; line-height: 0;
+    transition: transform 0.15s, opacity 0.15s;
 }
-.ts-settings-btn:hover { background: rgba(255,255,255,0.16); color: white; }
+.ts-settings-btn:hover { transform: scale(1.1); opacity: 0.9; }
 
 /* ── C1: Settings panel ── */
 #settings-panel {

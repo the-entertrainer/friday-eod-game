@@ -295,14 +295,8 @@ function stopTypingSound() {
 // ─── Mute toggle ─────────────────────────────────────────────────────────────
 function toggleMute() {
     _muted = !_muted;
-    const wave = document.getElementById('spk-wave');
-    const x1   = document.getElementById('spk-x1');
-    const x2   = document.getElementById('spk-x2');
-    const body = document.getElementById('spk-body');
-    if (wave) wave.style.display = _muted ? 'none'  : '';
-    if (x1)   x1.style.display   = _muted ? ''      : 'none';
-    if (x2)   x2.style.display   = _muted ? ''      : 'none';
-    if (body) body.setAttribute('fill', _muted ? 'rgba(255,71,87,0.9)' : 'white');
+    const icon = document.getElementById('mute-icon');
+    if (icon) icon.src = _muted ? 'assets/images/icon_sound_off.png' : 'assets/images/icon_sound_on.png';
     document.getElementById('mute-btn').classList.toggle('muted', _muted);
     [_themeAudio, _sceneBGMAudio, _typingAudio, _transitionAudio].forEach(a => {
         if (a) a.muted = _muted;

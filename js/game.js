@@ -1195,13 +1195,22 @@ function closeSettings() {
     document.getElementById('settings-panel')?.classList.remove('visible');
 }
 function updateSettingsDisplay() {
-    const muteBtn  = document.getElementById('sp-mute-btn');
-    const speedBtn = document.getElementById('sp-speed-btn');
-    if (muteBtn)  muteBtn.textContent  = _muted ? '🔇 OFF' : '🔊 ON';
-    if (speedBtn) speedBtn.textContent = _TW_DISPLAY[_twSpeedIdx];
+    const toggle = document.getElementById('sp-audio-toggle');
+    const slider = document.getElementById('sp-speed-slider');
+    const spLbl  = document.getElementById('sp-speed-label');
+    if (toggle) toggle.checked    = !_muted;
+    if (slider) slider.value      = _twSpeedIdx;
+    if (spLbl)  spLbl.textContent = _TW_DISPLAY[_twSpeedIdx];
+}
+function setSpeedFromSlider(idx) {
+    _twSpeedIdx = parseInt(idx) % _TW_SPEEDS.length;
+    localStorage.setItem('twSpeedIdx', _twSpeedIdx);
+    const lbl = document.getElementById('speed-label');
+    if (lbl) { lbl.textContent = _TW_DISPLAY[_twSpeedIdx]; lbl.setAttribute('fill', _TW_COLORS[_twSpeedIdx]); }
+    const spLbl = document.getElementById('sp-speed-label');
+    if (spLbl) spLbl.textContent = _TW_DISPLAY[_twSpeedIdx];
 }
 function toggleMuteFromSettings() { toggleMute(); updateSettingsDisplay(); }
-function cycleSpeedFromSettings()  { cycleTypingSpeed(); updateSettingsDisplay(); }
 
 // ─── C3: Credits modal ───────────────────────────────────────────────────────
 function openCredits() {

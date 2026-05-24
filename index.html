@@ -60,11 +60,18 @@
                     </div>
                     <div class="sp-row">
                         <span>Audio</span>
-                        <button id="sp-mute-btn" class="sp-toggle" onclick="toggleMuteFromSettings()">🔊 ON</button>
+                        <label class="sp-switch" onclick="event.stopPropagation()">
+                            <input type="checkbox" id="sp-audio-toggle" checked onchange="toggleMuteFromSettings()">
+                            <span class="sp-thumb"></span>
+                        </label>
                     </div>
                     <div class="sp-row">
                         <span>Text Speed</span>
-                        <button id="sp-speed-btn" class="sp-toggle" onclick="cycleSpeedFromSettings()">1×</button>
+                        <div class="sp-speed-wrap">
+                            <span id="sp-speed-label">1×</span>
+                            <input type="range" id="sp-speed-slider" min="0" max="2" step="1" value="0"
+                                   oninput="setSpeedFromSlider(this.value)" onclick="event.stopPropagation()">
+                        </div>
                     </div>
                 </div>
             </div>
@@ -111,7 +118,7 @@
                         <circle cx="5.5"  cy="30" r="1.5" fill="rgba(255,255,255,0.3)"/>
                         <!-- Hour hand (points at 12, pivot at 30,30) -->
                         <line id="clk-h" x1="30" y1="32" x2="30" y2="18"
-                              stroke="white" stroke-width="3.5" stroke-linecap="round"/>
+                              stroke="#ffea00" stroke-width="3.5" stroke-linecap="round"/>
                         <!-- Minute hand -->
                         <line id="clk-m" x1="30" y1="33" x2="30" y2="11"
                               stroke="#00e5ff" stroke-width="2.2" stroke-linecap="round"/>
@@ -119,18 +126,16 @@
                         <circle cx="30" cy="30" r="2.8" fill="#00e5ff"/>
                     </svg>
                 </div>
-                <div class="hud-controls">
-                    <button id="mute-btn" class="hud-icon-btn" onclick="toggleMute()">
-                        <img id="mute-icon" src="assets/images/icon_sound_on.png" alt="Sound" width="22" height="22">
-                    </button>
-                    <button id="speed-btn" class="hud-icon-btn" onclick="cycleTypingSpeed()">
-                        <svg id="speed-icon" viewBox="0 0 36 22" width="36" height="22">
-                            <text id="speed-label" x="18" y="16"
-                                  font-family="Outfit,sans-serif" font-weight="900"
-                                  font-size="13" fill="white" text-anchor="middle">1×</text>
-                        </svg>
-                    </button>
-                </div>
+                <button id="mute-btn" class="hud-icon-btn" onclick="toggleMute()">
+                    <img id="mute-icon" src="assets/images/icon_sound_on.png" alt="Sound" width="22" height="22">
+                </button>
+                <button id="speed-btn" class="hud-icon-btn" onclick="cycleTypingSpeed()">
+                    <svg id="speed-icon" viewBox="0 0 36 22" width="36" height="22">
+                        <text id="speed-label" x="18" y="16"
+                              font-family="Outfit,sans-serif" font-weight="900"
+                              font-size="13" fill="white" text-anchor="middle">1×</text>
+                    </svg>
+                </button>
             </div>
             <div class="hud-right">
                 <div class="stat-pill" id="wrap-quality">

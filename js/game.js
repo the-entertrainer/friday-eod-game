@@ -651,7 +651,12 @@ function loadNode(nodeId) {
     gameHistory.visitedThisRun.add(nodeId);
     gameState.resolvedText = resolveNodeText(nodeId);
     gameState.pendingBubble = !!node.thoughtBubble;
-    typewriterEffect(gameState.resolvedText, node.choices);
+
+    if (node.cutaway && cutawayData[node.cutaway]) {
+        showCutaway(node.cutaway, () => typewriterEffect(gameState.resolvedText, node.choices));
+    } else {
+        typewriterEffect(gameState.resolvedText, node.choices);
+    }
 }
 
 function spawnEndingEffect(type) {
@@ -748,6 +753,102 @@ function showEndingTitle(title, type) {
         }
         requestAnimationFrame(frame);
     })(performance.now());
+}
+
+// ─── Cutaway Panel System ─────────────────────────────────────────────────────
+// Fires before the typewriter when a node has cutaway: "id".
+// Shows a bold title card (Family Guy-style) then 3 comic panels flying in from
+// alternating sides inside a retro TV frame. Tap or wait 8s to dismiss.
+function showCutaway(id, onComplete) {
+    const data = cutawayData[id];
+    if (!data) { onComplete(); return; }
+
+    const ov = document.createElement('div');
+    ov.className = 'cutaway-overlay';
+
+    // ── Phase 1: title card flash ──
+    const tc = document.createElement('div');
+    tc.className = 'cutaway-title-card';
+    tc.innerHTML =
+        `<div class="ct-main">${data.titleLine1}</div>` +
+        (data.titleLine2 ? `<div class="ct-sub">${data.titleLine2}</div>` : '');
+    ov.appendChild(tc);
+
+    // ── Phase 2: retro TV ──
+    const tv = document.createElement('div');
+    tv.className = 'retro-tv';
+
+    const screen = document.createElement('div');
+    screen.className = 'retro-tv-screen';
+
+    const panelsWrap = document.createElement('div');
+    panelsWrap.className = 'cutaway-panels';
+
+    function makePanel(src, caption, extraClass) {
+        const p = document.createElement('div');
+        p.className = 'cutaway-panel ' + extraClass;
+        p.style.backgroundImage = `url('${src}')`;
+        if (caption) {
+            const cap = document.createElement('div');
+            cap.className = 'panel-caption';
+            cap.textContent = caption;
+            p.appendChild(cap);
+        }
+        return p;
+    }
+
+    const hero = makePanel(data.panels[0].src, data.panels[0].caption, 'panel-hero');
+    const smalls = document.createElement('div');
+    smalls.className = 'cutaway-smalls';
+    smalls.appendChild(makePanel(data.panels[1].src, data.panels[1].caption, 'panel-small panel-small-1'));
+    smalls.appendChild(makePanel(data.panels[2].src, data.panels[2].caption, 'panel-small panel-small-2'));
+
+    panelsWrap.appendChild(hero);
+    panelsWrap.appendChild(smalls);
+    screen.appendChild(panelsWrap);
+    tv.appendChild(screen);
+
+    // TV decorative footer
+    const foot = document.createElement('div');
+    foot.className = 'tv-footer';
+    foot.innerHTML =
+        '<div class="tv-knobs"><div class="tv-knob"></div><div class="tv-knob"></div></div>' +
+        '<div class="tv-speaker">' + '<span></span>'.repeat(9) + '</div>';
+    tv.appendChild(foot);
+    ov.appendChild(tv);
+
+    // Tap hint
+    const hint = document.createElement('div');
+    hint.className = 'cutaway-tap-hint';
+    hint.textContent = '▼ tap to continue';
+    ov.appendChild(hint);
+
+    uiGameCont.appendChild(ov);
+
+    // ── Animation timeline ──
+    const timers = [];
+    const T = (ms, fn) => timers.push(setTimeout(fn, ms));
+
+    T(1500, () => tc.classList.add('hiding'));          // title fades out
+    T(1800, () => tv.classList.add('visible'));         // TV appears
+    T(2050, () => hero.classList.add('landed'));        // hero slams in from left
+    T(2600, () => smalls.children[0]?.classList.add('landed')); // small1 from right
+    T(3150, () => smalls.children[1]?.classList.add('landed')); // small2 from left
+    T(4200, () => hint.classList.add('visible'));       // tap hint
+
+    let gone = false;
+    const dismiss = () => {
+        if (gone) return;
+        gone = true;
+        timers.forEach(clearTimeout);
+        ov.style.transition = 'opacity 0.35s ease';
+        ov.style.opacity = '0';
+        ov.style.pointerEvents = 'none';
+        setTimeout(() => { ov.remove(); onComplete(); }, 380);
+    };
+
+    timers.push(setTimeout(dismiss, 8000)); // auto-dismiss after 8s
+    ov.addEventListener('pointerup', dismiss);
 }
 
 function showThoughtBubble() {

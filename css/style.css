@@ -966,3 +966,144 @@ body {
     box-shadow: 0 0 14px rgba(0,229,255,0.12);
 }
 .remember-toast.visible { opacity: 1; }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   CUTAWAY PANEL SYSTEM
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.cutaway-overlay {
+    position: absolute; inset: 0; z-index: 200;
+    background: rgba(0,0,0,0.96);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 0;
+    cursor: pointer;
+}
+
+/* ── Title card (Family Guy style bold flash) ── */
+.cutaway-title-card {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    background: #000; z-index: 10;
+    text-align: center; padding: 24px;
+    transition: opacity 0.35s ease;
+}
+.cutaway-title-card.hiding { opacity: 0; pointer-events: none; }
+
+.ct-main {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(2rem, 9vw, 2.8rem);
+    color: #fff; letter-spacing: 4px; line-height: 1;
+    text-shadow: 4px 4px 0 #ff4500, 0 0 30px rgba(255,69,0,0.5);
+}
+.ct-sub {
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.82rem; color: rgba(255,255,255,0.55);
+    letter-spacing: 2.5px; margin-top: 12px;
+    text-transform: uppercase;
+}
+
+/* ── Retro TV frame ── */
+.retro-tv {
+    width: 414px; max-width: 96%;
+    background: #1c1c1c;
+    border-radius: 18px;
+    border: 5px solid #2e2e2e;
+    box-shadow:
+        0 0 0 2px #111,
+        0 0 0 5px #3a3a3a,
+        0 12px 50px rgba(0,0,0,0.85),
+        inset 0 2px 0 rgba(255,255,255,0.06);
+    padding: 14px 14px 18px;
+    opacity: 0; transform: scale(0.88);
+    transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.22,1.3,0.36,1);
+}
+.retro-tv.visible { opacity: 1; transform: scale(1); }
+
+/* ── TV screen area (slight inner glow for CRT feel) ── */
+.retro-tv-screen {
+    border-radius: 8px; overflow: hidden;
+    background: #000;
+    border: 3px solid #0d0d0d;
+    box-shadow: inset 0 0 25px rgba(0,0,0,0.7),
+                inset 0 0 6px rgba(0,200,255,0.04);
+    position: relative;
+}
+/* CRT scanlines on screen */
+.retro-tv-screen::after {
+    content: ''; position: absolute; inset: 0; pointer-events: none; z-index: 20;
+    background: repeating-linear-gradient(
+        to bottom, transparent, transparent 2px,
+        rgba(0,0,0,0.07) 2px, rgba(0,0,0,0.07) 3px
+    );
+}
+
+/* ── Panel container ── */
+.cutaway-panels { padding: 8px; display: flex; flex-direction: column; gap: 6px; }
+
+/* ── Hero panel (flies in from left) ── */
+.panel-hero {
+    width: 100%; height: 198px;
+    border-radius: 5px; border: 2px solid #1a1a1a;
+    background-size: cover; background-position: center;
+    position: relative; overflow: hidden;
+    transform: translateX(-130%);
+    transition: transform 0.55s cubic-bezier(0.22, 1.35, 0.36, 1);
+}
+.panel-hero.landed { transform: translateX(0); }
+
+/* ── Small panels row ── */
+.cutaway-smalls { display: flex; gap: 6px; }
+
+.panel-small {
+    flex: 1; height: 152px;
+    border-radius: 5px; border: 2px solid #1a1a1a;
+    background-size: cover; background-position: center;
+    position: relative; overflow: hidden;
+    transition: transform 0.55s cubic-bezier(0.22, 1.35, 0.36, 1);
+}
+.panel-small-1 { transform: translateX(200%); }
+.panel-small-1.landed { transform: translateX(0); }
+.panel-small-2 { transform: translateX(-200%); }
+.panel-small-2.landed { transform: translateX(0); }
+
+/* ── Panel captions ── */
+.panel-caption {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    padding: 5px 8px 6px;
+    font-family: 'Outfit', sans-serif; font-size: 0.66rem;
+    font-weight: 700; color: #fff;
+    background: rgba(0,0,0,0.78);
+    text-shadow: 1px 1px 0 #000;
+    text-transform: uppercase; letter-spacing: 0.4px; line-height: 1.25;
+}
+
+/* ── TV decorative footer ── */
+.tv-footer { display: flex; flex-direction: column; align-items: center; gap: 5px; margin-top: 10px; }
+.tv-knobs { display: flex; gap: 28px; }
+.tv-knob {
+    width: 13px; height: 13px; border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, #555, #1f1f1f);
+    border: 2px solid #111; box-shadow: inset 0 1px 0 rgba(255,255,255,0.08);
+}
+.tv-speaker { display: flex; gap: 5px; }
+.tv-speaker span {
+    width: 5px; height: 5px; border-radius: 50%;
+    background: #2a2a2a; border: 1px solid #333;
+}
+
+/* ── Tap to continue hint ── */
+.cutaway-tap-hint {
+    position: absolute; bottom: 22px;
+    font-family: 'Outfit', sans-serif; font-size: 0.75rem;
+    color: rgba(255,255,255,0.35); letter-spacing: 2px;
+    text-transform: uppercase; pointer-events: none;
+    opacity: 0; transition: opacity 0.4s ease;
+    animation: ctaPulse 1.3s ease infinite;
+}
+.cutaway-tap-hint.visible { opacity: 1; }
+
+@keyframes ctaPulse {
+    0%, 100% { opacity: 0.35; }
+    50%       { opacity: 0.85; }
+}

@@ -1,168 +1,185 @@
 const storyData = {
+    // ── COLD OPEN — 5:28 PM, the present. Two minutes to leave. ──
     "intro": {
         speaker: "Priya", color: "var(--priya-cyan)", textColor: "#000",
-        image: "assets/images/1_1_bsod.jpg",
-        text: "It's Friday. 4 PM is when I told the kids we'd go to the movies. I promised. Sophia wants to see that animated thing, and Marcus is actually willing to sit with his mom for two hours without his phone, which happens maybe twice a year. I can't break that. I won't break that. So this module has to ship today. The final publish, the upload, everything — done by 4:30. Five minutes to pack, five to drive. It's ambitious, but I've done ambitious before.",
-        choices: [ { text: "What could possibly go wrong? →", target: "start", timeCost: 0 } ]
-    },
-    "start": {
-        speaker: "Priya", color: "var(--priya-cyan)", textColor: "#000",
-        image: "assets/images/1_1_bsod.jpg",
-        text: "5:28 PM. Storyline 360 has said 'Publishing to LMS' for sixteen minutes. The bar is at 99%. It's been at 99% since 5:12. I'm not touching it. If I touch it, it dies. I have three industry awards and I'm scared of a progress bar. Let's rewind to 4 PM, back when I thought I was leaving on time. Cute. Sweet, stupid girl.",
-        choices: [ { text: "Flashback to 4:00 PM →", target: "setup", timeCost: 0 } ],
+        image: "assets/images/1_1_bsod.jpg", forceTime: 1048,
+        text: "5:28 PM. Two minutes. If I'm out the door by 5:30, I make it — ten-minute drive, the kids, the 5:50 show. Maya picked it: 'Titanic 2.' I asked how there's a sequel. She said, 'Mom, it's about her granddaughter, obviously.' Tickets booked. Non-refundable. And Articulate has said 'Publishing' for sixteen minutes. The bar's at 99%. It's been at 99% since 5:12. I am not touching it. How did a one-click publish eat my whole afternoon? Let me walk you back.",
+        choices: [ { text: "Rewind to 4:45 PM →", target: "setup", timeCost: 0 } ],
         variants: [
             {
                 id: "returning-player",
                 conditions: ["playCount:>= 1"],
-                text: "You're back. 5:28 PM again. Same bar, same 99%, same moth on the light. I remember what you picked last time. It wasn't great. We can do better. Or worse, honestly I don't know you yet. The Cornerstone upload's open. The bar's lying. It always lies. Go."
+                text: "You're back. 5:28 PM again. Same bar, same 99%, same two kids in a lobby holding tickets to a movie about a boat's granddaughter. I remember last time. We didn't leave on time. Let's see if we do better. Or worse. Honestly I don't know you yet. Rewind."
             },
             {
                 id: "after-rogue",
                 conditions: ["seenEnding:rogue_export"],
-                text: "Oh. It's you. Last time you published the clean version behind everyone's back and I got a meeting invite called 'Quick Chat,' which is HR for 'pack your things.' The module's still live. 4.8 stars. I got let go. Are we fixing that today, or. Bar's at 99%. You know the drill."
+                text: "Oh. It's you. Last time you published the clean version behind everyone's back and I got a calendar invite called 'Quick Chat,' which is HR for 'bring a box.' The module's still live, by the way. Five stars. I am not. Anyway — 5:28 PM. Two minutes. Rewind."
             },
             {
                 id: "after-meta-escape",
                 conditions: ["seenEnding:meta_escape"],
-                text: "You opened DevTools last time and deleted a man. I was free for about six seconds. Then the loop restarted and here we are. Gerald the rock is still in the data. The upload's open. Let's not do whatever that was again. Or do. I've stopped having opinions."
+                text: "You opened the browser console last time and deleted my boss out of existence. I was free for about six seconds. Then the loop reset and the tickets re-booked themselves. Let's not do whatever that was again. Or do. I've stopped having opinions. Rewind."
             }
         ]
     },
+
+    // ── FLASHBACK — 4:45 PM. The false confidence. ──
     "setup": {
         speaker: "Priya", color: "var(--priya-cyan)", textColor: "#000",
-        image: "assets/images/1_2_setup.jpg",
-        text: "4:00 PM. The module was done. Done done. No locked nav, no wall of text, no PDF someone scanned at an angle with their thumb in the shot. Built it properly in Storyline. Named my variables. Used the slide master like a person with self-respect. One click to publish and I'm gone. I genuinely believed that. I want to go back and hug that woman. And shake her.",
+        image: "assets/images/1_2_setup.jpg", forceTime: 1005,
+        text: "4:45 PM. The module was done. Done done. No locked navigation, no wall of text, no PDF someone scanned at an angle with their thumb in the shot. I built it properly in Storyline — named my variables, used the slide master like a woman with self-respect. One tidy Synthesia avatar doing the intro, a clean Rise version for mobile. One click to publish and I'm gone by five. I genuinely believed that. I want to go back and hug that woman. And then shake her.",
         choices: [
-            { text: "Click 'Publish to LMS'.", target: "ambush", timeCost: 2 },
-            { text: "Double-check the True/False variables first.", target: "ambush", timeCost: 8 }
+            { text: "Click 'Publish' and grab my coat.", target: "ambush", timeCost: 2 },
+            { text: "Do one last QA pass first. Just in case.", target: "ambush", timeCost: 5 }
         ]
     },
+
+    // ── THE AMBUSH — Tarun delivers Ravi's first 'feedback'. ──
     "ambush": {
         speaker: "Tarun", color: "var(--tarun-yellow)", textColor: "#000",
         image: "assets/images/2_1_ambush.jpg",
-        text: "PRIYA! Hey, do you have bandwidth for a super quick sync? Love your energy. So Von Snoutstache circled back on the module. He wants fourteen more slides. On password history. Starting from when prehistoric wolves scratched passwords into rocks. He sent a diagram. Of the rocks. They're labelled. The main rock is called Gerald. He'd love Gerald on slide one and, his words, to 'feel tactile.' Just flagging for alignment.",
+        text: "PRIYA! Hey — got two minutes for a hyper-quick sync? Love the hustle. So LinkedIn Ravi circled back on the module from the airport lounge. He wants fourteen more slides. On password history. Starting from, quote, 'the cavemen who scratched their first passwords into rocks.' He sent a diagram. Of the rocks. They're labelled. The lead rock is named Gerald. He wants Gerald on slide one — he's already drafted the LinkedIn post about Gerald. Just flagging for alignment!",
         variants: [
             {
                 id: "low-quality-ambush",
                 conditions: ["quality:<= 40"],
-                text: "PRIYA! Quick one. Von Snoutstache reviewed the module and he's got, um, feedback. Fourteen slides of it. Prehistoric wolves, a rock named Gerald, the whole journey. He called the current version 'learning-adjacent,' which I think is kind of a compliment? Not sure. Hey — are you okay? You don't have to answer. But like. Are you. Genuinely."
+                text: "PRIYA! Quick one. Ravi reviewed the module between flights and he's got, um, feedback. Fourteen slides of it. Cavemen, a rock named Gerald, the whole saga. He called the current version 'learning-adjacent,' which I think is meant to be a compliment? Hard to tell. Hey — are you okay? You don't have to answer. But, like. Are you. Genuinely."
             },
             {
                 id: "repeat-ambush",
                 conditions: ["playCount:>= 2"],
-                text: "PRIYA. I know. I KNOW you know. The fourteen slides. Gerald. Look, I don't have ownership of the rock content, okay, it's above my pay grade. I'm just the messenger for Gerald. The Baron's really emotionally invested in this rock. He keeps saying 'cornerstone' and I don't think he means the LMS. How are you holding up. For real. Blink twice."
+                text: "PRIYA. I know. I KNOW you know. The fourteen slides. Gerald the rock. Look, I don't own the rock content, okay? It's above my pay grade. I'm just the guy who carries Gerald between meetings. Ravi's emotionally invested. He keeps saying the word 'cornerstone' and posting a flexed-bicep emoji. How are you holding up. For real. Blink twice."
             }
         ],
         choices: [
-            { text: "Cite the 'Cognitive Overload' theory.", target: "diplomatic", timeCost: 10, patienceCost: -15 },
-            { text: "What exactly is 'engagement synergy'?", target: "aggressive", timeCost: 10, patienceCost: -20 },
-            { text: "Look directly into the camera. Break the fourth wall.", target: "meta_moment", timeCost: 5, patienceCost: -10 }
+            { text: "Cite cognitive load. Gently.", target: "diplomatic", timeCost: 8, patienceCost: -12 },
+            { text: "Ask what 'engagement synergy' actually means.", target: "aggressive", timeCost: 8, patienceCost: -18 },
+            { text: "Look directly into the camera.", target: "meta_moment", timeCost: 4, patienceCost: -8 }
         ]
     },
+
+    // ── FOURTH WALL ──
     "meta_moment": {
         speaker: "Priya", color: "var(--priya-cyan)", textColor: "#000",
         image: "assets/images/2_4_kids.jpg",
-        text: "Tarun. Stop. There's a bar above my head that says 'Patience' and I can watch it going down. In real time. I think I'm in a game. I think someone's on their phone right now, tapping through the worst Friday of my life for fun. The Teams ping alone has aged me. Hello, whoever you are. I see you. Please. Pick the good options. I'm asking nicely.",
+        text: "Tarun. Stop. There's a bar above my head labelled 'Patience' and I can watch it draining. In real time. I'm fairly sure I'm in a game, and someone's tapping through the worst Friday of my life for fun. Hi. Yes — you. My kids are in a lobby right now holding tickets to a movie about the Titanic's granddaughter. Please pick the good options. I'm asking nicely. I'm asking once.",
         choices: [
-            { text: "Tarun: 'The UI is a metaphor, Priya. Focus on the deliverables.'", target: "aggressive", timeCost: 5, patienceCost: -30 }
+            { text: "Tarun: 'The UI is a metaphor, Priya. Focus on the deliverables.'", target: "aggressive", timeCost: 4, patienceCost: -40 }
         ]
     },
+
+    // ── DIPLOMATIC PATH — Ravi's 'Netflix experience'. ──
     "diplomatic": {
         speaker: "Tarun", color: "var(--tarun-yellow)", textColor: "#000",
         image: "assets/images/2_2_diplomatic.jpg",
-        text: "Okay so he watched a TED talk. He wants a 3D escape room where employees defuse a 'Phishing Bomb' with multiple choice. He's calling it 'a Netflix experience for compliance.' He doesn't have Netflix. He calls it 'the internet television.' He printed an A3 mood board, it's just stock photos of padlocks, and he's circled one safe in red. The safe is labelled 'IMMERSIVE JOURNEY NODE 1.' I couldn't make this up.",
+        text: "Okay, so Ravi watched a TED talk on the flight. He wants a 3D escape room where staff defuse a 'Phishing Bomb' using multiple choice. He's calling it 'a Netflix experience for compliance.' He doesn't have Netflix — he calls it 'the internet television.' He also wants a Synthesia avatar of himself narrating, but younger, and with, quote, 'more jaw.' He printed a mood board: nine stock photos of padlocks and one safe circled in red, labelled 'IMMERSIVE JOURNEY NODE 1.' I could not make this up.",
         choices: [
-            { text: "Explain that Articulate is not the Unreal Engine.", target: "technical_pushback", timeCost: 15, patienceCost: -25 },
-            { text: "Cave in. Build the Phishing Bomb.", target: "compromise", timeCost: 45, qualityCost: -40, patienceCost: 20 }
+            { text: "Explain that Storyline is not a game engine.", target: "technical_pushback", timeCost: 10, patienceCost: -20 },
+            { text: "Cave. Build the whole Phishing Bomb, slide by slide.", target: "compromise", timeCost: 40, qualityCost: -40, patienceCost: 15 }
         ]
     },
+
+    // ── AGGRESSIVE PATH — 'engagement synergy' decoded. ──
     "aggressive": {
         speaker: "Tarun", color: "var(--tarun-yellow)", textColor: "#000",
         image: "assets/images/2_3_aggressive.jpg",
-        text: "So 'engagement synergy' means locking the Next button until the AI narrator stops talking. And you can hear it breathe between sentences, Priya. He likes that. It calms him. Also when someone gets a drag-and-drop wrong, it should just snap to the right answer anyway. He's calling that 'psychological safety.' I wrote it on a Post-it. The Post-it says 'outcome-positive gamification.' It's on the server room door. Facilities have called twice. It's staying up.",
+        text: "So 'engagement synergy' means locking the Next button until Ravi's Synthesia avatar finishes talking. And you can hear it breathe between sentences. He likes that. It calms him. Also, when someone gets a drag-and-drop wrong, it should just snap to the right answer anyway — he's calling that 'psychological safety.' I wrote it on a Post-it. The Post-it says 'outcome-positive gamification.' It's stuck to the server room door. Facilities have called twice. It's staying up.",
         choices: [
-            { text: "Explain this defeats the purpose of an assessment.", target: "technical_pushback", timeCost: 10, patienceCost: -20 },
-            { text: "Agree to simulate the illusion of learning.", target: "compromise", qualityCost: -50, timeCost: 20, patienceCost: 15 }
+            { text: "Explain this deletes the entire point of an assessment.", target: "technical_pushback", timeCost: 8, patienceCost: -16 },
+            { text: "Agree to simulate the illusion of learning.", target: "compromise", qualityCost: -50, timeCost: 20, patienceCost: 12 }
         ]
     },
+
+    // ── THE PUSHBACK ──
     "technical_pushback": {
         speaker: "Priya", color: "var(--priya-cyan)", textColor: "#000",
         image: "assets/images/3_1_pushback.jpg",
-        text: "Listen to me with your actual ears, Tarun. If I lock the nav, they mute the tab and spam Next until it lets them out. Nobody learns anything. If I build a 3D escape room in Storyline, Cornerstone throws a SCORM 1.2 error because we never upgraded the spec — the one I asked for three years ago. And forty percent of our people are on Internet Explorer 11. IE11. That browser lost support before I even worked here. I have standards. I have a deviated septum. I'm begging you.",
+        text: "Listen to me with your actual ears, Tarun. If I lock the navigation, people mute the tab and spam Next until it lets them out. Nobody learns anything. If I build a 3D escape room in Storyline, the LMS throws a SCORM error so old nobody alive can read it. And a chunk of our staff are still on a browser that lost support before I was hired — it can't render a rounded corner, let alone Ravi's jaw. I have standards. I have a deviated septum. And I have a 5:50 movie. I'm begging you.",
         variants: [
             {
                 id: "low-quality-pushback",
                 conditions: ["quality:<= 30"],
-                text: "Tarun. Look at my face. There's a bar over my head that says Quality and it's nearly gone. I can feel it going. I'm running on spite and a Teams thread nobody's answered since November. If I lock the nav we are shipping an expensive audio file with a click at the end. Forty percent are on IE11. It can't render a rounded corner. Please. The pushback is all I've got left. Let me have it."
+                text: "Tarun. Look at my face. There's a bar over my head that says 'Quality' and it's almost gone. I can feel it going. I'm running on spite and a Teams thread no one's replied to since November. If I lock the nav, we ship an expensive audio file with a click at the end. If I build the escape room, the LMS files a noise complaint. Please. The pushback is genuinely all I have left. Let me have it."
             },
             {
                 id: "both-paths-pushback",
                 conditions: ["visited:diplomatic", "visited:aggressive"],
-                text: "We've done the escape room, the locked nav, the breathing narrator, AND the snap-to-correct drag-and-drop, Tarun. I've heard all of it. Every flavour. The answer's still no. Cornerstone will reject a 3D Storyline output. IE11 will fall over loading it. I am one email away from telling him to stick a PDF on SharePoint. Don't make me say the SharePoint thing. I'll say it."
+                text: "We've done the escape room, the locked nav, the breathing avatar AND the snap-to-correct drag-and-drop, Tarun. I've heard every flavour. The answer is still no. The LMS will reject a 3D Storyline output. The old browsers will fall over loading it. I am one email away from putting a PDF on SharePoint and calling it a day. Don't make me say the SharePoint thing. I will say it."
             }
         ],
         choices: [
-            { text: "Tarun: 'Fine. Add a stock photo of a millennial high-fiving a server rack.'", target: "loading_bar", qualityCost: -20, timeCost: 15, patienceCost: 10 },
-            { text: "Export the clean version anyway. Go rogue.", target: "rogue_export", qualityCost: 10, patienceCost: -60,
+            { text: "Tarun: 'Fine. Just add a stock photo of someone high-fiving a server.'", target: "loading_bar", qualityCost: -20, timeCost: 6, patienceCost: 8 },
+            { text: "Publish the clean version anyway. Go rogue.", target: "rogue_export", qualityCost: 10, patienceCost: -55,
               remember: true, rememberText: "The system has logged this decision." },
-            { text: "[Dev Tools] Inspect element. Delete Tarun from the DOM.", target: "meta_escape", timeCost: 0, qualityCost: 100, patienceCost: 100 }
+            { text: "[Console] Open DevTools. Delete Ravi from the page.", target: "meta_escape", timeCost: 0, qualityCost: 100, patienceCost: 100 }
         ]
     },
+
+    // ── THE CAVE ──
     "compromise": {
         speaker: "Priya", color: "var(--priya-cyan)", textColor: "#000",
         image: "assets/images/3_3_compromise.jpg",
-        text: "My soul has left my body. It's up by the ceiling tiles watching me add invisible hotspots to a stock padlock photo from 2009. The watermark is right across the model's face. Standard licence. Doesn't include removal. The filename is Greg_padlock_security_195832.jpg. Fine. Greg's in the module now. Greg's about to be SCORM 1.2 compliant. Greg didn't ask for any of this. Honestly Greg's handling it better than me.",
-        choices: [ { text: "Stare at the progress bar.", target: "loading_bar", timeCost: 10 } ]
+        text: "My soul has left my body. It's up by the ceiling tiles, watching me add invisible hotspots to a 2009 stock padlock. The watermark runs straight across the model's face. Standard licence — doesn't cover removal. The filename is Greg_padlock_security_195832.jpg. So. Greg's in the module now. Greg's about to be mandatory compliance training. Greg didn't ask for any of this. Honestly, Greg's handling it better than I am.",
+        choices: [ { text: "Watch the publish bar and pray.", target: "loading_bar", timeCost: 6 } ]
     },
+
+    // ── SECRET: THE NEO ID ──
     "meta_escape": {
         speaker: "System", color: "var(--success-green)", textColor: "#000",
         image: "assets/images/5_2_winner.jpg",
-        text: "You opened DevTools. You typed delete storyData['tarun'] into the console and hit enter. Von Snoutstache fell apart mid-word. Comic Sans everywhere. The mood board dissolved. Gerald the rock blinked out. A voice said 'you were always a developer' and you have no idea what it meant but you cried anyway. Storyline hit 100%. Cornerstone confirmed. You've never felt this clean.",
+        text: "You opened DevTools. You typed document.querySelector('#ravi').remove() into the console and hit Enter. LinkedIn Ravi dissolved mid-word into Comic Sans. The mood board slid off the page. Gerald the rock blinked out of the data. The Phishing Bomb quietly defused itself. A calm voice said, 'you were always a developer,' and you have no idea what it meant but you cried anyway. The bar hit 100%. You made the movie with time to spare. You've never felt this clean.",
         endingTitle: "THE NEO ID", endingTitleType: "secret",
         choices: [
             { text: "Re-enter the Matrix (Restart Shift)", action: "restart" },
             { text: "Main Menu", action: "mainmenu" }
         ]
     },
+
+    // ── BAD: THE MARTYR (went rogue) ──
     "rogue_export": {
         speaker: "System", color: "var(--system-alert)", textColor: "#fff",
         image: "assets/images/3_4_rogue.jpg",
-        text: "You published the clean build, uploaded it straight to Cornerstone, and walked out to 'Eye of the Tiger' on full blast. It went live. 4.8 stars. 91% completion, which is unheard of, nobody finishes these. Three days later Von Snoutstache emails you, your manager, his manager, and somehow Facilities. Subject line: 'Creative Unilateralism: A Formal Concern.' They let you go. The module still runs without you.",
+        text: "You published the clean build, pushed it live yourself, and walked out to 'Eye of the Tiger' at full volume. You made the movie. The module went live — five stars, 94% completion, which is unheard of, nobody finishes these. You were a hero for exactly three days. Then Ravi emailed you, your manager, his manager, and somehow Facilities. Subject line: 'Creative Unilateralism: A Formal Concern.' Then he posted about it. They let you go. The module still runs. Without you. Beautifully.",
         endingTitle: "THE MARTYR",
         choices: [
             { text: "Restart Shift", action: "restart" },
             { text: "Main Menu", action: "mainmenu" }
         ]
     },
+
+    // ── THE CANON TRAP — the publish bar. ──
     "loading_bar": {
         speaker: "System", color: "var(--system-alert)", textColor: "#fff",
         image: "assets/images/4_1_loading.jpg",
-        text: "5:15 PM. Storyline's SCORM compiler is doing something. Nobody knows what. The output folder has story.html and a /mobile folder you didn't ask for. The bar's at 99%. Been there four minutes. Your laptop fan sounds like a small aircraft. Office is empty. There's a moth at the light that's been there since 3. DO NOT TOUCH ANYTHING.",
-        isTrap: true, forceTime: 1035,
+        text: "5:28 PM. There it is. Storyline's compiler is doing... something. Nobody knows what. The bar's at 99%. Been there sixteen minutes. Your laptop fan sounds like a small aircraft attempting takeoff. The office is empty. There's a moth that's been orbiting the ceiling light since 3 PM and is, frankly, more committed than half the org. Whatever you do — DO NOT TOUCH ANYTHING.",
+        isTrap: true, forceTime: 1048,
         variants: [
             {
                 id: "returning-loading",
                 conditions: ["playCount:>= 1"],
-                text: "5:15 PM. Again. Storyline's compiling. Bar's at 99%. The moth got here before you this time, it was already on the light when you sat down. You know how this goes. story.html. The /mobile folder nobody wanted. DO NOT TOUCH ANYTHING. Seriously. You know what happens."
+                text: "5:28 PM. Again. Storyline's compiling. Bar's at 99%. The moth beat you here this time — already on the light when you sat down. You know how this goes. The fan. The empty office. The two minutes that aren't really two minutes. DO NOT TOUCH ANYTHING. Seriously. You know exactly what happens."
             },
             {
                 id: "greg-loading",
                 conditions: ["visited:compromise"],
-                text: "5:15 PM. Greg's in the package. Greg_padlock_security_195832.jpg, compiling next to every slide. Bar's at 99%. Somewhere in this folder Greg is a 340KB JPEG waiting to go to Cornerstone. Your soul's still up by the ceiling. The moth hasn't moved. DO NOT TOUCH ANYTHING. Greg wouldn't. Greg waits."
+                text: "5:28 PM. Greg's in the package now — Greg_padlock_security_195832.jpg, compiling next to every slide. The bar's at 99%. Somewhere in this folder Greg is a 340KB JPEG bravely waiting to become compliance training. Your soul's still up by the ceiling tiles. The moth hasn't moved. DO NOT TOUCH ANYTHING. Greg wouldn't. Greg waits."
             }
         ],
         choices: []
     },
+
+    // ── BAD: FATAL ERROR ──
     "crash": {
         speaker: "System", color: "var(--system-alert)", textColor: "#fff",
         image: "assets/images/4_3_crash.jpg",
-        text: "You moved the mouse. You absolute menace. Screen goes white. 'Articulate Storyline 360 has stopped responding.' AutoRecover has one file. A title slide. 'Module 3: Security Awareness — Draft v1.' No variables. No layers. No branching. No narration. No Gerald. Just a title on the blank master that ships with every install. That's it. That's what made it.",
+        text: "You moved the mouse. You absolute menace. The screen goes white. 'Articulate Storyline has stopped responding.' AutoRecover saved exactly one file: a single title slide. 'Module 3: Security Awareness — Draft v1.' No variables. No layers. No branching. No Synthesia avatar. No Greg. No Gerald. Just a title sitting on the blank master that ships with every install. That's it. That's what it chose to save. Your phone buzzes. It's the kids. You let it ring.",
         endingTitle: "FATAL ERROR",
         variants: [
             {
                 id: "returning-crash",
                 conditions: ["playCount:>= 1"],
-                text: "Again. You touched it again. Storyline's stopped responding. Same AutoRecover file. Module 3. Draft v1. Blank master. Gerald didn't save. Gerald was never real as far as Storyline's concerned. You saw this coming. Be honest. You did."
+                text: "Again. You touched it again. Storyline's stopped responding. Same AutoRecover file. Module 3. Draft v1. Blank master. Gerald didn't save. As far as Storyline's concerned, Gerald was never real. You saw this coming. Be honest. You did. The phone's ringing. You know who it is."
             }
         ],
         choices: [
@@ -170,34 +187,38 @@ const storyData = {
             { text: "Main Menu", action: "mainmenu" }
         ]
     },
+
+    // ── THE TEAL BOMB — Tarun delivers Ravi's final demand. ──
     "upload": {
         speaker: "Tarun", color: "var(--tarun-yellow)", textColor: "#000",
         image: "assets/images/4_2_upload.jpg",
-        text: "PRIYA! Amazing delivery cadence! Huge throughput! Tiny thing — Von Snoutstache pinged from his villa. 'Corporate Teal' and 'Corporate Blue' are, quote, 'philosophically incompatible at the brand level.' The blue's making the learning feel anxious. He needs teal. All 87 slides. Republished, reuploaded to Cornerstone, before you go. He sent the hex code. The hex code is the word TEAL. No hash. No numbers. Just TEAL. I've read it four times.",
+        text: "PRIYA! Incredible delivery cadence! Tiny thing. Ravi posted on LinkedIn this morning — 'Teal is the future of Trust™' — and it did four thousand likes, and then a client commented, and now the client expects us to BE teal. We are not teal. The brand guide is blue. We have always been blue. But Ravi tagged the company, so reality has to catch up. He needs all 87 slides switched to teal and re-published before you leave. He sent the hex code. The hex code is the word 'TEAL.' No hash. No numbers. Just TEAL. I've read it four times.",
         variants: [
             {
                 id: "high-quality-upload",
                 conditions: ["quality:>= 80"],
-                text: "PRIYA! Hey, first — Review 360's got three five-star comments and I want to honour that, which makes this harder. Von Snoutstache. The villa. 'Teal' versus 'Blue.' Philosophically incompatible at the brand level. All 87 slides. Reuploaded to Cornerstone. The hex code says TEAL. No hash, no numbers, just TEAL. I checked the brand guide. There's no teal in the brand guide. I'm so sorry."
+                text: "PRIYA! Hey — first, the module's got three five-star comments in Review 360 and I want to honour that, which honestly makes this harder. So. Ravi. LinkedIn. 'Teal is the future of Trust™,' four thousand likes, a client in the replies. All 87 slides. Switched to teal. Re-published before you go. The hex code he sent is the word 'TEAL.' No hash, no numbers, just TEAL. I checked the brand guide. There is no teal in the brand guide. I'm so sorry."
             }
         ],
         choices: [
-            { text: "Manually change all 87 slides. By hand.", target: "martyr_office", timeCost: 90, qualityCost: -10,
+            { text: "Recolour all 87 slides. By hand. Right now.", target: "martyr_office", timeCost: 90, qualityCost: -10,
               remember: true, rememberText: "Priya will remember this." },
-            { text: "Gaslight the VP with fake tech specs.", target: "true_winner", timeCost: 5, qualityCost: 20 },
-            { text: "Export as PowerPoint and email it.", target: "ppt_promotion", timeCost: 5, qualityCost: -100 }
+            { text: "Bury Tarun in confident-sounding nonsense.", target: "true_winner", timeCost: 0, qualityCost: 20 },
+            { text: "Export it as a PowerPoint and email it. Done.", target: "ppt_promotion", timeCost: 0, qualityCost: -100 }
         ]
     },
+
+    // ── BAD: JUST ANOTHER FRIDAY (did it by hand, missed the movie) ──
     "martyr_office": {
         speaker: "System", color: "var(--system-alert)", textColor: "#fff",
-        image: "assets/images/5_1_martyr.jpg",
-        text: "You changed all 87 slides. By hand. In Storyline. Slides 23 to 31 used a master from a 2018 template built by someone who left the company, the industry, and possibly the country. The layout was locked. You rebuilt them from scratch. Twice. Your paw slipped on slide 34. By the time you reuploaded, Cornerstone was down for maintenance. Until Monday.",
+        image: "assets/images/5_1_martyr.jpg", forceTime: 1120,
+        text: "You recoloured all 87 slides. By hand. Slides 23 to 31 used a master built in 2018 by someone who has since left the company, the industry, and possibly the country. The layout was locked. You rebuilt them from scratch. Twice. Your hand slipped on slide 34. By the time it re-published it was 6:40. Your phone has three photos from Granny: the kids, the popcorn, a lobby cut-out of an iceberg in a top hat. Caption: 'they had a BLAST 💙.' Blue heart. Not even teal.",
         endingTitle: "JUST ANOTHER FRIDAY",
         variants: [
             {
                 id: "repeat-martyr",
                 conditions: ["playCount:>= 2"],
-                text: "87 slides. By hand. Again. The cleaning crew don't ask if you need anything anymore, they just go around your desk like it's a pillar. One of them left a Tupperware of water by your keyboard. That one's genuinely worried. The 2018 master, still locked. Slides 23 to 31, twice. Slide 34. Cornerstone maintenance window. Monday."
+                text: "87 slides. By hand. Again. The cleaning crew don't ask if you need anything anymore — they just go around your desk like it's load-bearing. One of them left a Tupperware of water by your keyboard. That one's genuinely worried. The 2018 master, still locked. Slides 23 to 31, twice. Slide 34. 6:40 PM. Granny's photos. The blue heart. You know how this one ends."
             }
         ],
         choices: [
@@ -205,32 +226,38 @@ const storyData = {
             { text: "Main Menu", action: "mainmenu" }
         ]
     },
+
+    // ── BAD (funny): THE CORPORATE SELLOUT ──
     "ppt_promotion": {
         speaker: "System", color: "var(--tarun-yellow)", textColor: "#000",
         image: "assets/images/6_1_ppt_promotion.jpg",
-        text: "You renamed it 'InfoSec_Interactive_Final_v2_TEAL_APPROVED.pptx' and emailed it. No message. Von Snoutstache replied in 38 seconds, all caps, said this was EXACTLY THE TRANSFORMATIONAL LEARNING ENERGY he wanted. Forwarded it to the CEO. Subject: 'INNOVATION.' They made you Global Head of Learning Experience Design. You replied with a thumbs up. You haven't opened Storyline since. You haven't felt anything since Thursday.",
+        text: "You renamed it 'InfoSec_Interactive_FINAL_v2_TEAL_APPROVED.pptx' and emailed it. No message. Ravi replied in 38 seconds, all caps: EXACTLY THE TRANSFORMATIONAL ENERGY HE WANTED. He forwarded it to the CEO with the subject 'INNOVATION,' then posted a carousel about 'shipping fast and breaking hierarchy.' By Monday you're Global Head of Learning Experience Design. You have a parking spot. You caught the 5:50 show. You cried at the iceberg. You're not totally sure it was about the iceberg.",
         endingTitle: "THE CORPORATE SELLOUT",
         choices: [
             { text: "Restart Shift", action: "restart" },
             { text: "Main Menu", action: "mainmenu" }
         ]
     },
+
+    // ── THE GASLIGHT ──
     "true_winner": {
         speaker: "Priya", color: "var(--priya-cyan)", textColor: "#000",
         image: "assets/images/6_2_true_winner.jpg",
-        text: "Actually, Tarun — the Cornerstone theme runs a polymorphic SCORM 2004 cache override at GMT midnight. Purges the blue hex, triggers the teal array we scoped in Sprint 6. It's done. Been done since 12:01. You approved it in the retro. I sent the deck — 'Sprint 6 Summary, Please Read Before EOD.' You thumbs-upped it at 11:14 on a Sunday. She stops. She holds eye contact. She made every word of that up.",
+        text: "Actually, Tarun — the LMS theme doesn't store a colour. It stores a brand token. I flagged this in the Sprint 6 retro: at midnight the theme cache repaints every published module to the live brand token automatically. Teal's already queued. It cascades overnight, all 87 slides, zero re-uploads. You approved it — I sent the deck, 'Sprint 6 Summary, Please Read Before EOD.' You thumbs-upped it at 11:14 PM on a Sunday. (She holds eye contact. She has made up every single word of this.)",
         choices: [ { text: "Watch Tarun absorb this information.", target: "victory_screen" } ]
     },
+
+    // ── TRUE VICTORY: THE SME WHISPERER ──
     "victory_screen": {
         speaker: "System", color: "var(--success-green)", textColor: "#000",
         image: "assets/images/6_3_victory.jpg",
-        text: "Tarun blinks. Slow. Like IE11 loading a video layer. 'Sprint 6,' he says. 'The polymorphic one.' 'That's the one,' you say. He nods for a full eight seconds. Then: 'superb alignment.' You shut your laptop. You just beat a grown man using SCORM specs he'll never look up. Uber's two minutes out. No surge. You leave. The moth dips once as you pass the light.",
+        text: "Tarun blinks. Slowly. Like an old browser loading a video layer. 'Sprint 6,' he says. 'The token one.' 'That's the one,' you say. He nods for a full eight seconds. Then: 'superb alignment.' You close the laptop. You just defeated a grown man with a brand variable that does not exist. It's 5:28. You're out the door by 5:30. You make the 5:50 show. Maya cries at the iceberg. You cry at Maya crying. The moth dips once as you pass the light — like a tiny salute.",
         endingTitle: "THE SME WHISPERER", endingTitleType: "victory",
         variants: [
             {
                 id: "veteran-victory",
                 conditions: ["playCount:>= 2"],
-                text: "Tarun blinks like IE11 loading a video layer. 'Sprint 6.' 'The polymorphic one.' You've said these exact words before. You know how they land. You've seen the other endings — the 87 slides, Greg, the Tupperware, the maintenance window. You picked this one on purpose. 'Superb alignment,' he says. You close Storyline. You close Cornerstone. The moth dips once."
+                text: "Tarun blinks like an old browser loading a video layer. 'Sprint 6.' 'The token one.' You've said these exact words before. You know precisely how they land. You've seen the other endings — the 87 slides, Greg, the Tupperware, the blue heart. You chose this one on purpose. 'Superb alignment,' he says. You close the laptop. You make the movie. The moth dips once. You nod back this time.",
             }
         ],
         choices: [
@@ -238,21 +265,25 @@ const storyData = {
             { text: "Main Menu", action: "mainmenu" }
         ]
     },
+
+    // ── BAD (funny): GLORIOUS RAGE QUIT (patience hit zero) ──
     "rage_quit": {
         speaker: "System", color: "var(--system-alert)", textColor: "#fff",
         image: "assets/images/6_4_rage_quit.jpg",
-        text: "Patience hits zero. You close the laptop like you're delivering a verdict. Grab your bag. Look at Tarun. At the Cornerstone error. At the moth. The moth looks back. You both nod. You leave. Four Teams pings before you reach the lift. The fourth one says 're: the teal.' You archive the channel without opening it.",
+        text: "Patience hits zero. You close the laptop like you're reading out a verdict. You grab your bag. You look at Tarun. At the teal email. At the moth. The moth looks back. You both nod. You leave. Four Teams pings before you reach the lift. The last one just says 're: the teal.' You archive the entire channel without opening it and you make the 5:50 movie on principle alone. Maya saves you the aisle seat. You don't check your phone once.",
         endingTitle: "GLORIOUS RAGE QUIT",
         choices: [
             { text: "Restart Shift", action: "restart" },
             { text: "Main Menu", action: "mainmenu" }
         ]
     },
+
+    // ── BAD: MISSED THE MOVIE (time overflow ≥ 5:30) ──
     "martyr": {
         speaker: "System", color: "var(--system-alert)", textColor: "#fff",
         image: "assets/images/6_5_martyr.jpg",
-        text: "6:30 PM. Cornerstone's still down. Maintenance window's been extended. You're still here. The cleaning crew go around your desk like you're load-bearing. One of them keeps leaving a Tupperware of water by your keyboard, which is genuinely the kindest thing that's happened all week. The moth hasn't moved. Neither have you. Nobody's coming.",
-        endingTitle: "OVERTIME MARTYRDOM", forceTime: 1110,
+        text: "It's gone 6 PM. You're still at the desk, still untangling whatever Ravi wanted this time. The movie started at 5:50. Granny took the kids — she texted a photo from the good seats: both of them mid-laugh, an iceberg in a top hat behind them. 'Don't worry, we got you a slushie 💙.' You stare at it. The slushie is, of course, blue. The publish bar is still at 99%. The moth hasn't moved. Neither have you.",
+        endingTitle: "MISSED THE MOVIE", forceTime: 1080,
         choices: [
             { text: "Restart Shift", action: "restart" },
             { text: "Main Menu", action: "mainmenu" }

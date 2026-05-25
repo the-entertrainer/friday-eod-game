@@ -234,7 +234,7 @@ function showContextualEffect(text) {
 
 // ─── Game BGM System ──────────────────────────────────────────────────────────
 const SCENE_MOODS = {
-    start: 'office', setup: 'office', upload: 'office',
+    intro: 'office', setup: 'office', upload: 'office',
     ambush: 'tense', meta_moment: 'tense', diplomatic: 'tense',
     aggressive: 'tense', technical_pushback: 'tense',
     compromise: 'defeated', loading_bar: 'suspense',
@@ -474,7 +474,7 @@ function resetState() {
     clearTrapTimers();
     stopTypingSound();
     gameState.isTyping     = false;
-    gameState.minutes      = 960;
+    gameState.minutes      = 1005;
     _clkMinAccum           = 0;
     _nodeLoading           = false;
     gameHistory.visitedThisRun.clear();
@@ -506,9 +506,9 @@ function updateHUD() {
     uiQuality.classList.toggle('bar-danger',  qPct < 20);
     uiPatience.classList.toggle('bar-warning', pPct < 30 && pPct >= 15);
     uiPatience.classList.toggle('bar-danger',  pPct < 15);
-    const timeLeft = 1110 - gameState.minutes;
-    uiClock.classList.toggle('clock-warning', timeLeft < 90 && timeLeft >= 40);
-    uiClock.classList.toggle('clock-danger',  timeLeft < 40);
+    const timeLeft = 1050 - gameState.minutes;
+    uiClock.classList.toggle('clock-warning', timeLeft < 25 && timeLeft >= 10);
+    uiClock.classList.toggle('clock-danger',  timeLeft < 10);
 }
 
 function spawnFloatingText(elementId, text, color) {
@@ -974,7 +974,7 @@ function handleChoice(choice) {
     // Overflow endings: skip if already on an ending node, or if the chosen target is itself an ending
     if (!ALL_ENDINGS.has(gameState.currentNode) && !ALL_ENDINGS.has(choice.target)) {
         if (gameState.patience <= 0)   { loadNode("rage_quit"); return; }
-        if (gameState.minutes >= 1110) { loadNode("martyr");    return; }
+        if (gameState.minutes >= 1050) { loadNode("martyr");    return; }
     }
 
     if (choice.action === "restart") {

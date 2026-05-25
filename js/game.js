@@ -2,7 +2,7 @@ let gameState = {
     minutes: 960,
     quality: 100,
     patience: 50,
-    currentNode: "start",
+    currentNode: "intro",
     resolvedText: '',
     isTyping: false,
     typeInterval: null,

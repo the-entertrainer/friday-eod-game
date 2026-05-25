@@ -1,4 +1,10 @@
 const storyData = {
+    "intro": {
+        speaker: "Priya", color: "var(--priya-cyan)", textColor: "#000",
+        image: "assets/images/1_1_bsod.jpg",
+        text: "It's Friday. 4 PM is when I told the kids we'd go to the movies. I promised. Sophia wants to see that animated thing, and Marcus is actually willing to sit with his mom for two hours without his phone, which happens maybe twice a year. I can't break that. I won't break that. So this module has to ship today. The final publish, the upload, everything — done by 4:30. Five minutes to pack, five to drive. It's ambitious, but I've done ambitious before.",
+        choices: [ { text: "What could possibly go wrong? →", target: "start", timeCost: 0 } ]
+    },
     "start": {
         speaker: "Priya", color: "var(--priya-cyan)", textColor: "#000",
         image: "assets/images/1_1_bsod.jpg",

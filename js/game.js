@@ -701,11 +701,12 @@ function showEndingTitle(title, type) {
 
     const nameEl = document.createElement('div');
     Object.assign(nameEl.style, {
-        fontFamily: "'Outfit',sans-serif",
-        fontSize: 'clamp(1.9rem, 9vw, 3rem)', fontWeight: '900',
-        textTransform: 'uppercase', lineHeight: '1.08',
-        color: color, WebkitTextStroke: '2px #000',
-        textShadow: `6px 6px 0 #000, -1px -1px 0 #000`,
+        fontFamily: "'Bebas Neue',sans-serif",
+        fontSize: 'clamp(2.4rem, 11vw, 3.6rem)', fontWeight: '400',
+        textTransform: 'uppercase', lineHeight: '1.05',
+        letterSpacing: '3px',
+        color: color,
+        textShadow: `5px 5px 0 #000, -1px -1px 0 rgba(0,0,0,0.6)`,
     });
     nameEl.textContent = title;
 

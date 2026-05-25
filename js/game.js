@@ -390,7 +390,7 @@ let _themeAudio = null;
 function startTitleBGM() {
     try {
         if (!_themeAudio) {
-            _themeAudio = new Audio('assets/audio/Theme.wav');
+            _themeAudio = new Audio('assets/audio/Dialogues Theme.mp3');
             _themeAudio.loop   = true;
             _themeAudio.volume = 0.45;
         }

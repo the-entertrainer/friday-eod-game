@@ -478,6 +478,7 @@ body {
     padding: 10px 14px; font-size: 0.77rem; font-weight: 700; letter-spacing: 0.4px;
     background: rgba(0,0,0,0.28);
     animation: cardFadeIn 0.4s ease forwards;
+    font-family: 'Outfit', sans-serif;
 }
 .victory-stats { border-color: var(--success-green); color: var(--success-green); box-shadow: 0 0 14px rgba(0,255,170,0.2); }
 .bad-stats     { border-color: var(--system-alert);  color: var(--system-alert);  box-shadow: 0 0 14px rgba(255,71,87,0.2); }

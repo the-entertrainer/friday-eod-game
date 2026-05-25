@@ -742,79 +742,61 @@ body {
 
 /* ── C3: Credits modal ── */
 #credits-modal {
-    position: absolute; inset: 0; z-index: 160;
-    background: #000;
-    display: none; overflow: hidden;
+    position: absolute; inset: 0; z-index: 150;
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(0,0,0,0.72);
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.2s ease;
 }
-#credits-modal.visible { display: block; }
+#credits-modal.visible { opacity: 1; pointer-events: all; }
+.credits-card {
+    background: #fff; border: 3px solid #000;
+    border-radius: 0; min-width: 320px; max-height: 70vh; overflow-y: auto;
+    box-shadow: 6px 6px 0 #000;
+}
+.credits-header {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 14px 22px;
+    background: var(--priya-cyan); border-bottom: 3px solid #000;
+    font-family: 'Outfit', sans-serif; font-weight: 900;
+    font-size: 0.72rem; letter-spacing: 4px; color: #000;
+    text-transform: uppercase;
+}
 .credits-close {
-    position: absolute; top: 14px; right: 14px; z-index: 5;
-    background: rgba(255,255,255,0.1); border: 1.5px solid var(--priya-cyan);
-    border-radius: 2px; color: white; width: 40px; height: 40px;
-    font-size: 1.1rem; cursor: pointer; display: flex; align-items: center; justify-content: center;
-    transition: background 0.15s, box-shadow 0.15s;
+    background: none; border: 1.5px solid var(--priya-cyan); color: #000;
+    font-size: 1.2rem; font-weight: 900; cursor: pointer; padding: 4px 8px; line-height: 1;
+    transition: opacity 0.12s, box-shadow 0.12s;
+    border-radius: 2px;
 }
-.credits-close:hover {
-    background: rgba(255,255,255,0.2);
-    color: white;
-    box-shadow: 0 0 10px rgba(0,229,255,0.4);
-    box-shadow: 0 0 10px rgba(255,255,255,0.15);
-}
-#credits-scroll-wrap {
-    position: absolute; inset: 0; overflow: hidden;
-    perspective: 700px;
-    perspective-origin: center center;
-}
+.credits-close:hover { opacity: 0.9; box-shadow: 0 0 8px rgba(0,229,255,0.3); }
+#credits-scroll-wrap { padding: 0; }
 #credits-scroll {
-    position: absolute; left: 0; right: 0; width: 100%;
-    padding: 60px 36px 100px;
+    padding: 22px 22px;
     font-family: 'Outfit', sans-serif; text-align: center;
-    transform: rotateX(75deg) translateY(850px);
-    transform-origin: 50% 100%;
-    animation: crawl 60s ease-in forwards;
-}
-#credits-modal.visible #credits-scroll {
-    animation: crawl 60s ease-in forwards;
-}
-@keyframes crawl {
-    0% {
-        transform: rotateX(75deg) translateY(850px);
-        opacity: 0;
-    }
-    3% {
-        opacity: 1;
-    }
-    90% {
-        opacity: 1;
-    }
-    100% {
-        transform: rotateX(75deg) translateY(-1500px);
-        opacity: 0;
-    }
 }
 .credits-intro {
-    font-size: 0.85rem; font-weight: 600; color: rgba(255,255,255,0.5);
-    font-style: italic; letter-spacing: 0.5px; line-height: 1.7;
-    margin-bottom: 36px;
+    font-size: 0.75rem; font-weight: 600; color: rgba(0,0,0,0.55);
+    font-style: italic; letter-spacing: 0.5px; line-height: 1.6;
+    margin-bottom: 16px;
 }
 .credits-title {
-    font-size: 1.3rem; font-weight: 900; letter-spacing: 3px;
-    color: var(--priya-cyan); text-transform: uppercase; line-height: 1.2;
-    margin-bottom: 6px;
+    font-size: 1.1rem; font-weight: 900; letter-spacing: 3px;
+    color: #000; text-transform: uppercase; line-height: 1.2;
+    margin-bottom: 4px;
 }
 .credits-subtitle {
-    font-size: 0.9rem; font-weight: 600; color: rgba(255,255,255,0.55);
-    letter-spacing: 1px; font-style: italic; margin-bottom: 28px;
+    font-size: 0.8rem; font-weight: 600; color: rgba(0,0,0,0.6);
+    letter-spacing: 1px; font-style: italic; margin-bottom: 14px;
 }
 .credits-section {
-    color: rgba(255,255,255,0.38); font-size: 0.68rem; letter-spacing: 4px;
-    text-transform: uppercase; margin: 28px 0 10px;
+    color: rgba(0,0,0,0.4); font-size: 0.65rem; letter-spacing: 3px;
+    text-transform: uppercase; margin: 12px 0 6px; font-weight: 700;
 }
 .credits-body {
-    font-size: 0.9rem; font-weight: 600; color: rgba(255,255,255,0.82); line-height: 1.8;
+    font-size: 0.85rem; font-weight: 500; color: #000; line-height: 1.6;
 }
 .credits-footer {
-    font-size: 0.72rem; color: rgba(255,255,255,0.3); letter-spacing: 2px;
+    font-size: 0.7rem; color: rgba(0,0,0,0.35); letter-spacing: 1px;
     margin-top: 40px;
 }
 

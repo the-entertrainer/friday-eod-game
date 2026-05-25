@@ -465,7 +465,7 @@ function startGame() {
     stopTitleBGM();
     initAudio();
     resetState();
-    loadNode("start");
+    loadNode("intro");
     showHUDTooltips();
 }
 

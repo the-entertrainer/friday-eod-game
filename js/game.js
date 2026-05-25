@@ -1271,7 +1271,7 @@ function initTitleScreen() {
     document.querySelector('.ts-btn')?.addEventListener('pointerdown', onTitleInteract, { once: true });
 
     // C2: Audio unlock overlay
-    document.getElementById('brand-splash')?.addEventListener('pointerdown', dismissBrandSplash, { once: true });
+    document.getElementById('brand-tap')?.addEventListener('pointerdown', dismissBrandSplash, { once: true });
 
     // C1: Settings panel — click outside card to close
     document.getElementById('settings-panel')?.addEventListener('pointerdown', e => {

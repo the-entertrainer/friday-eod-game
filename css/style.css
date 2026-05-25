@@ -395,20 +395,20 @@ body {
     text-shadow: 0 2px 8px rgba(0,0,0,0.45);
 }
 .ts-btn {
-    background: #F5C518; color: #1a1a1a;
-    border: 3px solid #1a1a1a; border-radius: 0;
+    background: var(--tarun-yellow); color: #000;
+    border: 3px solid #000; border-radius: 0;
     padding: 16px 56px; font-size: 1.2rem; font-weight: 900;
     font-family: 'Outfit', sans-serif; cursor: pointer;
     letter-spacing: 1.5px; text-transform: uppercase;
-    box-shadow: 4px 4px 0 #1a1a1a;
+    box-shadow: 4px 4px 0 #000;
     transition: transform 0.1s, box-shadow 0.1s, filter 0.15s;
 }
 .ts-btn:hover  {
     transform: translate(-2px,-2px);
-    box-shadow: 6px 6px 0 #1a1a1a, 0 0 12px rgba(255,234,0,0.3);
+    box-shadow: 6px 6px 0 #000, 0 0 12px rgba(255,234,0,0.3);
     filter: brightness(1.05);
 }
-.ts-btn:active { transform: translate(4px, 4px);  box-shadow: 0   0   0 #1a1a1a; }
+.ts-btn:active { transform: translate(4px, 4px); box-shadow: 0 0 0 #000; }
 
 /* --- Scene crossfade --- */
 #fade-overlay {
@@ -636,7 +636,7 @@ body {
 .sp-header {
     display: flex; justify-content: space-between; align-items: center;
     padding: 14px 22px;
-    background: #ffea00; border-bottom: 3px solid #000;
+    background: var(--tarun-yellow); border-bottom: 3px solid #000;
     font-family: 'Outfit', sans-serif; font-weight: 900;
     font-size: 0.72rem; letter-spacing: 4px; color: #000;
     text-transform: uppercase;
@@ -698,19 +698,30 @@ body {
 }
 #sp-speed-slider::-moz-range-thumb:hover { filter: brightness(1.1); }
 
-/* ── C2: Audio unlock overlay ── */
-#audio-unlock-overlay {
-    position: absolute; inset: 0; z-index: 200;
-    background: rgba(10,10,20,0.84);
-    display: flex; align-items: center; justify-content: center;
-    cursor: pointer;
+/* ── Entertrainer brand splash ── */
+#brand-splash {
+    position: absolute; inset: 0; z-index: 250;
+    background: #fff;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 36px;
+    transition: opacity 0.6s ease;
 }
-#audio-unlock-overlay span {
-    color: rgba(255,255,255,0.82);
-    font-family: 'Outfit', sans-serif;
-    font-size: 1.05rem; font-weight: 700;
-    letter-spacing: 2.5px; text-transform: uppercase;
-    animation: tapBlink 1.3s ease-in-out infinite;
+#brand-splash.hiding { opacity: 0; pointer-events: none; }
+#brand-logo {
+    max-width: 70%; max-height: 180px; object-fit: contain;
+    opacity: 0;
+    animation: brandLogoIn 1.2s ease 0.3s forwards;
+}
+#brand-tap {
+    background: none; border: none; border-bottom: 2px solid var(--priya-cyan);
+    color: #1a1a24; font-family: 'Outfit', sans-serif;
+    font-size: 0.78rem; font-weight: 700; letter-spacing: 3px; text-transform: lowercase;
+    cursor: pointer; padding: 4px 8px;
+    opacity: 0;
+    animation: brandLogoIn 0.8s ease 1.6s forwards, tapBlink 1.5s ease-in-out 2.4s infinite;
+}
+@keyframes brandLogoIn {
+    from { opacity: 0; transform: scale(0.94); }
+    to   { opacity: 1; transform: scale(1); }
 }
 
 /* ── C3: Credits modal ── */
@@ -744,11 +755,16 @@ body {
     transform: translateY(100%);
 }
 #credits-modal.visible #credits-scroll {
-    animation: creditsRoll 32s linear forwards;
+    animation: creditsRoll 40s linear forwards;
 }
 @keyframes creditsRoll {
     from { transform: translateY(100%); }
     to   { transform: translateY(-100%); }
+}
+.credits-intro {
+    font-size: 0.85rem; font-weight: 600; color: rgba(255,255,255,0.5);
+    font-style: italic; letter-spacing: 0.5px; line-height: 1.7;
+    margin-bottom: 36px;
 }
 .credits-title {
     font-size: 1.3rem; font-weight: 900; letter-spacing: 3px;

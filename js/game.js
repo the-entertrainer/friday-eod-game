@@ -4,7 +4,6 @@ let gameState = {
     patience: 50,
     currentNode: "start",
     resolvedText: '',
-    previousNode: null,
     isTyping: false,
     typeInterval: null,
     trapTimeout: null
@@ -486,7 +485,6 @@ function resetState() {
     gameHistory.visitedThisRun.clear();
     gameState.quality      = 100;
     gameState.patience     = 50;
-    gameState.previousNode = null;
     uiEndingCard.style.display = 'none';
     uiEndingCard.innerHTML     = '';
     uiGameCont.classList.remove('ending-victory', 'ending-bad');
@@ -988,8 +986,6 @@ function handleChoice(choice) {
         startGame();
     } else if (choice.action === "mainmenu") {
         showTitleScreen();
-    } else if (choice.action === "return_from_cutaway") {
-        loadNode(gameState.previousNode || "start");
     } else if (choice.target) {
         loadNode(choice.target);
     } else {
@@ -1204,17 +1200,6 @@ function initTitleScreen() {
     positionTitleElements();
     window.addEventListener('resize', positionTitleElements);
 
-    const logoWrap = document.getElementById('ts-logo-wrap');
-    if (logoWrap) {
-        setTimeout(() => {
-            logoWrap.classList.add('logo-slam');
-            logoWrap.addEventListener('animationend', () => {
-                logoWrap.classList.remove('logo-slam');
-                logoWrap.classList.add('logo-float');
-            }, { once: true });
-        }, 250);
-    }
-
     document.getElementById('title-screen')?.addEventListener('click', (e) => {
         if (!e.target.closest('#zone-priya') && !e.target.closest('#zone-tarun') && !e.target.closest('.char-bubble')) {
             hideCharBubbles();
@@ -1225,7 +1210,7 @@ function initTitleScreen() {
     document.querySelector('.ts-btn')?.addEventListener('pointerdown', onTitleInteract, { once: true });
 
     // C2: Audio unlock overlay
-    document.getElementById('audio-unlock-overlay')?.addEventListener('pointerdown', dismissAudioUnlock, { once: true });
+    document.getElementById('brand-splash')?.addEventListener('pointerdown', dismissBrandSplash, { once: true });
 
     // C1: Settings panel — click outside card to close
     document.getElementById('settings-panel')?.addEventListener('pointerdown', e => {
@@ -1254,7 +1239,7 @@ window.addEventListener('load', () => {
 });
 
 // ─── Safari audio unlock ──────────────────────────────────────────────────────
-// #audio-unlock-overlay handles the guaranteed-trusted-gesture unlock on first visit.
+// The brand-splash pointerdown handles the guaranteed-trusted-gesture audio unlock.
 // This lightweight fallback resumes a suspended AudioContext on any later interaction
 // (e.g. after returning from a backgrounded tab on iOS).
 (function () {
@@ -1265,16 +1250,34 @@ window.addEventListener('load', () => {
     document.addEventListener('pointerdown', unlock, { capture: true, passive: true });
 })();
 
-// ─── C2: Audio unlock overlay dismiss ────────────────────────────────────────
-function dismissAudioUnlock() {
-    const ov = document.getElementById('audio-unlock-overlay');
-    if (ov) ov.remove();
+// ─── Brand splash dismiss (audio unlock + reveal title screen) ───────────────
+function dismissBrandSplash() {
+    const splash = document.getElementById('brand-splash');
+    if (splash) {
+        splash.classList.add('hiding');
+        setTimeout(() => splash.remove(), 650);
+    }
     initAudio();
     if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume().catch(() => {});
     if (!titleAudioInited) {
         titleAudioInited = true;
         startTitleBGM();
     }
+    revealTitleScreen();
+}
+
+function revealTitleScreen() {
+    const logoWrap = document.getElementById('ts-logo-wrap');
+    if (!logoWrap) return;
+    logoWrap.className = 'ts-logo-wrap';
+    void logoWrap.offsetWidth;
+    setTimeout(() => {
+        logoWrap.classList.add('logo-slam');
+        logoWrap.addEventListener('animationend', () => {
+            logoWrap.classList.remove('logo-slam');
+            logoWrap.classList.add('logo-float');
+        }, { once: true });
+    }, 120);
 }
 
 // ─── C1: Settings panel ──────────────────────────────────────────────────────

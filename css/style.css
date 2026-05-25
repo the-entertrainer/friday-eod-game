@@ -762,46 +762,33 @@ body {
 }
 #credits-scroll-wrap {
     position: absolute; inset: 0; overflow: hidden;
-    perspective: 600px;
-    transform-style: preserve-3d;
-    display: flex; align-items: center; justify-content: center;
+    perspective: 700px;
+    perspective-origin: center center;
 }
 #credits-scroll {
     position: absolute; left: 0; right: 0; width: 100%;
     padding: 60px 36px 100px;
     font-family: 'Outfit', sans-serif; text-align: center;
-    transform-style: preserve-3d;
-    transform: translateY(800px) rotateX(75deg) scaleY(0.15);
+    transform: rotateX(75deg) translateY(850px);
+    transform-origin: 50% 100%;
+    animation: crawl 60s ease-in forwards;
 }
 #credits-modal.visible #credits-scroll {
-    animation: creditsRoll3D 42s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
+    animation: crawl 60s ease-in forwards;
 }
-@keyframes creditsRoll3D {
+@keyframes crawl {
     0% {
-        transform: translateY(800px) rotateX(75deg) scaleY(0.15);
+        transform: rotateX(75deg) translateY(850px);
+        opacity: 0;
+    }
+    3% {
         opacity: 1;
     }
-    5% {
-        transform: translateY(750px) rotateX(73deg) scaleY(0.18);
-    }
-    15% {
-        transform: translateY(500px) rotateX(60deg) scaleY(0.35);
-    }
-    35% {
-        transform: translateY(0px) rotateX(40deg) scaleY(0.7);
-    }
-    50% {
-        transform: translateY(-300px) rotateX(20deg) scaleY(0.9);
-    }
-    75% {
-        transform: translateY(-800px) rotateX(5deg) scaleY(1);
-    }
     90% {
-        transform: translateY(-1300px) rotateX(0deg) scaleY(1);
         opacity: 1;
     }
     100% {
-        transform: translateY(-1600px) rotateX(0deg) scaleY(1);
+        transform: rotateX(75deg) translateY(-1500px);
         opacity: 0;
     }
 }

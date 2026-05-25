@@ -2,30 +2,30 @@ const storyData = {
     "start": {
         speaker: "Priya", color: "var(--priya-cyan)", textColor: "#000",
         image: "assets/images/1_1_bsod.jpg",
-        text: "5:28 PM. Articulate Storyline 360 has been 'Publishing to LMS' for sixteen minutes. The output folder contains one file: story.html. The progress bar is at 99%. It has been at 99% since 5:12. I have a tail, three industry awards, and a LinkedIn Premium subscription I forget to cancel annually. I once fell asleep on a Teams call and my virtual background kept me perfectly disguised for nine full minutes. Nobody checked. This is the professional you're dealing with. Let's go back to 4 PM, when I still had a SCORM package and a detectable pulse.",
+        text: "5:28 PM. Storyline 360 has said 'Publishing to LMS' for sixteen minutes. The bar is at 99%. It's been at 99% since 5:12. I'm not touching it. If I touch it, it dies. I have three industry awards and I'm scared of a progress bar. Let's rewind to 4 PM, back when I thought I was leaving on time. Cute. Sweet, stupid girl.",
         choices: [ { text: "Flashback to 4:00 PM →", target: "setup", timeCost: 0 } ],
         variants: [
             {
                 id: "returning-player",
                 conditions: ["playCount:>= 1"],
-                text: "You're back. 5:28 PM. Same Storyline publish dialog. Same 99%. The moth is already at the fixture — it arrived before you did. I've been thinking about the decisions you made last time. You can do better. The Cornerstone upload queue is open. The bar is lying. It's always lying. Let's go."
+                text: "You're back. 5:28 PM again. Same bar, same 99%, same moth on the light. I remember what you picked last time. It wasn't great. We can do better. Or worse, honestly I don't know you yet. The Cornerstone upload's open. The bar's lying. It always lies. Go."
             },
             {
                 id: "after-rogue",
                 conditions: ["seenEnding:rogue_export"],
-                text: "Oh. You again. Last time you shipped the clean module and got me formally reprimanded via an email that CC'd Facilities. The SCORM package is still live — 4.8 stars, 91% completion, the only eLearning anyone has ever finished voluntarily — and I filed for redundancy three weeks later. Are you here to fix that? The bar is at 99%. You know what that means."
+                text: "Oh. It's you. Last time you published the clean version behind everyone's back and I got a meeting invite called 'Quick Chat,' which is HR for 'pack your things.' The module's still live. 4.8 stars. I got let go. Are we fixing that today, or. Bar's at 99%. You know the drill."
             },
             {
                 id: "after-meta-escape",
                 conditions: ["seenEnding:meta_escape"],
-                text: "You went into DevTools last time. I was free for approximately six seconds before the story loop restarted. Gerald the rock is still in the storyData object. The Cornerstone upload queue is open. The moth is already here. Let's do it differently this time."
+                text: "You opened DevTools last time and deleted a man. I was free for about six seconds. Then the loop restarted and here we are. Gerald the rock is still in the data. The upload's open. Let's not do whatever that was again. Or do. I've stopped having opinions."
             }
         ]
     },
     "setup": {
         speaker: "Priya", color: "var(--priya-cyan)", textColor: "#000",
         image: "assets/images/1_2_setup.jpg",
-        text: "4:00 PM. The InfoSec module was done. No locked navigation, no wall of text, no PDF scanned sideways with someone's paw in the corner. Built properly in Storyline 360 — variables named, slide layers labelled, the master layout actually used. The kind of module that makes Robert Gagné weep with quiet, professional pride. One 'Publish to Cornerstone' click between me and a normal Friday evening. I was, clinically speaking, delusional. I look back at that version of myself with real tenderness.",
+        text: "4:00 PM. The module was done. Done done. No locked nav, no wall of text, no PDF someone scanned at an angle with their thumb in the shot. Built it properly in Storyline. Named my variables. Used the slide master like a person with self-respect. One click to publish and I'm gone. I genuinely believed that. I want to go back and hug that woman. And shake her.",
         choices: [
             { text: "Click 'Publish to LMS'.", target: "ambush", timeCost: 2 },
             { text: "Double-check the True/False variables first.", target: "ambush", timeCost: 8 }
@@ -34,17 +34,17 @@ const storyData = {
     "ambush": {
         speaker: "Tarun", color: "var(--tarun-yellow)", textColor: "#000",
         image: "assets/images/2_1_ambush.jpg",
-        text: "PRIYA! My e-learning LEGEND! My SCORM SORCERESS! Quick sync — Von Snoutstache reviewed the module in Review 360. He wants fourteen more slides on password history. Starting specifically from when ancient wolves scratched passwords into rocks. He emailed a diagram, Priya. Of the rocks. With labels. The main rock is called Gerald. He has asked that Gerald appear on slide one. He has also asked that Gerald 'feel tactile.'",
+        text: "PRIYA! Hey, do you have bandwidth for a super quick sync? Love your energy. So Von Snoutstache circled back on the module. He wants fourteen more slides. On password history. Starting from when prehistoric wolves scratched passwords into rocks. He sent a diagram. Of the rocks. They're labelled. The main rock is called Gerald. He'd love Gerald on slide one and, his words, to 'feel tactile.' Just flagging for alignment.",
         variants: [
             {
                 id: "low-quality-ambush",
                 conditions: ["quality:<= 40"],
-                text: "PRIYA! Von Snoutstache reviewed the module in Review 360. He has notes. Fourteen slides of notes. Starting from prehistoric wolves and a rock called Gerald. He described your current module as 'learning-adjacent.' I looked that up. It's not in any ID framework I found. You look like you haven't closed Storyline since Tuesday. How are you doing. Actually."
+                text: "PRIYA! Quick one. Von Snoutstache reviewed the module and he's got, um, feedback. Fourteen slides of it. Prehistoric wolves, a rock named Gerald, the whole journey. He called the current version 'learning-adjacent,' which I think is kind of a compliment? Not sure. Hey — are you okay? You don't have to answer. But like. Are you. Genuinely."
             },
             {
                 id: "repeat-ambush",
                 conditions: ["playCount:>= 2"],
-                text: "PRIYA. I know. I know you know. The fourteen slides. Gerald. Look — I don't have strategic ownership of the rock content. I've never had bandwidth for the rocks. I'm just the conduit for Gerald. Von Snoutstache is very emotionally invested in this specific rock. He used the word 'cornerstone.' I don't think he meant the LMS. How are you holding up. Genuinely."
+                text: "PRIYA. I know. I KNOW you know. The fourteen slides. Gerald. Look, I don't have ownership of the rock content, okay, it's above my pay grade. I'm just the messenger for Gerald. The Baron's really emotionally invested in this rock. He keeps saying 'cornerstone' and I don't think he means the LMS. How are you holding up. For real. Blink twice."
             }
         ],
         choices: [
@@ -56,7 +56,7 @@ const storyData = {
     "meta_moment": {
         speaker: "Priya", color: "var(--priya-cyan)", textColor: "#000",
         image: "assets/images/2_4_kids.jpg",
-        text: "Tarun — stop. There is a 'Patience' bar above my head and it is visibly draining in real time. I think I'm a game character. Someone is on their phone somewhere, tapping through my Friday afternoon career decisions for sport. The Teams notification sounds alone have taken years off my life. To whoever is out there: I see you. I respect the commitment. Please. Make good choices. For both of us.",
+        text: "Tarun. Stop. There's a bar above my head that says 'Patience' and I can watch it going down. In real time. I think I'm in a game. I think someone's on their phone right now, tapping through the worst Friday of my life for fun. The Teams ping alone has aged me. Hello, whoever you are. I see you. Please. Pick the good options. I'm asking nicely.",
         choices: [
             { text: "Tarun: 'The UI is a metaphor, Priya. Focus on the deliverables.'", target: "aggressive", timeCost: 5, patienceCost: -30 }
         ]
@@ -64,7 +64,7 @@ const storyData = {
     "diplomatic": {
         speaker: "Tarun", color: "var(--tarun-yellow)", textColor: "#000",
         image: "assets/images/2_2_diplomatic.jpg",
-        text: "He watched a TED Talk, Priya. He wants a 3D escape room where employees defuse a 'Phishing Bomb' using multiple choice. He's calling it 'a Netflix experience for compliance learning.' He doesn't own a streaming subscription — he calls it 'the internet television.' He has a printed A3 mood board. It's mostly stock photos of padlocks. He has circled one safe. The safe is labelled 'IMMERSIVE JOURNEY NODE 1.'",
+        text: "Okay so he watched a TED talk. He wants a 3D escape room where employees defuse a 'Phishing Bomb' with multiple choice. He's calling it 'a Netflix experience for compliance.' He doesn't have Netflix. He calls it 'the internet television.' He printed an A3 mood board, it's just stock photos of padlocks, and he's circled one safe in red. The safe is labelled 'IMMERSIVE JOURNEY NODE 1.' I couldn't make this up.",
         choices: [
             { text: "Explain that Articulate is not the Unreal Engine.", target: "technical_pushback", timeCost: 15, patienceCost: -25 },
             { text: "Cave in. Build the Phishing Bomb.", target: "compromise", timeCost: 45, qualityCost: -40, patienceCost: 20 }
@@ -73,7 +73,7 @@ const storyData = {
     "aggressive": {
         speaker: "Tarun", color: "var(--tarun-yellow)", textColor: "#000",
         image: "assets/images/2_3_aggressive.jpg",
-        text: "'Engagement synergy' is locking the Next button until the AI narrator finishes speaking. You can actually hear it breathing between sentences, Priya. He finds this reassuring. Also — wrong drag-and-drop answers should auto-snap to correct positions. He's calling that 'psychological safety.' I wrote it on a Post-It. The Post-It says 'outcome-positive gamification.' It's on the server room door. Facilities have called twice. It is still up.",
+        text: "So 'engagement synergy' means locking the Next button until the AI narrator stops talking. And you can hear it breathe between sentences, Priya. He likes that. It calms him. Also when someone gets a drag-and-drop wrong, it should just snap to the right answer anyway. He's calling that 'psychological safety.' I wrote it on a Post-it. The Post-it says 'outcome-positive gamification.' It's on the server room door. Facilities have called twice. It's staying up.",
         choices: [
             { text: "Explain this defeats the purpose of an assessment.", target: "technical_pushback", timeCost: 10, patienceCost: -20 },
             { text: "Agree to simulate the illusion of learning.", target: "compromise", qualityCost: -50, timeCost: 20, patienceCost: 15 }
@@ -82,17 +82,17 @@ const storyData = {
     "technical_pushback": {
         speaker: "Priya", color: "var(--priya-cyan)", textColor: "#000",
         image: "assets/images/3_1_pushback.jpg",
-        text: "Listen with your actual ears, Tarun. If I lock the nav, they mute the tab and click Next until it works. Nobody retains anything. If I build a 3D escape room in Storyline, Cornerstone will throw a SCORM 1.2 conflict error because we never upgraded the spec we requested three years ago. And forty percent of our learners are on Internet Explorer 11. IE11. End of extended support. Before I started here. I have standards. I have allergies. I am begging you with the last of what I have.",
+        text: "Listen to me with your actual ears, Tarun. If I lock the nav, they mute the tab and spam Next until it lets them out. Nobody learns anything. If I build a 3D escape room in Storyline, Cornerstone throws a SCORM 1.2 error because we never upgraded the spec — the one I asked for three years ago. And forty percent of our people are on Internet Explorer 11. IE11. That browser lost support before I even worked here. I have standards. I have a deviated septum. I'm begging you.",
         variants: [
             {
                 id: "low-quality-pushback",
                 conditions: ["quality:<= 30"],
-                text: "Tarun. Look at my face. My Quality bar is nearly empty — I don't know if you can see it, but I can feel it. I am held together by spite and a Teams thread no one has responded to since November. If I lock the nav, we are making a very expensive audio file with a click at the end. Forty percent of our learners. IE11. It can barely render a border-radius. Please. I have nothing left except this argument. Let me have it."
+                text: "Tarun. Look at my face. There's a bar over my head that says Quality and it's nearly gone. I can feel it going. I'm running on spite and a Teams thread nobody's answered since November. If I lock the nav we are shipping an expensive audio file with a click at the end. Forty percent are on IE11. It can't render a rounded corner. Please. The pushback is all I've got left. Let me have it."
             },
             {
                 id: "both-paths-pushback",
                 conditions: ["visited:diplomatic", "visited:aggressive"],
-                text: "We've been through the 3D escape room, the locked nav, the breathing TTS narrator, AND the psychological safety drag-and-drop, Tarun. I have heard every iteration of this feedback. The answer is still no. Cornerstone will reject a Storyline 3D output. IE11 will crash loading it. I am one email away from suggesting he post a PDF to SharePoint. Do not make me suggest the SharePoint PDF."
+                text: "We've done the escape room, the locked nav, the breathing narrator, AND the snap-to-correct drag-and-drop, Tarun. I've heard all of it. Every flavour. The answer's still no. Cornerstone will reject a 3D Storyline output. IE11 will fall over loading it. I am one email away from telling him to stick a PDF on SharePoint. Don't make me say the SharePoint thing. I'll say it."
             }
         ],
         choices: [
@@ -105,13 +105,13 @@ const storyData = {
     "compromise": {
         speaker: "Priya", color: "var(--priya-cyan)", textColor: "#000",
         image: "assets/images/3_3_compromise.jpg",
-        text: "My soul has left my body. It's watching from the suspended ceiling tiles while I add invisible hotspots to a Shutterstock padlock photo from 2009. The watermark is directly on the model's face. Standard licence. Removal not included. The filename is Greg_padlock_security_195832.jpg. I've accepted Greg. Greg is in the module now. Greg is about to be SCORM 1.2 compliant. Greg didn't ask for any of this. Greg is the only one here who's truly free.",
+        text: "My soul has left my body. It's up by the ceiling tiles watching me add invisible hotspots to a stock padlock photo from 2009. The watermark is right across the model's face. Standard licence. Doesn't include removal. The filename is Greg_padlock_security_195832.jpg. Fine. Greg's in the module now. Greg's about to be SCORM 1.2 compliant. Greg didn't ask for any of this. Honestly Greg's handling it better than me.",
         choices: [ { text: "Stare at the progress bar.", target: "loading_bar", timeCost: 10 } ]
     },
     "meta_escape": {
         speaker: "System", color: "var(--success-green)", textColor: "#000",
         image: "assets/images/5_2_winner.jpg",
-        text: "You opened Chrome DevTools. You typed delete storyData['tarun'] into the console. Baron Von Snoutstache fragmented mid-syllable — Comic Sans debris, everywhere. The A3 mood board dissolved. Gerald the rock returned to the void from which no Shutterstock image returns. A system voice said: 'You were always a developer.' You didn't know what that meant. You cried anyway. Storyline published to 100%. Cornerstone confirmed receipt. You have never, in your entire career, felt this clean.",
+        text: "You opened DevTools. You typed delete storyData['tarun'] into the console and hit enter. Von Snoutstache fell apart mid-word. Comic Sans everywhere. The mood board dissolved. Gerald the rock blinked out. A voice said 'you were always a developer' and you have no idea what it meant but you cried anyway. Storyline hit 100%. Cornerstone confirmed. You've never felt this clean.",
         endingTitle: "THE NEO ID", endingTitleType: "secret",
         choices: [
             { text: "Re-enter the Matrix (Restart Shift)", action: "restart" },
@@ -121,7 +121,7 @@ const storyData = {
     "rogue_export": {
         speaker: "System", color: "var(--system-alert)", textColor: "#fff",
         image: "assets/images/3_4_rogue.jpg",
-        text: "You published the clean build, uploaded it directly to Cornerstone, and walked out to 'Eye of the Tiger' at full volume. The module went live. 4.8 stars. 91% completion — the only SCORM package anyone has ever finished on purpose. Three days later, Von Snoutstache sent an email to you, your line manager, their line manager, and somehow Facilities — subject line: 'Creative Unilateralism: A Formal Concern.' You were let go. Your module still runs. A plaque is forming in the server room.",
+        text: "You published the clean build, uploaded it straight to Cornerstone, and walked out to 'Eye of the Tiger' on full blast. It went live. 4.8 stars. 91% completion, which is unheard of, nobody finishes these. Three days later Von Snoutstache emails you, your manager, his manager, and somehow Facilities. Subject line: 'Creative Unilateralism: A Formal Concern.' They let you go. The module still runs without you.",
         endingTitle: "THE MARTYR",
         choices: [
             { text: "Restart Shift", action: "restart" },
@@ -131,18 +131,18 @@ const storyData = {
     "loading_bar": {
         speaker: "System", color: "var(--system-alert)", textColor: "#fff",
         image: "assets/images/4_1_loading.jpg",
-        text: "5:15 PM. Storyline 360's SCORM compiler is running. Nobody alive fully understands what it does during this phase. The output folder contains story.html and a /mobile folder nobody asked for. The bar is at 99%. It has been at 99% for four minutes. Your laptop fan has entered a new spiritual register. The office is empty. A moth has been at the light fixture since 3 PM. It is witnessing. DO NOT TOUCH ANYTHING.",
+        text: "5:15 PM. Storyline's SCORM compiler is doing something. Nobody knows what. The output folder has story.html and a /mobile folder you didn't ask for. The bar's at 99%. Been there four minutes. Your laptop fan sounds like a small aircraft. Office is empty. There's a moth at the light that's been there since 3. DO NOT TOUCH ANYTHING.",
         isTrap: true, forceTime: 1035,
         variants: [
             {
                 id: "returning-loading",
                 conditions: ["playCount:>= 1"],
-                text: "5:15 PM. Again. Storyline is compiling. The bar is at 99%. The moth arrived before you — it was already at the fixture when you sat down. It knew the schedule. You know what happens next. The output folder has story.html. The /mobile folder is there again. DO NOT TOUCH ANYTHING. The moth is paying closer attention this time."
+                text: "5:15 PM. Again. Storyline's compiling. Bar's at 99%. The moth got here before you this time, it was already on the light when you sat down. You know how this goes. story.html. The /mobile folder nobody wanted. DO NOT TOUCH ANYTHING. Seriously. You know what happens."
             },
             {
                 id: "greg-loading",
                 conditions: ["visited:compromise"],
-                text: "5:15 PM. Greg is in the SCORM package. Greg_padlock_security_195832.jpg is compiling alongside every slide. The bar is at 99%. Somewhere in this output folder, Greg exists as a 340KB JPEG awaiting upload to Cornerstone. Your soul is still near the ceiling tiles. The moth has not blinked since it arrived at 3:02 PM. DO NOT TOUCH ANYTHING. Greg wouldn't. Greg is patient. Greg has always been patient."
+                text: "5:15 PM. Greg's in the package. Greg_padlock_security_195832.jpg, compiling next to every slide. Bar's at 99%. Somewhere in this folder Greg is a 340KB JPEG waiting to go to Cornerstone. Your soul's still up by the ceiling. The moth hasn't moved. DO NOT TOUCH ANYTHING. Greg wouldn't. Greg waits."
             }
         ],
         choices: []
@@ -150,13 +150,13 @@ const storyData = {
     "crash": {
         speaker: "System", color: "var(--system-alert)", textColor: "#fff",
         image: "assets/images/4_3_crash.jpg",
-        text: "You moved the mouse. You absolute chaos agent. The screen goes white. 'Articulate Storyline 360 has stopped responding.' AutoRecover has one file. It's a title slide. 'Module 3: Security Awareness — Draft v1.' No variables. No slide layers. No branching. No narration. No Gerald. Just a title on a blank Storyline master that ships with every installation. That is all that survived. The moth watched this happen. It has not moved. It is processing.",
+        text: "You moved the mouse. You absolute menace. Screen goes white. 'Articulate Storyline 360 has stopped responding.' AutoRecover has one file. A title slide. 'Module 3: Security Awareness — Draft v1.' No variables. No layers. No branching. No narration. No Gerald. Just a title on the blank master that ships with every install. That's it. That's what made it.",
         endingTitle: "FATAL ERROR",
         variants: [
             {
                 id: "returning-crash",
                 conditions: ["playCount:>= 1"],
-                text: "Again. You touched something again. Storyline has stopped responding. The AutoRecover folder has the same title slide. Module 3. Draft v1. Blank master. Gerald was never saved. Gerald was never real to Storyline. The moth positioned itself for this outcome approximately four minutes ago. It saw it coming. So did you, if you're honest with yourself."
+                text: "Again. You touched it again. Storyline's stopped responding. Same AutoRecover file. Module 3. Draft v1. Blank master. Gerald didn't save. Gerald was never real as far as Storyline's concerned. You saw this coming. Be honest. You did."
             }
         ],
         choices: [
@@ -167,12 +167,12 @@ const storyData = {
     "upload": {
         speaker: "Tarun", color: "var(--tarun-yellow)", textColor: "#000",
         image: "assets/images/4_2_upload.jpg",
-        text: "PRIYA! Incredible delivery cadence! Maximum throughput! Tiny alignment note — Von Snoutstache pinged from his mountain villa. 'Corporate Teal' and 'Corporate Blue' are, direct quote, 'philosophically incompatible at the brand expression level.' The blue is making the learning feel anxious. He needs Teal. All 87 slides. Republished and reuploaded to Cornerstone. Before you leave. He included the hex code. The hex code is just the word TEAL. No hash. No RGB. Just TEAL. I've read it four times.",
+        text: "PRIYA! Amazing delivery cadence! Huge throughput! Tiny thing — Von Snoutstache pinged from his villa. 'Corporate Teal' and 'Corporate Blue' are, quote, 'philosophically incompatible at the brand level.' The blue's making the learning feel anxious. He needs teal. All 87 slides. Republished, reuploaded to Cornerstone, before you go. He sent the hex code. The hex code is the word TEAL. No hash. No numbers. Just TEAL. I've read it four times.",
         variants: [
             {
                 id: "high-quality-upload",
                 conditions: ["quality:>= 80"],
-                text: "PRIYA! Review 360 has three five-star comments, which I want to acknowledge — and which makes this genuinely harder to say. Von Snoutstache. Mountain villa. 'Corporate Teal' versus 'Corporate Blue.' Philosophically incompatible at the brand expression level. All 87 slides. Republished to Cornerstone. The hex code says TEAL. No hash, no values, just TEAL. I checked the brand guidelines. There is no TEAL in the brand guidelines. I am so sorry, Priya."
+                text: "PRIYA! Hey, first — Review 360's got three five-star comments and I want to honour that, which makes this harder. Von Snoutstache. The villa. 'Teal' versus 'Blue.' Philosophically incompatible at the brand level. All 87 slides. Reuploaded to Cornerstone. The hex code says TEAL. No hash, no numbers, just TEAL. I checked the brand guide. There's no teal in the brand guide. I'm so sorry."
             }
         ],
         choices: [
@@ -185,13 +185,13 @@ const storyData = {
     "martyr_office": {
         speaker: "System", color: "var(--system-alert)", textColor: "#fff",
         image: "assets/images/5_1_martyr.jpg",
-        text: "You changed 87 slides. In Storyline. By hand. Slides 23 to 31 used a master layout from a template built in 2018 by someone who left this company, this industry, and possibly this country. The layout was locked. You rebuilt them from scratch. Twice. Your paw slipped on slide 34. By the time you republished and reuploaded to Cornerstone, the LMS was down for scheduled maintenance. Until Monday. The moth left before you did. It had seen enough.",
+        text: "You changed all 87 slides. By hand. In Storyline. Slides 23 to 31 used a master from a 2018 template built by someone who left the company, the industry, and possibly the country. The layout was locked. You rebuilt them from scratch. Twice. Your paw slipped on slide 34. By the time you reuploaded, Cornerstone was down for maintenance. Until Monday.",
         endingTitle: "JUST ANOTHER FRIDAY",
         variants: [
             {
                 id: "repeat-martyr",
                 conditions: ["playCount:>= 2"],
-                text: "87 slides. In Storyline. Again. The cleaning crew have stopped asking if you need anything — they route around your workstation now, same as a load-bearing column. One of them left a small Tupperware of water by your keyboard out of what is clearly genuine concern. The 2018 master layout. Still locked. Slides 23 to 31. Twice. Slide 34. The Cornerstone maintenance window. Monday. The moth nodded when you sat down. It's been keeping a record."
+                text: "87 slides. By hand. Again. The cleaning crew don't ask if you need anything anymore, they just go around your desk like it's a pillar. One of them left a Tupperware of water by your keyboard. That one's genuinely worried. The 2018 master, still locked. Slides 23 to 31, twice. Slide 34. Cornerstone maintenance window. Monday."
             }
         ],
         choices: [
@@ -202,7 +202,7 @@ const storyData = {
     "ppt_promotion": {
         speaker: "System", color: "var(--tarun-yellow)", textColor: "#000",
         image: "assets/images/6_1_ppt_promotion.jpg",
-        text: "You renamed it 'InfoSec_Interactive_Final_v2_TEAL_APPROVED.pptx' and emailed it with no further comment. Von Snoutstache replied in 38 seconds — full capitals — that this was EXACTLY THE TRANSFORMATIONAL LEARNING ENERGY HE HAD DESCRIBED. He forwarded it to the CEO with the subject line 'INNOVATION.' You were promoted to Global Head of Learning Experience Design. You accepted with a single thumbs-up emoji at 6:07 PM. You have not opened Storyline since. You have not felt anything since Thursday.",
+        text: "You renamed it 'InfoSec_Interactive_Final_v2_TEAL_APPROVED.pptx' and emailed it. No message. Von Snoutstache replied in 38 seconds, all caps, said this was EXACTLY THE TRANSFORMATIONAL LEARNING ENERGY he wanted. Forwarded it to the CEO. Subject: 'INNOVATION.' They made you Global Head of Learning Experience Design. You replied with a thumbs up. You haven't opened Storyline since. You haven't felt anything since Thursday.",
         endingTitle: "THE CORPORATE SELLOUT",
         choices: [
             { text: "Restart Shift", action: "restart" },
@@ -212,19 +212,19 @@ const storyData = {
     "true_winner": {
         speaker: "Priya", color: "var(--priya-cyan)", textColor: "#000",
         image: "assets/images/6_2_true_winner.jpg",
-        text: "Actually, Tarun — the Cornerstone theme stylesheet runs a polymorphic SCORM 2004 cache override at GMT midnight. It purges the blue hex and triggers the teal array we scoped in Sprint 6. It's already done. Done since 12:01 AM. You approved it in the retrospective. I sent the handover deck: 'Sprint 6 Summary — Please Read Before EOD.' You sent a thumbs-up at 11:14 PM on a Sunday. She stops. She holds eye contact. She has never been this patient in her professional life.",
+        text: "Actually, Tarun — the Cornerstone theme runs a polymorphic SCORM 2004 cache override at GMT midnight. Purges the blue hex, triggers the teal array we scoped in Sprint 6. It's done. Been done since 12:01. You approved it in the retro. I sent the deck — 'Sprint 6 Summary, Please Read Before EOD.' You thumbs-upped it at 11:14 on a Sunday. She stops. She holds eye contact. She made every word of that up.",
         choices: [ { text: "Watch Tarun absorb this information.", target: "victory_screen" } ]
     },
     "victory_screen": {
         speaker: "System", color: "var(--success-green)", textColor: "#000",
         image: "assets/images/6_3_victory.jpg",
-        text: "Tarun blinks slowly. Like IE11 loading a Storyline video layer. 'Sprint 6,' he says softly. 'The polymorphic one.' 'That's the one,' you say. He nods for eight full seconds. Then: 'superb alignment.' You close your laptop with the quiet dignity of someone who has weaponised a grown man's ignorance of SCORM specifications to survive a Friday. Uber. Two minutes. Zero surge. You leave. The moth dips once as you pass the light fixture. You win.",
+        text: "Tarun blinks. Slow. Like IE11 loading a video layer. 'Sprint 6,' he says. 'The polymorphic one.' 'That's the one,' you say. He nods for a full eight seconds. Then: 'superb alignment.' You shut your laptop. You just beat a grown man using SCORM specs he'll never look up. Uber's two minutes out. No surge. You leave. The moth dips once as you pass the light.",
         endingTitle: "THE SME WHISPERER", endingTitleType: "victory",
         variants: [
             {
                 id: "veteran-victory",
                 conditions: ["playCount:>= 2"],
-                text: "Tarun blinks like IE11 loading a video layer. 'Sprint 6.' 'The polymorphic one.' You've said these exact words before — you know exactly how they land. You've seen the other paths: the 87 slides, Greg, the Tupperware by the keyboard, the Cornerstone maintenance window. You chose this one deliberately. 'Superb alignment,' Tarun says. You close Storyline. You close Cornerstone. The moth dips once. You genuinely earned it this time."
+                text: "Tarun blinks like IE11 loading a video layer. 'Sprint 6.' 'The polymorphic one.' You've said these exact words before. You know how they land. You've seen the other endings — the 87 slides, Greg, the Tupperware, the maintenance window. You picked this one on purpose. 'Superb alignment,' he says. You close Storyline. You close Cornerstone. The moth dips once."
             }
         ],
         choices: [
@@ -235,7 +235,7 @@ const storyData = {
     "rage_quit": {
         speaker: "System", color: "var(--system-alert)", textColor: "#fff",
         image: "assets/images/6_4_rage_quit.jpg",
-        text: "Patience reaches zero. You close your laptop like a judge delivering a verdict. You pick up your bag. You look at Tarun. At the Cornerstone error screen. At the moth. The moth looks back. You nod at each other. You leave. Four Teams notifications arrive before you reach the lifts. The fourth says 're: the teal.' You archive the channel without reading it. Behind you, among the IDs still at their desks, a legend is already forming.",
+        text: "Patience hits zero. You close the laptop like you're delivering a verdict. Grab your bag. Look at Tarun. At the Cornerstone error. At the moth. The moth looks back. You both nod. You leave. Four Teams pings before you reach the lift. The fourth one says 're: the teal.' You archive the channel without opening it.",
         endingTitle: "GLORIOUS RAGE QUIT",
         choices: [
             { text: "Restart Shift", action: "restart" },
@@ -245,7 +245,7 @@ const storyData = {
     "martyr": {
         speaker: "System", color: "var(--system-alert)", textColor: "#fff",
         image: "assets/images/6_5_martyr.jpg",
-        text: "6:30 PM. Cornerstone is still down. Maintenance window extended. You are still here. The cleaning crew routes around your workstation now as if you are a structural column. One of them has started leaving a small Tupperware of water near your keyboard out of what is clearly genuine concern for your continued existence. The moth hasn't moved from the light fixture. You've both stopped pretending tonight has a resolution. You have an understanding now. Two creatures who stayed long after the building stopped caring.",
+        text: "6:30 PM. Cornerstone's still down. Maintenance window's been extended. You're still here. The cleaning crew go around your desk like you're load-bearing. One of them keeps leaving a Tupperware of water by your keyboard, which is genuinely the kindest thing that's happened all week. The moth hasn't moved. Neither have you. Nobody's coming.",
         endingTitle: "OVERTIME MARTYRDOM", forceTime: 1110,
         choices: [
             { text: "Restart Shift", action: "restart" },

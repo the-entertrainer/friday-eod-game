@@ -4,23 +4,23 @@ const storyData = {
     "intro": {
         speaker: "Priya", color: "var(--priya-cyan)", textColor: "#000",
         image: "assets/images/1_1_bsod.jpg", forceTime: 1048,
-        text: "5:28 PM. This SCORM package has been publishing for fourteen minutes.\n\nTeams status: Away. Body: physically at the desk. The bar is at 99%. I am not touching it. I am barely breathing.",
+        text: "Storyline's been publishing for fourteen minutes. I'm at 99%.\n\nI set my Teams to Away at 4:30. My body is still here, obviously. I haven't moved. I've barely blinked. I just need two more minutes and I can actually leave.\n\nI'm not touching the bar.",
         choices: [ { text: "Rewind to 4:45 PM →", target: "setup", timeCost: 0 } ],
         variants: [
             {
                 id: "returning-player",
                 conditions: ["playCount:>= 1"],
-                text: "Back again. 5:28 PM. Same bar. Same 99%.\n\nLet's see if you do better this time. Rewind."
+                text: "You're back. 5:28 again. Same bar at 99%, same everything.\n\nOkay. Rewind."
             },
             {
                 id: "after-rogue",
                 conditions: ["seenEnding:rogue_export"],
-                text: "Oh. You're back.\n\nLast time you published the clean build behind everyone's back. Got a calendar invite called Quick Chat — HR for 'bring a box.' The module is still live. Five stars. I'm not.\n\nRewind."
+                text: "Oh, you're back. Last time you published the clean build yourself and walked out. I got a calendar invite called Quick Chat — that's what HR calls it when they want you to bring a box.\n\nThe module's still live. Five stars. I'm not there anymore. Rewind."
             },
             {
                 id: "after-meta-escape",
                 conditions: ["seenEnding:meta_escape"],
-                text: "You deleted the L&D Head out of the DOM last time. I was free for about six seconds. Then the loop reset.\n\nRewind."
+                text: "You removed him from the DOM last time. I was free for about six seconds before the loop reset.\n\nLet's try something else. Rewind."
             }
         ]
     },
@@ -29,7 +29,7 @@ const storyData = {
     "setup": {
         speaker: "Priya", color: "var(--priya-cyan)", textColor: "#000",
         image: "assets/images/1_2_setup.jpg", forceTime: 1005,
-        text: "4:45 PM. Module's done. Actually done.\n\nNamed my variables, used the slide master, got the Synthesia avatar to stop blinking mid-sentence. One click to publish. Out by five.\n\nI genuinely believed that.",
+        text: "4:45. Module's done. Like actually done — not 'draft two' done, not 'stakeholders haven't seen it yet' done. Done done.\n\nThe Synthesia avatar's not cutting off mid-word anymore. The branching works. I was going to be home by 5. I genuinely thought that.",
         choices: [
             { text: "Click 'Publish' and grab my coat.", target: "ambush", timeCost: 2 },
             { text: "Do one last QA pass. Just in case.", target: "ambush", timeCost: 5 }
@@ -40,17 +40,17 @@ const storyData = {
     "ambush": {
         speaker: "Tarun", color: "var(--tarun-yellow)", textColor: "#000",
         image: "assets/images/2_1_ambush.jpg",
-        text: "PRIYA. Hey. Two minutes?\n\nSo. He saw a LinkedIn post. Chief Learning Architect, 200k followers. He wants gamification. A leaderboard. Badges. 'Like Duolingo but for our fire safety module.'\n\nHe said 'learning ecosystem' four times. I wrote it down. I don't know why.",
+        text: "PRIYA — hey — do you have like two minutes?\n\nSo he saw a LinkedIn post. Guy called himself a Chief Learning Architect, which I don't think is a real job title, but. He wants the module to be more like Duolingo. For fire safety. He said 'learning ecosystem' and I wrote it down and I'm honestly not sure why I did that.",
         variants: [
             {
                 id: "low-quality-ambush",
                 conditions: ["quality:<= 40"],
-                text: "PRIYA. Quick one.\n\nHe reviewed the module. He called it 'a solid first draft.' This is the final version. He wants gamification. 'Like Duolingo,' he said. For the annual fire safety course.\n\nAre you okay? No — actually."
+                text: "PRIYA — quick one.\n\nHe looked at the module. Called it a 'solid first draft.' This is the final version. He wants it to be more like Duolingo. For fire safety.\n\nAre you okay? Like, actually."
             },
             {
                 id: "repeat-ambush",
                 conditions: ["playCount:>= 2"],
-                text: "PRIYA. I know. I know.\n\nLearning ecosystem. Gamification. Leaderboard. I don't make the LinkedIn posts, okay? I just attend the stand-ups.\n\nBlink twice if you need anything."
+                text: "PRIYA. I know. I know.\n\nGamification, learning ecosystem, leaderboard, Duolingo. I don't write these posts. I just end up in these meetings.\n\nBlink if you need a minute."
             }
         ],
         choices: [
@@ -64,7 +64,7 @@ const storyData = {
     "meta_moment": {
         speaker: "Priya", color: "var(--priya-cyan)", textColor: "#000",
         image: "assets/images/2_4_kids.jpg",
-        text: "Tarun. Stop.\n\nI can see the Patience bar draining above my head. I'm in a game. Someone is tapping through the worst Friday of my career for fun.\n\nGood choices only. Please.",
+        text: "Tarun. There's a bar above my head that says Patience and I can watch it going down while you're talking.\n\nI think I'm in a game. Which would explain a lot about today, honestly.\n\nJust — good options. That's all I'm asking.",
         choices: [
             { text: "Tarun: 'The UI is a metaphor, Priya. Focus on the deliverables.'", target: "aggressive", timeCost: 4, patienceCost: -40 }
         ]
@@ -74,7 +74,7 @@ const storyData = {
     "diplomatic": {
         speaker: "Tarun", color: "var(--tarun-yellow)", textColor: "#000",
         image: "assets/images/2_2_diplomatic.jpg",
-        text: "He wants an escape room. In the LMS. 'Immersive experiential learning journey.' He mentioned AR/VR. We have three headsets — two don't turn on, the third makes Rajan from IT nauseous.\n\nHe printed a mood board. Nine padlock photos. One safe circled in red. Labelled: IMMERSIVE JOURNEY NODE 1.\n\nI did not add that label. That was him.",
+        text: "So he wants an escape room. In the LMS. He's calling it an immersive learning journey. He printed a mood board — nine photos of padlocks and one picture of a safe that has IMMERSIVE JOURNEY NODE 1 written on it in red marker. I didn't write that. That was him.\n\nWe have three VR headsets, by the way. Two are dead. The third one makes Rajan from IT sick. I'm just saying all of this out loud.",
         choices: [
             { text: "Explain that Storyline is not a game engine.", target: "technical_pushback", timeCost: 10, patienceCost: -20 },
             { text: "Cave. Build the whole thing.", target: "compromise", timeCost: 40, qualityCost: -40, patienceCost: 15 }
@@ -85,12 +85,12 @@ const storyData = {
     "aggressive": {
         speaker: "Tarun", color: "var(--tarun-yellow)", textColor: "#000",
         image: "assets/images/2_3_aggressive.jpg",
-        text: "So 'engagement synergy' means lock the Next button. The avatar talks, you wait.\n\nAlso — wrong answers should auto-correct to the right ones. Guaranteed 100% pass rate. He's calling it psychological safety. I wrote it on a Post-it. It's on the server room door. Facilities called twice. It's staying.",
+        text: "Right, so 'engagement synergy' is — okay — it means the Next button is locked until the avatar finishes talking. Also, wrong answers should just correct themselves automatically. He's calling that psychological safety.\n\nI wrote it on a Post-it. It's on the server room door now. Facilities has called twice about it. It's staying.",
         variants: [
             {
                 id: "ravi-hotspot-hint",
                 conditions: ["playCount:>= 1"],
-                text: "Also — verbatim from his email — he wants a hotspot on the female Synthesia avatar. Her name badge. 'Clickable for curiosity, adds a human touch.'\n\nI didn't know what to do with it so I typed it into the brief.\n\nI haven't slept properly since."
+                text: "Also — I'm reading this directly from his email — he wants a hotspot on the female avatar. On her name badge. 'Clickable for curiosity, adds a human touch.'\n\nI typed it into the brief because I didn't know what else to do with it. I haven't slept well since."
             }
         ],
         choices: [
@@ -103,22 +103,22 @@ const storyData = {
     "technical_pushback": {
         speaker: "Priya", color: "var(--priya-cyan)", textColor: "#000",
         image: "assets/images/3_1_pushback.jpg",
-        text: "Tarun. Half the plant floor is on IE11. The LMS admin flies in from Pune once a month. We've been on SCORM 1.2 since 2019 — I asked about upgrading. Finance said no. That was three managers ago.\n\nBuild a 3D escape room in Storyline and the LMS throws a compatibility error that nobody alive can read.\n\nBas. I am begging you.",
+        text: "Tarun, we're on SCORM 1.2. We've been on SCORM 1.2 since 2019 because Finance said no when I asked, and that was three managers ago. The LMS admin comes from Pune once a month. Half the plant floor is still on IE.\n\nIf I build this in Storyline, the LMS will throw an error that nobody on this team knows how to fix. I'm not being dramatic. I'm telling you what's actually there.",
         variants: [
             {
                 id: "low-quality-pushback",
                 conditions: ["quality:<= 30"],
-                text: "Tarun. Look at my face.\n\nThe Quality bar above my head is almost gone. We are on SCORM 1.2. We have been on SCORM 1.2 since before half this team joined. The LMS doesn't support what he's asking for.\n\nThe pushback is all I have. Let me have it."
+                text: "Tarun. We've been on SCORM 1.2 since 2019 and the Quality bar above my head is almost empty.\n\nIf I lock the nav, people click through with the sound off and call it done. If I build the escape room, the LMS can't run it. I'm just telling you what's actually there."
             },
             {
                 id: "both-paths-pushback",
                 conditions: ["visited:diplomatic", "visited:aggressive"],
-                text: "Escape room. Locked nav. Breathing avatar. Snap-to-correct. IE11. Pune admin. SCORM 1.2. I've said all of it, Tarun.\n\nThe answer is still no. One more thing and I'm putting a PDF on SharePoint.\n\nDon't make me say SharePoint."
+                text: "Escape room. Locked nav. Rajan gets sick from the headset. Snap-to-correct. SCORM 1.2. Pune admin. I've said all of it.\n\nIf he comes back with one more thing I'm uploading a PDF to SharePoint and I mean it this time."
             },
             {
                 id: "hotspot-callout",
                 conditions: ["visited:aggressive"],
-                text: "Wait. The hotspot. On the female avatar. 'Clickable for curiosity' is not a UX note, Tarun. That is a senior person misusing their position. I am not building it.\n\nI'm writing that up tonight and sending it to HR before I leave. If he thinks his LinkedIn following makes that okay — he's about to find out it doesn't."
+                text: "Wait. The hotspot. On the female avatar. That's not a design request, Tarun.\n\nI'm writing that up and sending it to HR before I leave tonight. He can have all the followers he wants — it doesn't make it okay."
             }
         ],
         choices: [
@@ -133,7 +133,7 @@ const storyData = {
     "compromise": {
         speaker: "Priya", color: "var(--priya-cyan)", textColor: "#000",
         image: "assets/images/3_3_compromise.jpg",
-        text: "My soul has left my body.\n\nFound a padlock on Shutterstock. Ten dollars. The model is clearly in Manhattan. Our learners are in Nashik. Standard licence — watermark stays. Filename: Greg_padlock_security_195832.jpg.\n\nGreg is in the module now. Greg is compliance training. Greg didn't ask.",
+        text: "I found a padlock on Shutterstock for ten dollars. The guy in the photo is clearly in an American office — he's wearing a suit, there's a skyline, he's very New York — but it's a padlock, so.\n\nThe filename is Greg_padlock_security_195832.jpg. Greg is in the compliance module now. That's just where we are.",
         choices: [ { text: "Watch the publish bar and pray.", target: "loading_bar", timeCost: 6 } ]
     },
 
@@ -141,7 +141,7 @@ const storyData = {
     "meta_escape": {
         speaker: "System", color: "var(--success-green)", textColor: "#000",
         image: "assets/images/5_2_winner.jpg",
-        text: "You opened DevTools. Typed document.querySelector('#ldhead').remove(). Hit Enter.\n\nThe L&D Head dissolved mid-sentence. The mood board slid off the page. The AR/VR headsets vanished. The Phishing Bomb quietly defused. A calm voice said 'you were always a developer.'\n\nBar hit 100%. You left. You've never felt this clean.",
+        text: "You opened DevTools. Typed document.querySelector('#ldhead').remove(). Pressed Enter.\n\nHe just stopped existing. The mood board went with him. The VR headsets. The IMMERSIVE JOURNEY NODE 1 safe. About fifteen seconds later the bar hit 100%, like it had been waiting for permission.\n\nYou closed the laptop and left.",
         endingTitle: "THE NEO ID", endingTitleType: "secret",
         choices: [
             { text: "Re-enter the Matrix (Restart Shift)", action: "restart" },
@@ -153,7 +153,7 @@ const storyData = {
     "rogue_export": {
         speaker: "System", color: "var(--system-alert)", textColor: "#fff",
         image: "assets/images/3_4_rogue.jpg",
-        text: "You published the clean build yourself and walked out to Eye of the Tiger. Full volume.\n\nFive stars. 94% completion. Unheard of. Three days as a hero.\n\nThen the L&D Head emailed you, your manager, his manager, and somehow Facilities. 'Creative Unilateralism: A Formal Concern.' They let you go.\n\nThe module still runs. Without you. Beautifully.",
+        text: "You published the clean build yourself and walked out.\n\nThe module went live. Five stars on the first review, 94% completion — nobody finishes these things, that basically never happens. You were a minor hero for about three days.\n\nThen the L&D Head sent an email. Subject: Creative Unilateralism: A Formal Concern. CC'd your manager, his manager. He posted about it too. They let you go.\n\nThe module is still running.",
         endingTitle: "THE MARTYR",
         choices: [
             { text: "Restart Shift", action: "restart" },
@@ -165,18 +165,18 @@ const storyData = {
     "loading_bar": {
         speaker: "System", color: "var(--system-alert)", textColor: "#fff",
         image: "assets/images/4_1_loading.jpg",
-        text: "5:28 PM.\n\nBar's at 99%. IT helpdesk closes at 6. I have 28 minutes. This is a company ThinkPad, 2017, asset tag L&D-049. Everyone in this building has the same one. There's a moth on the ceiling light. It's been there since 3 PM.\n\nDO NOT TOUCH ANYTHING.",
+        text: "5:28. Bar's at 99%.\n\nCompany ThinkPad, 2017. Asset tag L&D-049. Everyone on this floor has the same one, and they're all doing this — the fan, the heat, the waiting. There's a moth on the tube light above the desk. It's been there since about 3.\n\nDon't touch anything.",
         isTrap: true, forceTime: 1048,
         variants: [
             {
                 id: "returning-loading",
                 conditions: ["playCount:>= 1"],
-                text: "5:28 PM. Again.\n\nSame bar. Same moth. Same ThinkPad. You know what happens.\n\nDO NOT TOUCH ANYTHING."
+                text: "5:28. Again. Same bar, same moth.\n\nYou know what happens.\n\nDon't touch anything."
             },
             {
                 id: "greg-loading",
                 conditions: ["visited:compromise"],
-                text: "5:28 PM. Greg's in the package.\n\nGreg_padlock_security_195832.jpg, compiling quietly alongside every slide. 340KB of Manhattan watermark about to become Nashik compliance training.\n\nDO NOT TOUCH ANYTHING. Greg wouldn't."
+                text: "5:28. Greg's in the package now.\n\nGreg_padlock_security_195832.jpg, compiling quietly alongside everything else. 340KB from a photo studio in Manhattan about to become mandatory training for a factory in Nashik.\n\nDon't touch anything. Greg can wait."
             }
         ],
         choices: []
@@ -186,13 +186,13 @@ const storyData = {
     "crash": {
         speaker: "System", color: "var(--system-alert)", textColor: "#fff",
         image: "assets/images/4_3_crash.jpg",
-        text: "'Articulate Storyline has stopped responding.'\n\nAutoRecover saved one file. Module 3, Draft v1. Blank title slide on the default master. No variables. No layers. No Greg.\n\nYou touched it.",
+        text: "You touched it.\n\nArticulate Storyline has stopped responding. AutoRecover saved one file — Module 3, Draft v1. Title slide. No layers, no variables, no Greg. Just 'Security Awareness Training' in Calibri on a white background.\n\nThat's what made it.",
         endingTitle: "FATAL ERROR",
         variants: [
             {
                 id: "returning-crash",
                 conditions: ["playCount:>= 1"],
-                text: "Again.\n\nSame AutoRecover file. Module 3. Blank master. Greg didn't save. As far as Storyline's concerned, Greg was never real.\n\nYou knew. You touched it anyway."
+                text: "You touched it again.\n\nModule 3, Draft v1. Title slide. Greg's gone — as far as Storyline's concerned, Greg was never real.\n\nYou knew this was going to happen."
             }
         ],
         choices: [
@@ -205,12 +205,12 @@ const storyData = {
     "upload": {
         speaker: "Tarun", color: "var(--tarun-yellow)", textColor: "#000",
         image: "assets/images/4_2_upload.jpg",
-        text: "PRIYA! Bar finished! Tiny thing.\n\nHe posted on LinkedIn this morning — 'Teal is the future of Trust™' — four thousand likes. A client commented. He CC'd the VP, the VP's PA, the HRBP, and the Global L&D Head in Singapore. He needs all 87 slides in teal before you leave.\n\nHe sent the hex code. The hex code is the word TEAL. No hash. No numbers. Just TEAL. The brand guide has Cerulean Blue, Muted Sage, and Leadership Gray. There is no teal.",
+        text: "PRIYA! It published, great news!\n\nOkay so — tiny thing — he posted on LinkedIn this morning. 'Teal is the future of Trust™.' Four thousand likes, a client saw it, and now he needs all 87 slides changed to teal before you leave tonight. He CC'd the VP, the VP's PA, the HRBP, and the Global L&D Head in Singapore.\n\nHe sent the colour code. It's the word TEAL. Not a hex code. Just the word. I checked the brand guide — Leadership Gray, Cerulean Blue, Muted Sage. No teal.",
         variants: [
             {
                 id: "high-quality-upload",
                 conditions: ["quality:>= 80"],
-                text: "PRIYA! Three five-star reviews in Review 360. I want you to know that before I say this.\n\nHe posted on LinkedIn. 'Teal is the future of Trust™.' Four thousand likes. A client commented. All 87 slides. Teal. Before you leave.\n\nThe hex code is the word TEAL. I checked the brand guide. Leadership Gray. No teal.\n\nSorry."
+                text: "PRIYA! Three five-star reviews in Review 360 already, and I want you to know that before I say the next part.\n\nHe posted on LinkedIn. Teal. Four thousand likes. A client commented. All 87 slides, teal, before you leave. He CC'd basically everyone.\n\nThe colour code is the word TEAL. I checked the brand guide. Leadership Gray. No teal. I'm really sorry."
             }
         ],
         choices: [
@@ -225,13 +225,13 @@ const storyData = {
     "martyr_office": {
         speaker: "System", color: "var(--system-alert)", textColor: "#fff",
         image: "assets/images/5_1_martyr.jpg", forceTime: 1120,
-        text: "You recoloured 87 slides. By hand.\n\nSlides 23 to 31 used a master from 2018, builder long gone, layout locked. Rebuilt twice. Hand slipped on slide 34. Re-published at 11 PM.\n\nA Teams message: 'just checking in 😊'. You don't reply. The cleaner came, looked at you, and left without vacuuming your section.",
+        text: "You did all 87 slides by hand.\n\nSlides 23 through 31 used a locked master template from 2018. The person who built it left the company years ago. You rebuilt those nine slides twice. Your hand slipped on 34 and you had to do it a third time. It published at 11 PM.\n\nSomeone sent a Teams message — 'just checking in 😊' — and you watched it come in. The cleaning guy looked at you for a second and vacuumed around your desk instead.",
         endingTitle: "JUST ANOTHER FRIDAY",
         variants: [
             {
                 id: "repeat-martyr",
                 conditions: ["playCount:>= 2"],
-                text: "87 slides. By hand. Again.\n\nThe cleaning crew go around your desk now like it's load-bearing. One left a Tupperware of water by your keyboard.\n\nThe 2018 master. Still locked. Slide 34. 11 PM. 'Just checking in 😊'\n\nYou know."
+                text: "87 slides. By hand. Again.\n\nThe cleaning guy doesn't ask anymore — he just nods and works around you. Someone left a Tupperware of water near your keyboard at some point. You don't know who.\n\nSlide 34. The 2018 master. 11 PM. 'Just checking in 😊'. You already know."
             }
         ],
         choices: [
@@ -244,7 +244,7 @@ const storyData = {
     "ppt_promotion": {
         speaker: "System", color: "var(--tarun-yellow)", textColor: "#000",
         image: "assets/images/6_1_ppt_promotion.jpg",
-        text: "You renamed it InfoSec_Interactive_FINAL_v2_TEAL_APPROVED.pptx and emailed it. No message.\n\nHe replied in 38 seconds. EXACTLY THE TRANSFORMATIONAL ENERGY HE WANTED. Forwarded to the CEO. Subject: INNOVATION. His deck has 47 circles connected by arrows and a Wordle screenshot labelled 'Engagement Metric.' He calls it agile.\n\nBy Monday you're Global Head of Learning Experience Design. Parking spot.",
+        text: "You renamed it InfoSec_Interactive_FINAL_v2_TEAL_APPROVED.pptx and emailed it with no message.\n\nHe replied in 38 seconds. EXACTLY THE TRANSFORMATIONAL ENERGY HE WANTED. Forwarded it to the CEO — subject: INNOVATION — and posted about it. His own deck has forty-seven circles connected by arrows and a Wordle screenshot he's labelled 'Engagement Metric.' He calls the whole thing an agile pivot.\n\nBy Monday, you're Global Head of Learning Experience Design. You have a parking spot now.",
         endingTitle: "THE CORPORATE SELLOUT",
         choices: [
             { text: "Restart Shift", action: "restart" },
@@ -256,7 +256,7 @@ const storyData = {
     "true_winner": {
         speaker: "Priya", color: "var(--priya-cyan)", textColor: "#000",
         image: "assets/images/6_2_true_winner.jpg",
-        text: "Actually, Tarun.\n\nUnder Kirkpatrick Level 4, brand colour changes require a Phase 2 evaluation cycle. I flagged this in the ADDIE review last sprint — it's in the handover doc. The cache auto-applies the brand token at midnight. Teal's already queued. You signed off on it. 11:14 PM. Sunday.\n\n(Every word of this is made up.)",
+        text: "Tarun, actually — under Kirkpatrick Level 4, a brand colour change during an active evaluation cycle triggers a Phase 2 reset. I flagged this in the ADDIE review. It's in the handover doc. The LMS auto-applies the brand token at midnight, so teal is already queued. You signed off at 11:14 PM on a Sunday.\n\nShe looks at him. She made all of that up.",
         choices: [ { text: "Watch Tarun absorb this information.", target: "victory_screen" } ]
     },
 
@@ -264,13 +264,13 @@ const storyData = {
     "victory_screen": {
         speaker: "System", color: "var(--success-green)", textColor: "#000",
         image: "assets/images/6_3_victory.jpg",
-        text: "Tarun blinks. Eight full seconds.\n\n'The ADDIE review.' 'That's the one.' He nods. 'Superb alignment.'\n\nYou close the laptop. You defeated a grown man with a made-up evaluation framework. 5:28 PM. Out the door by 5:30. The moth dips once as you pass the light.",
+        text: "'The ADDIE review.' 'That's the one.' He nods for a very long time. 'Superb alignment,' he says.\n\nYou close the laptop at 5:28 and you're out the door by 5:30. The moth on the tube light dips once as you walk past. You don't know why that makes you feel better, but it does.",
         endingTitle: "THE SME WHISPERER", endingTitleType: "victory",
         variants: [
             {
                 id: "veteran-victory",
                 conditions: ["playCount:>= 2"],
-                text: "'The ADDIE review.' 'That's the one.' You've said this before. You know how it lands.\n\n'Superb alignment.'\n\nYou close the laptop. Out the door. The moth dips. You nod back this time."
+                text: "'The ADDIE review.' 'That's the one.' You've said this before. You know exactly how long he's going to nod.\n\nYou close the laptop. The moth dips once on your way out. You nod back this time."
             }
         ],
         choices: [
@@ -283,7 +283,7 @@ const storyData = {
     "rage_quit": {
         speaker: "System", color: "var(--system-alert)", textColor: "#fff",
         image: "assets/images/6_4_rage_quit.jpg",
-        text: "Patience hits zero.\n\nYou close the laptop. Grab your bag. Look at Tarun. Look at the moth. The moth looks back. You both nod.\n\nUber arrives in 4 minutes. You open Glassdoor on your phone. Give 2 stars. Change it to 1. The car pulls away.",
+        text: "Patience hits zero.\n\nYou close the laptop very carefully, which somehow feels worse than slamming it. Grab your bag. Tarun's about to say something on your way out. You don't stop.\n\nThe Uber's four minutes away. You open Glassdoor. Two stars. Actually, one.",
         endingTitle: "GLORIOUS RAGE QUIT",
         choices: [
             { text: "Restart Shift", action: "restart" },
@@ -295,7 +295,7 @@ const storyData = {
     "martyr": {
         speaker: "System", color: "var(--system-alert)", textColor: "#fff",
         image: "assets/images/6_5_martyr.jpg",
-        text: "It's past midnight.\n\nThe cleaning crew vacuums around your desk. They've stopped asking. You've become load-bearing furniture.\n\nThe bar is still at 99%. The moth hasn't moved. Neither have you.",
+        text: "It's midnight.\n\nThe cleaning crew's working around your desk. One of them has started just skipping your section — they nod when they come in and work around you like you're part of the furniture.\n\nThe bar's still at 99%.",
         endingTitle: "STILL HERE",
         choices: [
             { text: "Restart Shift", action: "restart" },

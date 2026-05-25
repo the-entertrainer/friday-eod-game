@@ -6,7 +6,8 @@ let gameState = {
     resolvedText: '',
     isTyping: false,
     typeInterval: null,
-    trapTimeout: null
+    trapTimeout: null,
+    pendingBubble: false
 };
 
 const uiClock       = document.getElementById('clock-display');
@@ -649,6 +650,7 @@ function loadNode(nodeId) {
 
     gameHistory.visitedThisRun.add(nodeId);
     gameState.resolvedText = resolveNodeText(nodeId);
+    gameState.pendingBubble = !!node.thoughtBubble;
     typewriterEffect(gameState.resolvedText, node.choices);
 }
 
@@ -748,6 +750,31 @@ function showEndingTitle(title, type) {
     })(performance.now());
 }
 
+function showThoughtBubble() {
+    const existing = document.getElementById('_thought_bubble');
+    if (existing) existing.remove();
+
+    const wrap = document.createElement('div');
+    wrap.id = '_thought_bubble';
+    wrap.className = 'thought-bubble';
+
+    wrap.innerHTML = `
+        <div class="thought-bubble-img">
+            <img src="assets/images/JackSparrow.png" alt="Jack Sparrow">
+        </div>
+        <div class="thought-dots">
+            <span></span><span></span><span></span>
+        </div>`;
+
+    uiViewport.appendChild(wrap);
+
+    setTimeout(() => {
+        if (!wrap.parentNode) return;
+        wrap.style.animation = 'bubblePopOut 0.3s ease forwards';
+        setTimeout(() => wrap.parentNode && wrap.remove(), 300);
+    }, 3500);
+}
+
 // ─── Dialogue ─────────────────────────────────────────────────────────────────
 function typewriterEffect(text, choices) {
     clearInterval(gameState.typeInterval);
@@ -768,6 +795,7 @@ function typewriterEffect(text, choices) {
             gameState.isTyping = false;
             stopTypingSound();
             renderChoices(choices);
+            if (gameState.pendingBubble) { gameState.pendingBubble = false; showThoughtBubble(); }
         }
     }, _TW_SPEEDS[_twSpeedIdx]);
 }
@@ -782,6 +810,7 @@ function advanceDialogue() {
         gameState.isTyping = false;
         uiTapHint.classList.remove('visible');
         renderChoices(node.choices);
+        if (gameState.pendingBubble) { gameState.pendingBubble = false; showThoughtBubble(); }
     }
 }
 

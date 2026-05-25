@@ -82,6 +82,67 @@ function countTotalVariants() {
     return t;
 }
 
+function getVariantsByNode() {
+    const variants = [];
+    for (const [nodeId, node] of Object.entries(storyData)) {
+        const nodeTitle = node.speaker && node.speaker.toUpperCase() === 'TARUN' ? '🟨 ' + node.id.toUpperCase() : '🟦 ' + node.id.toUpperCase();
+        if (node.variants && node.variants.length > 0) {
+            node.variants.forEach((variant, idx) => {
+                const variantId = `${nodeId}__${variant.id}`;
+                const isSeen = gameHistory.variantsSeen.has(variantId);
+                variants.push({
+                    nodeId,
+                    nodeTitle,
+                    variantId: variant.id,
+                    variantLetter: String.fromCharCode(65 + idx),
+                    text: variant.text,
+                    conditions: variant.conditions,
+                    isSeen
+                });
+            });
+        }
+    }
+    return variants;
+}
+
+function openVariantGallery() {
+    const modal = document.getElementById('variant-modal');
+    const grid = document.getElementById('variant-grid');
+    grid.innerHTML = '';
+    const allVariants = getVariantsByNode();
+
+    allVariants.forEach(v => {
+        const card = document.createElement('div');
+        card.className = `variant-item ${v.isSeen ? 'unlocked' : 'locked'}`;
+        const stateIcon = v.isSeen ? '✓' : '🔒';
+        const stateLabel = v.isSeen ? 'DISCOVERED' : 'LOCKED';
+
+        card.innerHTML = `
+            <div class="variant-node-name">${v.nodeTitle}</div>
+            <div class="variant-badge">Variant ${v.variantLetter}</div>
+            <div class="variant-state">
+                <span class="variant-state-icon">${stateIcon}</span>
+                <span>${stateLabel}</span>
+            </div>
+        `;
+
+        if (v.isSeen) {
+            card.onclick = () => {
+                alert(`${v.nodeTitle} — Variant ${v.variantLetter}\n\n${v.text}`);
+            };
+        }
+
+        grid.appendChild(card);
+    });
+
+    modal.classList.add('visible');
+}
+
+function closeVariantGallery() {
+    const modal = document.getElementById('variant-modal');
+    modal.classList.remove('visible');
+}
+
 function showRememberToast(text) {
     const toast = document.createElement('div');
     toast.className = 'remember-toast';
@@ -958,7 +1019,7 @@ function showEndingCard() {
             <div class="ending-stats-row"><span>⏱ Clocked out</span><span>${formatTime(gameState.minutes)}</span></div>
             <div class="ending-stats-row"><span>★ Quality</span><span>${q}/100</span></div>
             <div class="ending-stats-row"><span>♥ Patience</span><span>${p}/50</span></div>
-            <div class="ending-stats-row" style="margin-top:6px;border-top:1px solid rgba(255,255,255,0.12);padding-top:6px"><span>◈ Dialogues found</span><span>${seenV}/${totalV}</span></div>
+            <div class="ending-stats-row" style="margin-top:6px;border-top:1px solid rgba(255,255,255,0.12);padding-top:6px"><span>◈ Dialogues found</span><span><span style="cursor:pointer;color:#00e5ff;text-decoration:underline;" onclick="openVariantGallery()">${seenV}/${totalV} [VIEW]</span></span></div>
         </div>`;
     uiEndingCard.style.display = 'block';
 }

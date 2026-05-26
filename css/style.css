@@ -976,149 +976,161 @@ body {
     background: #000;
     display: flex; flex-direction: column;
     cursor: pointer;
+    animation: cutawayIn 0.15s ease-out both;
 }
+@keyframes cutawayIn { from { opacity: 0; } to { opacity: 1; } }
 
-/* ── Title card (Family Guy style bold flash) ── */
+/* ── Title card ── */
 .cutaway-title-card {
     position: absolute; inset: 0;
     display: flex; flex-direction: column;
     align-items: center; justify-content: center;
-    background: #000; z-index: 10;
-    text-align: center; padding: 24px;
-    transition: opacity 0.35s ease;
+    background: #050505;
+    background-image: radial-gradient(circle, rgba(255,194,0,0.06) 1px, transparent 1px);
+    background-size: 18px 18px;
+    z-index: 10; text-align: center; padding: 28px;
+    transition: opacity 0.2s ease;
 }
 .cutaway-title-card.hiding { opacity: 0; pointer-events: none; }
 
-/* ── Word spotlight — sentence highlight before cutaway ── */
-.word-hl {
-    display: inline;
-    transition: color 0.12s ease, text-shadow 0.18s ease;
-}
-.word-hl.lit {
-    color: #fff;
-    text-shadow: 0 0 10px rgba(255, 210, 60, 1), 0 0 28px rgba(255, 120, 0, 0.7);
-}
+/* ── Word spotlight ── */
+.word-hl { display: inline; transition: color 0.12s ease, text-shadow 0.18s ease; }
+.word-hl.lit { color: #fff; text-shadow: 0 0 10px rgba(255,210,60,1), 0 0 28px rgba(255,120,0,0.7); }
 
 .ct-main {
     font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(2rem, 9vw, 2.8rem);
-    color: #fff; letter-spacing: 4px; line-height: 1;
-    text-shadow: 4px 4px 0 #ff4500, 0 0 30px rgba(255,69,0,0.5);
+    font-size: clamp(2.4rem, 10vw, 3.4rem);
+    color: #fff; letter-spacing: 6px; line-height: 1;
+    text-shadow: 6px 6px 0 #cc2800, -1px -1px 0 #000, 0 0 50px rgba(255,70,0,0.8);
+    animation: ctSlam 0.3s cubic-bezier(0.15, 1.6, 0.35, 1) both;
+}
+@keyframes ctSlam {
+    from { transform: scale(1.8) rotate(-3deg); opacity: 0; }
+    to   { transform: scale(1) rotate(0deg); opacity: 1; }
+}
+.ct-divider {
+    width: 90px; height: 3px; margin: 16px auto 12px;
+    background: linear-gradient(90deg, transparent, #ffc200, transparent);
 }
 .ct-sub {
     font-family: 'Outfit', sans-serif;
-    font-size: 0.82rem; color: rgba(255,255,255,0.55);
-    letter-spacing: 2.5px; margin-top: 12px;
-    text-transform: uppercase;
+    font-size: 0.78rem; color: rgba(255,255,255,0.4);
+    letter-spacing: 3px; text-transform: uppercase;
 }
 
-/* ── Fullscreen panels — retro TV is now edge-to-edge ── */
+/* ── Retro TV — fullscreen ── */
 .retro-tv {
     flex: 1; width: 100%;
-    background: #000;
-    padding: 0; border: none; border-radius: 0; box-shadow: none;
-    opacity: 0;
-    transition: opacity 0.4s ease;
+    padding: 0; border: none; border-radius: 0; box-shadow: none; background: #000;
+    opacity: 0; transform: scale(0.96);
+    transition: opacity 0.22s ease, transform 0.28s cubic-bezier(0.15, 1.5, 0.35, 1);
 }
-.retro-tv.visible { opacity: 1; }
+.retro-tv.visible { opacity: 1; transform: scale(1); }
 
 .retro-tv-screen {
     width: 100%; height: 100%;
-    background: #000;
-    border: none; border-radius: 0; box-shadow: none;
+    border: none; border-radius: 0; box-shadow: none; background: #000;
     position: relative; overflow: hidden;
 }
-/* CRT scanlines kept for texture */
 .retro-tv-screen::after {
     content: ''; position: absolute; inset: 0; pointer-events: none; z-index: 20;
     background: repeating-linear-gradient(
         to bottom, transparent, transparent 3px,
-        rgba(0,0,0,0.06) 3px, rgba(0,0,0,0.06) 4px
+        rgba(0,0,0,0.07) 3px, rgba(0,0,0,0.07) 4px
     );
 }
 
 .tv-footer { display: none; }
 
-/* ── Panel container ── */
-.cutaway-panels { height: 100%; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+/* ── Panel container — amber gap ── */
+.cutaway-panels {
+    height: 100%; padding: 0;
+    display: flex; flex-direction: column; gap: 10px;
+    background: #ffc200;
+}
 
-/* ── Three equal stacked panels ── */
+/* ── Panels shared ── */
 .panel-top, .panel-mid, .panel-bot {
     flex: 1; width: 100%; height: 0;
     border: none; border-radius: 0;
     background-size: contain; background-repeat: no-repeat; background-position: center;
-    background-color: #000;
+    background-color: #111;
     position: relative; overflow: hidden;
+    will-change: transform;
 }
 
-/* diagonal slash separators — comic book style */
+/* diagonal slash */
 .panel-top { clip-path: polygon(0 0, 100% 0, 100% calc(100% - 32px), 0 100%); }
 .panel-mid { clip-path: polygon(0 32px, 100% 0, 100% calc(100% - 32px), 0 100%); }
 .panel-bot { clip-path: polygon(0 32px, 100% 0, 100% 100%, 0 100%); }
 
-/* top: flies in from left */
+/* top: left entry → drift right/left */
 .panel-top {
-    transform: translateX(-130%);
-    transition: transform 0.55s cubic-bezier(0.22, 1.35, 0.36, 1);
+    transform: translateX(-140%);
+    transition: transform 0.45s cubic-bezier(0.15, 1.55, 0.35, 1);
 }
 .panel-top.landed { transform: translateX(0); }
 .panel-top.drifting {
     transition: none;
-    animation: panelDriftRight 9s ease-in-out infinite;
+    animation: panelDriftRight 8s ease-in-out infinite;
+    filter: drop-shadow(0 0 12px rgba(255, 194, 0, 0.55));
 }
 
-/* middle: flies in from right */
+/* middle: right entry → static with glow */
 .panel-mid {
-    transform: translateX(130%);
-    transition: transform 0.55s cubic-bezier(0.22, 1.35, 0.36, 1);
+    transform: translateX(140%);
+    transition: transform 0.45s cubic-bezier(0.15, 1.55, 0.35, 1);
 }
-.panel-mid.landed { transform: translateX(0); }
-.panel-mid.zooming {
-    transition: none;
-    animation: panelZoom 12s ease-in-out infinite alternate;
+.panel-mid.landed {
+    transform: translateX(0);
+    filter: drop-shadow(0 0 12px rgba(255, 194, 0, 0.55));
 }
 
-/* bottom: flies in from left, opposite phase to top */
+/* bottom: left entry → drift left/right (opposite phase) */
 .panel-bot {
-    transform: translateX(-130%);
-    transition: transform 0.55s cubic-bezier(0.22, 1.35, 0.36, 1);
+    transform: translateX(-140%);
+    transition: transform 0.45s cubic-bezier(0.15, 1.55, 0.35, 1);
 }
 .panel-bot.landed { transform: translateX(0); }
 .panel-bot.drifting-alt {
     transition: none;
-    animation: panelDriftLeft 9s ease-in-out infinite;
+    animation: panelDriftLeft 8s ease-in-out infinite;
+    filter: drop-shadow(0 0 12px rgba(255, 194, 0, 0.55));
 }
 
+/* ── Panel inner effects ── */
+.panel-vignette {
+    position: absolute; inset: 0; pointer-events: none; z-index: 2;
+    background: radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.72) 100%);
+}
+.panel-flash {
+    position: absolute; inset: 0; pointer-events: none; z-index: 4;
+    background: #fff; opacity: 0;
+}
+.panel-flash.active { animation: panelSlamFlash 0.55s ease-out forwards; }
+@keyframes panelSlamFlash {
+    0%   { opacity: 0.9; }
+    35%  { opacity: 0.18; }
+    100% { opacity: 0; }
+}
+
+/* ── Drift & keyframes ── */
 @keyframes panelDriftRight {
-    0%   { transform: translateX(0px); }
-    25%  { transform: translateX(13px); }
-    50%  { transform: translateX(0px); }
-    75%  { transform: translateX(-13px); }
-    100% { transform: translateX(0px); }
+    0%   { transform: translateX(0); }
+    25%  { transform: translateX(18px); }
+    50%  { transform: translateX(0); }
+    75%  { transform: translateX(-18px); }
+    100% { transform: translateX(0); }
 }
 @keyframes panelDriftLeft {
-    0%   { transform: translateX(0px); }
-    25%  { transform: translateX(-13px); }
-    50%  { transform: translateX(0px); }
-    75%  { transform: translateX(13px); }
-    100% { transform: translateX(0px); }
+    0%   { transform: translateX(0); }
+    25%  { transform: translateX(-18px); }
+    50%  { transform: translateX(0); }
+    75%  { transform: translateX(18px); }
+    100% { transform: translateX(0); }
 }
 
-/* ── TV decorative footer ── */
-.tv-footer { display: flex; flex-direction: column; align-items: center; gap: 5px; margin-top: 10px; }
-.tv-knobs { display: flex; gap: 28px; }
-.tv-knob {
-    width: 13px; height: 13px; border-radius: 50%;
-    background: radial-gradient(circle at 35% 35%, #555, #1f1f1f);
-    border: 2px solid #111; box-shadow: inset 0 1px 0 rgba(255,255,255,0.08);
-}
-.tv-speaker { display: flex; gap: 5px; }
-.tv-speaker span {
-    width: 5px; height: 5px; border-radius: 50%;
-    background: #2a2a2a; border: 1px solid #333;
-}
-
-/* ── Tap to continue hint ── */
+/* ── Tap hint ── */
 .cutaway-tap-hint {
     position: absolute; bottom: 22px;
     font-family: 'Outfit', sans-serif; font-size: 0.75rem;

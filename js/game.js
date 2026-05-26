@@ -793,6 +793,7 @@ function showCutaway(id, onComplete) {
     tc.className = 'cutaway-title-card';
     tc.innerHTML =
         `<div class="ct-main">${data.titleLine1}</div>` +
+        `<div class="ct-divider"></div>` +
         (data.titleLine2 ? `<div class="ct-sub">${data.titleLine2}</div>` : '');
     ov.appendChild(tc);
 
@@ -810,8 +811,17 @@ function showCutaway(id, onComplete) {
         const p = document.createElement('div');
         p.className = 'cutaway-panel ' + extraClass;
         p.style.backgroundImage = `url('${src}')`;
+        p.innerHTML = '<div class="panel-vignette"></div><div class="panel-flash"></div>';
         return p;
     }
+
+    const flash = (panel) => {
+        const f = panel.querySelector('.panel-flash');
+        if (!f) return;
+        f.classList.remove('active');
+        void f.offsetWidth; // force reflow so animation replays
+        f.classList.add('active');
+    };
 
     const pTop = makePanel(data.panels[0].src, 'panel-top');
     const pMid = makePanel(data.panels[1].src, 'panel-mid');
@@ -844,12 +854,12 @@ function showCutaway(id, onComplete) {
     const timers = [];
     const T = (ms, fn) => timers.push(setTimeout(fn, ms));
 
-    T(1500, () => tc.classList.add('hiding'));
-    T(1800, () => tv.classList.add('visible'));
-    T(2050, () => { pTop.classList.add('landed'); timers.push(setTimeout(() => pTop.classList.add('drifting'), 650)); });
-    T(2650, () => { pMid.classList.add('landed'); });
-    T(3250, () => { pBot.classList.add('landed'); timers.push(setTimeout(() => pBot.classList.add('drifting-alt'), 650)); });
-    T(4400, () => hint.classList.add('visible'));
+    T(1400, () => tc.classList.add('hiding'));
+    T(1650, () => tv.classList.add('visible'));
+    T(1900, () => { pTop.classList.add('landed'); flash(pTop); timers.push(setTimeout(() => pTop.classList.add('drifting'), 600)); });
+    T(2350, () => { pMid.classList.add('landed'); flash(pMid); });
+    T(2800, () => { pBot.classList.add('landed'); flash(pBot); timers.push(setTimeout(() => pBot.classList.add('drifting-alt'), 600)); });
+    T(3700, () => hint.classList.add('visible'));
 
     let gone = false;
     const dismiss = () => {

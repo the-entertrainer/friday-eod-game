@@ -792,14 +792,13 @@ function showCutaway(id, onComplete) {
         return p;
     }
 
-    const hero = makePanel(data.panels[0].src, data.panels[0].caption, 'panel-hero');
-    const smalls = document.createElement('div');
-    smalls.className = 'cutaway-smalls';
-    smalls.appendChild(makePanel(data.panels[1].src, data.panels[1].caption, 'panel-small panel-small-1'));
-    smalls.appendChild(makePanel(data.panels[2].src, data.panels[2].caption, 'panel-small panel-small-2'));
+    const pTop = makePanel(data.panels[0].src, data.panels[0].caption, 'panel-top');
+    const pMid = makePanel(data.panels[1].src, data.panels[1].caption, 'panel-mid');
+    const pBot = makePanel(data.panels[2].src, data.panels[2].caption, 'panel-bot');
 
-    panelsWrap.appendChild(hero);
-    panelsWrap.appendChild(smalls);
+    panelsWrap.appendChild(pTop);
+    panelsWrap.appendChild(pMid);
+    panelsWrap.appendChild(pBot);
     screen.appendChild(panelsWrap);
     tv.appendChild(screen);
 
@@ -824,12 +823,12 @@ function showCutaway(id, onComplete) {
     const timers = [];
     const T = (ms, fn) => timers.push(setTimeout(fn, ms));
 
-    T(1500, () => tc.classList.add('hiding'));          // title fades out
-    T(1800, () => tv.classList.add('visible'));         // TV appears
-    T(2050, () => hero.classList.add('landed'));        // hero slams in from left
-    T(2600, () => smalls.children[0]?.classList.add('landed')); // small1 from right
-    T(3150, () => smalls.children[1]?.classList.add('landed')); // small2 from left
-    T(4200, () => hint.classList.add('visible'));       // tap hint
+    T(1500, () => tc.classList.add('hiding'));
+    T(1800, () => tv.classList.add('visible'));
+    T(2050, () => { pTop.classList.add('landed'); timers.push(setTimeout(() => pTop.classList.add('drifting'), 650)); });
+    T(2650, () => { pMid.classList.add('landed'); timers.push(setTimeout(() => pMid.classList.add('zooming'), 650)); });
+    T(3250, () => { pBot.classList.add('landed'); timers.push(setTimeout(() => pBot.classList.add('drifting-alt'), 650)); });
+    T(4400, () => hint.classList.add('visible'));
 
     let gone = false;
     const dismiss = () => {

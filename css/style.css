@@ -1041,31 +1041,65 @@ body {
 /* ── Panel container ── */
 .cutaway-panels { padding: 8px; display: flex; flex-direction: column; gap: 6px; }
 
-/* ── Hero panel (flies in from left) ── */
-.panel-hero {
-    width: 100%; height: 198px;
+/* ── Three equal stacked panels ── */
+.panel-top, .panel-mid, .panel-bot {
+    width: 100%; height: 143px;
     border-radius: 5px; border: 2px solid #1a1a1a;
-    background-size: cover; background-position: center;
+    background-size: 104% auto; background-position: center;
     position: relative; overflow: hidden;
+}
+
+/* top: flies in from left */
+.panel-top {
     transform: translateX(-130%);
     transition: transform 0.55s cubic-bezier(0.22, 1.35, 0.36, 1);
 }
-.panel-hero.landed { transform: translateX(0); }
+.panel-top.landed { transform: translateX(0); }
+.panel-top.drifting {
+    transition: none;
+    animation: panelDriftRight 9s ease-in-out infinite;
+}
 
-/* ── Small panels row ── */
-.cutaway-smalls { display: flex; gap: 6px; }
-
-.panel-small {
-    flex: 1; height: 152px;
-    border-radius: 5px; border: 2px solid #1a1a1a;
-    background-size: cover; background-position: center;
-    position: relative; overflow: hidden;
+/* middle: flies in from right */
+.panel-mid {
+    transform: translateX(130%);
     transition: transform 0.55s cubic-bezier(0.22, 1.35, 0.36, 1);
 }
-.panel-small-1 { transform: translateX(200%); }
-.panel-small-1.landed { transform: translateX(0); }
-.panel-small-2 { transform: translateX(-200%); }
-.panel-small-2.landed { transform: translateX(0); }
+.panel-mid.landed { transform: translateX(0); }
+.panel-mid.zooming {
+    transition: none;
+    animation: panelZoom 12s ease-in-out infinite alternate;
+}
+
+/* bottom: flies in from left, opposite phase to top */
+.panel-bot {
+    transform: translateX(-130%);
+    transition: transform 0.55s cubic-bezier(0.22, 1.35, 0.36, 1);
+}
+.panel-bot.landed { transform: translateX(0); }
+.panel-bot.drifting-alt {
+    transition: none;
+    animation: panelDriftLeft 9s ease-in-out infinite;
+}
+
+@keyframes panelDriftRight {
+    0%   { transform: translateX(0px); }
+    25%  { transform: translateX(13px); }
+    50%  { transform: translateX(0px); }
+    75%  { transform: translateX(-13px); }
+    100% { transform: translateX(0px); }
+}
+@keyframes panelDriftLeft {
+    0%   { transform: translateX(0px); }
+    25%  { transform: translateX(-13px); }
+    50%  { transform: translateX(0px); }
+    75%  { transform: translateX(13px); }
+    100% { transform: translateX(0px); }
+}
+@keyframes panelZoom {
+    from { background-size: 104% auto; background-position: center; }
+    to   { background-size: 122% auto; background-position: center; }
+}
 
 /* ── Panel captions ── */
 .panel-caption {

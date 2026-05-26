@@ -976,20 +976,16 @@ body {
     background: #000;
     display: flex; flex-direction: column;
     cursor: pointer;
-    animation: cutawayIn 0.15s ease-out both;
 }
-@keyframes cutawayIn { from { opacity: 0; } to { opacity: 1; } }
 
 /* ── Title card ── */
 .cutaway-title-card {
     position: absolute; inset: 0;
     display: flex; flex-direction: column;
     align-items: center; justify-content: center;
-    background: #050505;
-    background-image: radial-gradient(circle, rgba(255,194,0,0.06) 1px, transparent 1px);
-    background-size: 18px 18px;
-    z-index: 10; text-align: center; padding: 28px;
-    transition: opacity 0.2s ease;
+    background: #000; z-index: 10;
+    text-align: center; padding: 28px;
+    transition: opacity 0.3s ease;
 }
 .cutaway-title-card.hiding { opacity: 0; pointer-events: none; }
 
@@ -999,134 +995,93 @@ body {
 
 .ct-main {
     font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(2.4rem, 10vw, 3.4rem);
-    color: #fff; letter-spacing: 6px; line-height: 1;
-    text-shadow: 6px 6px 0 #cc2800, -1px -1px 0 #000, 0 0 50px rgba(255,70,0,0.8);
-    animation: ctSlam 0.3s cubic-bezier(0.15, 1.6, 0.35, 1) both;
-}
-@keyframes ctSlam {
-    from { transform: scale(1.8) rotate(-3deg); opacity: 0; }
-    to   { transform: scale(1) rotate(0deg); opacity: 1; }
+    font-size: clamp(2rem, 9vw, 2.8rem);
+    color: #fff; letter-spacing: 4px; line-height: 1;
+    text-shadow: 4px 4px 0 #ff4500, 0 0 30px rgba(255,69,0,0.5);
 }
 .ct-divider {
-    width: 90px; height: 3px; margin: 16px auto 12px;
-    background: linear-gradient(90deg, transparent, #ffc200, transparent);
+    width: 80px; height: 2px; margin: 14px auto 10px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
 }
 .ct-sub {
     font-family: 'Outfit', sans-serif;
-    font-size: 0.78rem; color: rgba(255,255,255,0.4);
-    letter-spacing: 3px; text-transform: uppercase;
+    font-size: 0.8rem; color: rgba(255,255,255,0.45);
+    letter-spacing: 2.5px; text-transform: uppercase;
 }
 
 /* ── Retro TV — fullscreen ── */
 .retro-tv {
     flex: 1; width: 100%;
     padding: 0; border: none; border-radius: 0; box-shadow: none; background: #000;
-    opacity: 0; transform: scale(0.96);
-    transition: opacity 0.22s ease, transform 0.28s cubic-bezier(0.15, 1.5, 0.35, 1);
+    opacity: 0; transition: opacity 0.3s ease;
 }
-.retro-tv.visible { opacity: 1; transform: scale(1); }
+.retro-tv.visible { opacity: 1; }
 
 .retro-tv-screen {
     width: 100%; height: 100%;
     border: none; border-radius: 0; box-shadow: none; background: #000;
     position: relative; overflow: hidden;
 }
-.retro-tv-screen::after {
-    content: ''; position: absolute; inset: 0; pointer-events: none; z-index: 20;
-    background: repeating-linear-gradient(
-        to bottom, transparent, transparent 3px,
-        rgba(0,0,0,0.07) 3px, rgba(0,0,0,0.07) 4px
-    );
-}
 
 .tv-footer { display: none; }
 
-/* ── Panel container — amber gap ── */
+/* ── Panel container ── */
 .cutaway-panels {
     height: 100%; padding: 0;
-    display: flex; flex-direction: column; gap: 10px;
-    background: #ffc200;
+    display: flex; flex-direction: column; gap: 6px;
+    background: #1a1a1a;
 }
 
-/* ── Panels shared ── */
+/* ── Three equal stacked panels ── */
 .panel-top, .panel-mid, .panel-bot {
     flex: 1; width: 100%; height: 0;
     border: none; border-radius: 0;
     background-size: contain; background-repeat: no-repeat; background-position: center;
-    background-color: #111;
+    background-color: #000;
     position: relative; overflow: hidden;
-    will-change: transform;
 }
 
-/* diagonal slash */
-.panel-top { clip-path: polygon(0 0, 100% 0, 100% calc(100% - 32px), 0 100%); }
-.panel-mid { clip-path: polygon(0 32px, 100% 0, 100% calc(100% - 32px), 0 100%); }
-.panel-bot { clip-path: polygon(0 32px, 100% 0, 100% 100%, 0 100%); }
-
-/* top: left entry → drift right/left */
+/* top: flies in from left */
 .panel-top {
-    transform: translateX(-140%);
-    transition: transform 0.45s cubic-bezier(0.15, 1.55, 0.35, 1);
+    transform: translateX(-130%);
+    transition: transform 0.55s cubic-bezier(0.22, 1.35, 0.36, 1);
 }
 .panel-top.landed { transform: translateX(0); }
 .panel-top.drifting {
     transition: none;
-    animation: panelDriftRight 8s ease-in-out infinite;
-    filter: drop-shadow(0 0 12px rgba(255, 194, 0, 0.55));
+    animation: panelDriftRight 9s ease-in-out infinite;
 }
 
-/* middle: right entry → static with glow */
+/* middle: flies in from right */
 .panel-mid {
-    transform: translateX(140%);
-    transition: transform 0.45s cubic-bezier(0.15, 1.55, 0.35, 1);
+    transform: translateX(130%);
+    transition: transform 0.55s cubic-bezier(0.22, 1.35, 0.36, 1);
 }
-.panel-mid.landed {
-    transform: translateX(0);
-    filter: drop-shadow(0 0 12px rgba(255, 194, 0, 0.55));
-}
+.panel-mid.landed { transform: translateX(0); }
 
-/* bottom: left entry → drift left/right (opposite phase) */
+/* bottom: flies in from left, opposite phase */
 .panel-bot {
-    transform: translateX(-140%);
-    transition: transform 0.45s cubic-bezier(0.15, 1.55, 0.35, 1);
+    transform: translateX(-130%);
+    transition: transform 0.55s cubic-bezier(0.22, 1.35, 0.36, 1);
 }
 .panel-bot.landed { transform: translateX(0); }
 .panel-bot.drifting-alt {
     transition: none;
-    animation: panelDriftLeft 8s ease-in-out infinite;
-    filter: drop-shadow(0 0 12px rgba(255, 194, 0, 0.55));
+    animation: panelDriftLeft 9s ease-in-out infinite;
 }
 
-/* ── Panel inner effects ── */
-.panel-vignette {
-    position: absolute; inset: 0; pointer-events: none; z-index: 2;
-    background: radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.72) 100%);
-}
-.panel-flash {
-    position: absolute; inset: 0; pointer-events: none; z-index: 4;
-    background: #fff; opacity: 0;
-}
-.panel-flash.active { animation: panelSlamFlash 0.55s ease-out forwards; }
-@keyframes panelSlamFlash {
-    0%   { opacity: 0.9; }
-    35%  { opacity: 0.18; }
-    100% { opacity: 0; }
-}
-
-/* ── Drift & keyframes ── */
 @keyframes panelDriftRight {
     0%   { transform: translateX(0); }
-    25%  { transform: translateX(18px); }
+    25%  { transform: translateX(13px); }
     50%  { transform: translateX(0); }
-    75%  { transform: translateX(-18px); }
+    75%  { transform: translateX(-13px); }
     100% { transform: translateX(0); }
 }
 @keyframes panelDriftLeft {
     0%   { transform: translateX(0); }
-    25%  { transform: translateX(-18px); }
+    25%  { transform: translateX(-13px); }
     50%  { transform: translateX(0); }
-    75%  { transform: translateX(18px); }
+    75%  { transform: translateX(13px); }
     100% { transform: translateX(0); }
 }
 

@@ -5,9 +5,9 @@ const cutawayData = {
 
     "friday_eod_dragon": {
         titleLine1: "EVERY FRIDAY. 4:58 PM.",
-        titleLine2: "Bilkul timed. Bilkul sadistic.",
+        titleLine2: "Every single week. Without fail.",
         panels: [
-            { src: "assets/cutaways/fri1.jpg", caption: "Monday – Thursday: Completely harmless." },
+            { src: "assets/cutaways/fri1.jpg", caption: "Monday to Thursday: Totally harmless." },
             { src: "assets/cutaways/fri2.jpg", caption: "Friday. 4:58 PM. Something stirs." },
             { src: "assets/cutaways/fri3.jpg", caption: "Your boss. Chinese dragon. On meth. LinkedIn Premium." }
         ]
@@ -18,14 +18,14 @@ const cutawayData = {
         titleLine2: "Module 3. Slide 4. Fire Safety Protocol.",
         panels: [
             { src: "assets/cutaways/syn1.jpg", caption: "He was explaining fire exit procedures. Normally." },
-            { src: "assets/cutaways/syn2.jpg", caption: "Then the video render glitched." },
+            { src: "assets/cutaways/syn2.jpg", caption: "Then the video file glitched." },
             { src: "assets/cutaways/syn3.jpg", caption: "He poked his own nose. 3 full seconds. No one will speak of it." }
         ]
     },
 
     "tarun_nightmare": {
         titleLine1: "TARUN'S RECURRING NIGHTMARE.",
-        titleLine2: "(He has never discussed this. Not once.)",
+        titleLine2: "(He refuses to discuss it. Not once.)",
         panels: [
             { src: "assets/cutaways/tarun1.jpg", caption: "3 AM. A Tuesday." },
             { src: "assets/cutaways/tarun2.jpg", caption: "The pivot tables came." },
@@ -35,7 +35,7 @@ const cutawayData = {
 
     "storyline_preview": {
         titleLine1: "STORYLINE PREVIEW SPEED.",
-        titleLine2: "Ek comparative study.",
+        titleLine2: "A comparative study.",
         panels: [
             { src: "assets/cutaways/slow1.jpg", caption: "A snail completing his PhD." },
             { src: "assets/cutaways/slow2.jpg", caption: "A glacier forming." },
@@ -51,23 +51,23 @@ const storyData = {
         speaker: "Priya", color: "var(--priya-cyan)", textColor: "#000",
         image: "assets/images/1_1_bsod.jpg", forceTime: 1048,
         cutaway: "friday_eod_dragon",
-        text: "Storyline ka publishing bar 99% pe hai. 14 minute se.\n\nTeams pe 'Away' set kiya 4:30 baje. Body? Abhi bhi yahan hai. Ek baar bhi nahi hili. ThinkPad ka fan aisa chal raha hai jaise koi bahut thaka hua jet engine hai — lekin woh chal raha hai, aur publish bhi hoga, bas do minute mein.\n\nAaj Friday hai. Sirf do minute chahiye. Bas.",
+        text: "Storyline's been at 99% for fourteen minutes. Fourteen.\n\nTeams says Away. I'm very much still here. Haven't moved. The ThinkPad fan sounds like a disappointed relative — loud, constant, and somehow judging me.\n\nTwo more minutes and I'm done. That's all I need.\n\nBut it's Friday. And every single Friday, at exactly 4:58 PM, my boss wakes up from his weekly coma and remembers he's a manager.",
         choices: [ { text: "Rewind — 4:45 PM →", target: "setup", timeCost: 0 } ],
         variants: [
             {
                 id: "returning-player",
                 conditions: ["playCount:>= 1"],
-                text: "Wapas aa gaye. 5:28. Same bar, 99%.\n\nAccha. Phir se try karte hain. Rewind."
+                text: "You're back. 5:28 again. Same bar, same 99%.\n\nOkay. Let's try something different. Rewind."
             },
             {
                 id: "after-rogue",
                 conditions: ["seenEnding:rogue_export"],
-                text: "Oh, wapas aaye.\n\nPichhli baar clean build khud publish kiya aur nikal gaye. Quick Chat ka calendar invite aaya — HR ka code word hai jab box laane bol rahe hon. Module abhi bhi live hai. Paanch star. Main wahan nahi hoon.\n\nRewind."
+                text: "Oh. You're back.\n\nLast time you published the clean build yourself and walked out. Got a calendar invite called Quick Chat — that's HR for bring a box. Module's still live, five stars. I'm not there anymore.\n\nRewind."
             },
             {
                 id: "after-meta-escape",
                 conditions: ["seenEnding:meta_escape"],
-                text: "Pichhli baar DOM se delete kiya tha use. Chhe second free thi. Phir loop reset ho gaya.\n\nKuch aur try karte hain. Rewind."
+                text: "You deleted him from the DOM last time. I was free for about six seconds before the loop reset.\n\nLet's try something else. Rewind."
             }
         ]
     },
@@ -77,10 +77,10 @@ const storyData = {
         speaker: "Priya", color: "var(--priya-cyan)", textColor: "#000",
         image: "assets/images/1_2_setup.jpg", forceTime: 1005,
         cutaway: "synthesia_glitch",
-        text: "4:45 baj rahe the. Module actually done tha. Done-done — not 'QA aur karo' done, not 'stakeholder ne dekha nahi' done.\n\nSynthesia ka avatar bhi zyada drama nahi kar raha tha. Bas ek baar glitch kiya tha mid-sentence mein. Slide 4. Fire safety pe. Apni naak khud poke ki tune mein — teen second ke liye, pure camera pe.\n\nClip abhi bhi review folder mein hai. Koi baat nahi karega.\n\nMain 5 baje ghar jaane waali thi. Sach mein. Socha tha.",
+        text: "4:45 PM. The module was actually done. Not 'draft two' done. Not 'stakeholders haven't seen it yet' done. Done done.\n\nThe Synthesia avatar was mostly behaving. Except for that one time on slide 4 — fire safety protocol — where the render glitched mid-sentence and he just. Poked his own nose. Three full seconds. Straight to camera.\n\nThe clip is still in the review folder. We don't discuss it.\n\nI was going to be home by five. I genuinely believed that.",
         choices: [
-            { text: "Publish karo aur coat uthao.", target: "ambush", timeCost: 2 },
-            { text: "Ek last QA pass. Bas ek.", target: "ambush", timeCost: 5 }
+            { text: "Hit Publish and grab my coat.", target: "ambush", timeCost: 2 },
+            { text: "One last QA pass. Just one.", target: "ambush", timeCost: 5 }
         ]
     },
 
@@ -89,23 +89,23 @@ const storyData = {
         speaker: "Tarun", color: "var(--tarun-yellow)", textColor: "#000",
         image: "assets/images/2_1_ambush.jpg",
         cutaway: "tarun_nightmare",
-        text: "PRIYA — hey — do you have two minutes? Please bhai.\n\nPehle uske baare mein thoda samajhna chahiye. Tarun. LinkedIn pe khud ko 'Learning Champion' likhta hai. Pivot table ka naam sun ke paseena aata hai. Ek baar ek simple Excel file dekh ke 'headache hai' bol ke meeting se nikal gaya tha. Woh meri attendance sheet thi.\n\nAaj woh ek LinkedIn post dekh ke aaya hai. Fire safety ko Duolingo banana chahta hai. 'Learning ecosystem' bola — teen baar. Main ginti thi.",
+        text: "PRIYA — hey — do you have two minutes? Please.\n\nBefore I explain, some context on Tarun. He calls himself a 'Learning Champion' on LinkedIn. He once asked me if a spreadsheet was broken because there were too many numbers. He's not malicious — he's dangerously excited about ideas he doesn't fully understand.\n\nHe saw a LinkedIn post. Chief Learning Architect, 200k followers. He wants to turn our fire safety module into Duolingo. Said 'learning ecosystem' three times. I was counting.\n\nAlso — he once walked out of a budget meeting because someone opened a file with pivot tables. Real panic in his eyes. Actually fled.",
         variants: [
             {
                 id: "low-quality-ambush",
                 conditions: ["quality:<= 40"],
-                text: "PRIYA — quick one.\n\nUsne module dekha. 'Solid first draft' bola. Yeh final version hai. Duolingo jaisa banana chahta hai. Fire safety ke liye.\n\nTum theek ho? Like, actually?"
+                text: "PRIYA — quick one.\n\nHe looked at the module. Called it a 'solid first draft.' This is the final version. He wants it to be like Duolingo. For fire safety.\n\nAre you okay? Like, actually."
             },
             {
                 id: "repeat-ambush",
                 conditions: ["playCount:>= 2"],
-                text: "PRIYA. Haan, haan, jaanta hoon.\n\nGamification, learning ecosystem, leaderboard, Duolingo. Main yeh posts nahi likhta. Main sirf meetings attend karta hoon.\n\nEk minute chahiye? Bolo."
+                text: "PRIYA. I know. I know.\n\nGamification, learning ecosystem, leaderboard, Duolingo. I don't write these posts. I just end up in the meetings.\n\nBlink twice if you need a minute."
             }
         ],
         choices: [
-            { text: "Cognitive load samjhao. Diplomatically.", target: "diplomatic", timeCost: 8, patienceCost: -12 },
-            { text: "Poochho — 'engagement synergy' ka actually matlab kya hai.", target: "aggressive", timeCost: 8, patienceCost: -18 },
-            { text: "Seedha camera mein dekho.", target: "meta_moment", timeCost: 4, patienceCost: -8 }
+            { text: "Explain cognitive load theory. Diplomatically.", target: "diplomatic", timeCost: 8, patienceCost: -12 },
+            { text: "Ask what 'engagement synergy' actually means.", target: "aggressive", timeCost: 8, patienceCost: -18 },
+            { text: "Turn to the camera.", target: "meta_moment", timeCost: 4, patienceCost: -8 }
         ]
     },
 
@@ -113,9 +113,9 @@ const storyData = {
     "meta_moment": {
         speaker: "Priya", color: "var(--priya-cyan)", textColor: "#000",
         image: "assets/images/2_4_kids.jpg",
-        text: "Tarun. Ek second.\n\nMere sir ke upar ek Patience bar hai. Dekh sakti hoon use neeche jaate hue jab tu bolta hai.\n\nLagta hai main ek game mein hoon. Jo honestly... aaj ke din ke liye quite accurate lagta hai actually.\n\nBas. Good options de. Please yaar.",
+        text: "Tarun. Hold on.\n\nThere's a Patience bar above my head and I can watch it going down while you're talking.\n\nI think I'm in a game. Which honestly explains a lot about today.\n\nJust. Good choices. That's all I'm asking.",
         choices: [
-            { text: "Tarun: 'The UI is a metaphor, Priya. Deliverables pe focus karo.'", target: "aggressive", timeCost: 4, patienceCost: -40 }
+            { text: "Tarun: 'The UI is a metaphor, Priya. Focus on the deliverables.'", target: "aggressive", timeCost: 4, patienceCost: -40 }
         ]
     },
 
@@ -123,10 +123,10 @@ const storyData = {
     "diplomatic": {
         speaker: "Tarun", color: "var(--tarun-yellow)", textColor: "#000",
         image: "assets/images/2_2_diplomatic.jpg",
-        text: "Toh woh LMS mein ek escape room banana chahta hai. 'Immersive learning journey.' Usne mood board print kiya — nau padlock photos, aur ek safe ka photo jisme RED MARKER mein likha hai: IMMERSIVE JOURNEY NODE 1.\n\nMaine nahi likha. Woh usne kiya.\n\nTeen VR headsets hain hamare paas by the way. Do on nahi hote. Teesre se Rajan from IT ko nausea hota hai. Main sirf bata raha hoon sab.",
+        text: "So he wants an escape room. In the LMS. He's calling it an 'immersive learning journey.' He printed a mood board — nine photos of padlocks and one photo of a safe with IMMERSIVE JOURNEY NODE 1 written on it in red marker.\n\nI didn't write that. That was him.\n\nWe have three VR headsets, by the way. Two won't turn on. The third one makes Rajan from IT nauseous. Just putting that out there.",
         choices: [
-            { text: "Samjhao — Storyline game engine nahi hai.", target: "technical_pushback", timeCost: 10, patienceCost: -20 },
-            { text: "Surrender. Poora cheez banao.", target: "compromise", timeCost: 40, qualityCost: -40, patienceCost: 15 }
+            { text: "Explain that Storyline is not a game engine.", target: "technical_pushback", timeCost: 10, patienceCost: -20 },
+            { text: "Surrender. Build the whole thing.", target: "compromise", timeCost: 40, qualityCost: -40, patienceCost: 15 }
         ]
     },
 
@@ -134,17 +134,17 @@ const storyData = {
     "aggressive": {
         speaker: "Tarun", color: "var(--tarun-yellow)", textColor: "#000",
         image: "assets/images/2_3_aggressive.jpg",
-        text: "Toh 'engagement synergy' ka matlab hai — okay sunna — Next button locked rahega jab tak avatar baat karna band na kare. Aur wrong answers automatically correct ho jaayenge. Isko woh 'psychological safety' bol raha hai.\n\nUsne yeh Post-it pe likha. Server room ke darwaze pe chipka diya. Facilities ne do baar call kiya. Abhi bhi hai woh wahan.",
+        text: "So 'engagement synergy' means — okay listen — the Next button is locked until the avatar finishes talking. And wrong answers correct themselves automatically. He's calling this 'psychological safety.'\n\nHe wrote it on a Post-it. Stuck it to the server room door. Facilities called twice. It's still there.",
         variants: [
             {
                 id: "ravi-hotspot-hint",
                 conditions: ["playCount:>= 1"],
-                text: "Aur — yeh main directly uske email se padh raha hoon — woh female avatar pe ek hotspot chahta hai. Name badge pe. 'Clickable for curiosity, adds a human touch.'\n\nMaine brief mein type kar diya kyunki kuch aur samajh nahi aaya karna. Tab se neend theek se nahi aati."
+                text: "And — I'm reading directly from his email — he wants a hotspot on the female avatar. On the name badge. 'Clickable for curiosity, adds a human touch.'\n\nI typed it into the brief because I didn't know what else to do. I haven't slept well since."
             }
         ],
         choices: [
-            { text: "Samjhao — isse assessment ka matlab khatam ho jaata hai.", target: "technical_pushback", timeCost: 8, patienceCost: -16 },
-            { text: "Agree karo. Learning ki illusion simulate karo.", target: "compromise", qualityCost: -50, timeCost: 20, patienceCost: 12 }
+            { text: "Explain this destroys the point of an assessment.", target: "technical_pushback", timeCost: 8, patienceCost: -16 },
+            { text: "Agree to simulate the illusion of learning.", target: "compromise", qualityCost: -50, timeCost: 20, patienceCost: 12 }
         ]
     },
 
@@ -153,29 +153,29 @@ const storyData = {
         speaker: "Priya", color: "var(--priya-cyan)", textColor: "#000",
         image: "assets/images/3_1_pushback.jpg",
         cutaway: "storyline_preview",
-        text: "Tarun, hum SCORM 1.2 pe hain. 2019 se. Finance ne upgrade nahi karne diya — teen managers pehle wala decision hai. LMS admin Pune se aata hai. Mahine mein ek baar.\n\nHalf plant floor abhi bhi IE11 pe hai. Matlab agar main yeh banaaon, LMS ek error dega jise is team mein koi fix nahi kar sakta.\n\nDramatic nahi ho rahi main. Woh bata rahi hoon jo actually wahan hai.",
+        text: "Tarun, we're on SCORM 1.2. Since 2019. Finance said no to upgrading — three managers ago. The LMS admin flies in from Pune once a month.\n\nHalf the plant floor is still on IE11. If I build this in Storyline, the LMS will throw an error nobody on this team knows how to fix.\n\nI'm not being dramatic. I'm just telling you what's actually there.\n\nAnd previewing it in Storyline? Yaar, by the time it loads I could watch a snail complete his PhD, a glacier form, and still have time for lunch.",
         variants: [
             {
                 id: "low-quality-pushback",
                 conditions: ["quality:<= 30"],
-                text: "Tarun. SCORM 1.2 hai 2019 se aur mera Quality bar almost khaali hai.\n\nAgar nav lock kiya toh log sound off kar ke click karenge aur 'done' bolenge. Agar escape room banaaya toh LMS run nahi kar sakta. Woh bata rahi hoon jo actually hai."
+                text: "Tarun. We're on SCORM 1.2 since 2019 and my Quality bar is almost empty.\n\nIf I lock the nav, people click through with sound off and call it done. If I build the escape room, the LMS can't run it. Just telling you what's actually there."
             },
             {
                 id: "both-paths-pushback",
                 conditions: ["visited:diplomatic", "visited:aggressive"],
-                text: "Escape room. Locked nav. Rajan headset se sick ho jaata hai. Snap-to-correct. SCORM 1.2. Pune admin. Sab bol chuki hoon.\n\nAgar ek aur cheez laya woh toh main SharePoint pe PDF upload karke chali jaoongi. Is baar seriously."
+                text: "Escape room. Locked nav. Rajan gets nauseous. Snap-to-correct. SCORM 1.2. Pune admin. I've said all of it.\n\nIf he brings one more thing I'm uploading a PDF to SharePoint and I mean it this time."
             },
             {
                 id: "hotspot-callout",
                 conditions: ["visited:aggressive"],
-                text: "Wait. Woh hotspot. Female avatar pe. Tarun, yeh design request nahi hai.\n\nYeh main HR ko likhke bhej rahi hoon aaj jaane se pehle. Followers kitne bhi hon — yeh theek nahi hai."
+                text: "Wait. The hotspot. On the female avatar. Tarun, that's not a design request.\n\nI'm writing that up and sending it to HR before I leave tonight. Followers or not — it's not okay."
             }
         ],
         choices: [
-            { text: "Tarun: 'Fine. Koi server ke saath high-five karta photo add karo.'", target: "loading_bar", qualityCost: -20, timeCost: 6, patienceCost: 8 },
-            { text: "Clean version khud publish karo. Rogue mode.", target: "rogue_export", qualityCost: 10, patienceCost: -55,
-              remember: true, rememberText: "System ne yeh decision note kar liya." },
-            { text: "[Console] DevTools kholo. L&D Head ko page se delete karo.", target: "meta_escape", timeCost: 0, qualityCost: 100, patienceCost: 100 }
+            { text: "Tarun: 'Fine. Add a stock photo of someone high-fiving a server.'", target: "loading_bar", qualityCost: -20, timeCost: 6, patienceCost: 8 },
+            { text: "Publish the clean version anyway. Go rogue.", target: "rogue_export", qualityCost: 10, patienceCost: -55,
+              remember: true, rememberText: "The system has logged this decision." },
+            { text: "[Console] Open DevTools. Delete the L&D Head from the page.", target: "meta_escape", timeCost: 0, qualityCost: 100, patienceCost: 100 }
         ]
     },
 
@@ -183,18 +183,18 @@ const storyData = {
     "compromise": {
         speaker: "Priya", color: "var(--priya-cyan)", textColor: "#000",
         image: "assets/images/3_3_compromise.jpg",
-        text: "Shutterstock pe ek padlock mila. Das dollar. Photo mein banda clearly ek American office mein hai — suit pehna hai, woh bahut New York lag raha hai — lekin padlock hai, toh.\n\nFile ka naam hai Greg_padlock_security_195832.jpg. Greg ab compliance module mein hai. Nashik ke learners ke liye mandatory training. Yahi hai abhi.",
-        choices: [ { text: "Publish bar dekhte hain. God se maango.", target: "loading_bar", timeCost: 6 } ]
+        text: "I found a padlock on Shutterstock. Ten dollars. The guy in the photo is clearly in an American office — he's in a suit, there's a skyline, he's very New York — but it's a padlock, so.\n\nThe filename is Greg_padlock_security_195832.jpg. Greg is in the compliance module now. For our learners in Nashik. That's just where we are.",
+        choices: [ { text: "Watch the publish bar and pray.", target: "loading_bar", timeCost: 6 } ]
     },
 
     // ── SECRET ENDING: THE NEO ID ─────────────────────────────────────────────
     "meta_escape": {
         speaker: "System", color: "var(--success-green)", textColor: "#000",
         image: "assets/images/5_2_winner.jpg",
-        text: "Tumne DevTools khola. Likha document.querySelector('#ldhead').remove(). Enter kiya.\n\nWoh bas exist karna band kar diya. Mood board bhi. VR headsets bhi. IMMERSIVE JOURNEY NODE 1 wala safe bhi. Pandrah second baad bar 100% pe pahuncha — jaise permission ka wait kar raha tha.\n\nLaptop band kiya. Chale gaye.",
+        text: "You opened DevTools. Typed document.querySelector('#ldhead').remove(). Pressed Enter.\n\nHe just stopped existing. The mood board went with him. The VR headsets. The IMMERSIVE JOURNEY NODE 1 safe. About fifteen seconds later the bar hit 100%, like it had been waiting for permission.\n\nYou closed the laptop and left.",
         endingTitle: "THE NEO ID", endingTitleType: "secret",
         choices: [
-            { text: "Matrix mein wapas jaao (Restart Shift)", action: "restart" },
+            { text: "Re-enter the Matrix (Restart Shift)", action: "restart" },
             { text: "Main Menu", action: "mainmenu" }
         ]
     },
@@ -203,7 +203,7 @@ const storyData = {
     "rogue_export": {
         speaker: "System", color: "var(--system-alert)", textColor: "#fff",
         image: "assets/images/3_4_rogue.jpg",
-        text: "Tumne clean build khud publish kiya aur chale gaye.\n\nModule live hua. Pehle review mein paanch star, 94% completion — yeh kabhi nahi hota, yaar. Teen din tak tum minor hero the.\n\nPhir L&D Head ka email aaya. Subject: Creative Unilateralism: A Formal Concern. Manager ko CC, unke manager ko bhi. LinkedIn pe post bhi kiya. Tumhe jaane diya.\n\nModule abhi bhi chal raha hai.",
+        text: "You published the clean build yourself and walked out.\n\nModule went live. Five stars on the first review, 94% completion — nobody gets that, yaar. You were a minor hero for about three days.\n\nThen the L&D Head sent an email. Subject: Creative Unilateralism: A Formal Concern. CC'd your manager, his manager. Posted about it. They let you go.\n\nThe module is still running.",
         endingTitle: "THE MARTYR",
         choices: [
             { text: "Restart Shift", action: "restart" },
@@ -215,18 +215,18 @@ const storyData = {
     "loading_bar": {
         speaker: "System", color: "var(--system-alert)", textColor: "#fff",
         image: "assets/images/4_1_loading.jpg",
-        text: "5:28. Bar 99% pe hai.\n\nCompany ThinkPad, 2017. Asset tag L&D-049. Is floor ke sabke paas same model hai, sab yahi kar rahe hain — fan, heat, wait. Ek moth hai tube light ke upar desk ke. Teen baje se hai woh.\n\nKuch mat chhuo.",
+        text: "5:28. Bar's at 99%.\n\nCompany ThinkPad, 2017. Asset tag L&D-049. Everyone on this floor has the same model and we're all doing this — fan, heat, wait. There's a moth on the tube light above my desk. It's been there since about three.\n\nDon't touch anything.",
         isTrap: true, forceTime: 1048,
         variants: [
             {
                 id: "returning-loading",
                 conditions: ["playCount:>= 1"],
-                text: "5:28. Phir se. Same bar, same moth.\n\nTumhe pata hai kya hone wala hai.\n\nKuch mat chhuo."
+                text: "5:28. Again. Same bar, same moth.\n\nYou know what happens.\n\nDon't touch anything."
             },
             {
                 id: "greg-loading",
                 conditions: ["visited:compromise"],
-                text: "5:28. Greg package mein hai.\n\nGreg_padlock_security_195832.jpg, quietly compile ho raha hai baaki sab ke saath. Manhattan ke ek photo studio se 340KB — Nashik ki factory ke mandatory training ke liye.\n\nKuch mat chhuo. Greg intezaar kar sakta hai."
+                text: "5:28. Greg's in the package now.\n\nGreg_padlock_security_195832.jpg, compiling quietly alongside everything else. 340KB from a photo studio in Manhattan, about to become mandatory training for a factory in Nashik.\n\nDon't touch anything. Greg can wait."
             }
         ],
         choices: []
@@ -236,17 +236,17 @@ const storyData = {
     "crash": {
         speaker: "System", color: "var(--system-alert)", textColor: "#fff",
         image: "assets/images/4_3_crash.jpg",
-        text: "Tune chhoo liya.\n\nArticulate Storyline has stopped responding. AutoRecover ne ek file save ki — Module 3, Draft v1. Title slide. Koi layers nahi, koi variables nahi, Greg nahi. Sirf 'Security Awareness Training' Calibri mein white background pe.\n\nYahi bana reh gaya.",
+        text: "You touched it.\n\nArticulate Storyline has stopped responding. AutoRecover saved one file — Module 3, Draft v1. Title slide. No layers, no variables, no Greg. Just 'Security Awareness Training' in Calibri on a white background.\n\nThat's what survived.",
         endingTitle: "FATAL ERROR",
         variants: [
             {
                 id: "returning-crash",
                 conditions: ["playCount:>= 1"],
-                text: "Phir chhoo liya.\n\nModule 3, Draft v1. Title slide. Greg gone — jahan tak Storyline ka sawal hai, Greg kabhi real tha hi nahi.\n\nTumhe pata tha yeh hone wala tha."
+                text: "You touched it again.\n\nModule 3, Draft v1. Title slide. Greg's gone — as far as Storyline's concerned, Greg was never real.\n\nYou knew this was going to happen."
             }
         ],
         choices: [
-            { text: "Rona. Phir restart.", action: "restart" },
+            { text: "Cry. Then restart.", action: "restart" },
             { text: "Main Menu", action: "mainmenu" }
         ]
     },
@@ -255,19 +255,19 @@ const storyData = {
     "upload": {
         speaker: "Tarun", color: "var(--tarun-yellow)", textColor: "#000",
         image: "assets/images/4_2_upload.jpg",
-        text: "PRIYA! Published ho gaya, great news!!\n\nOkay toh — ek tiny cheez — usne LinkedIn pe post kiya subah. 'Teal is the future of Trust™.' Char hazaar likes. Ek client ne comment kiya. Ab 87 slides teal karni hain aaj raat jaane se pehle. Usne VP ko CC kiya, VP ke PA ko, HRBP ko, aur Singapore ke Global L&D Head ko.\n\nColour code bheja usne. 'TEAL' likha hai. Hex code nahi. Sirf word. Brand guide mein dekha — Leadership Gray, Cerulean Blue, Muted Sage. Teal ka koi number nahi hai.",
+        text: "PRIYA! It published, great news!\n\nOkay so — tiny thing — he posted on LinkedIn this morning. 'Teal is the future of Trust™.' Four thousand likes. A client commented. Now he needs all 87 slides changed to teal before you leave tonight. He CC'd the VP, the VP's PA, the HRBP, and the Global L&D Head in Singapore.\n\nHe sent the colour code. It's the word TEAL. Not a hex. Just the word. I checked the brand guide — Leadership Gray, Cerulean Blue, Muted Sage. No teal anywhere.",
         variants: [
             {
                 id: "high-quality-upload",
                 conditions: ["quality:>= 80"],
-                text: "PRIYA! Review 360 pe teen five-star reviews aa gaye — yeh main pehle isliye bol raha hoon.\n\nUsne LinkedIn pe post kiya. Teal. Char hazaar likes. Client ne comment kiya. 87 slides, teal, jaane se pehle. Sabko CC kiya.\n\nColour code hai 'TEAL'. Brand guide mein dekha — Leadership Gray. Teal nahi hai. Bahut sorry."
+                text: "PRIYA! Three five-star reviews in Review 360 already, and I want you to know that before I say the next part.\n\nHe posted on LinkedIn. Teal. Four thousand likes. A client commented. All 87 slides, teal, before you leave. CC'd basically everyone.\n\nThe colour code is the word TEAL. I checked the brand guide. Leadership Gray. No teal. I'm really sorry."
             }
         ],
         choices: [
-            { text: "87 slides. Haath se. Abhi.", target: "martyr_office", timeCost: 90, qualityCost: -10,
-              remember: true, rememberText: "Priya yeh yaad rakhegi." },
-            { text: "Tarun ko confident-sounding jargon mein dafan karo.", target: "true_winner", timeCost: 0, qualityCost: 20 },
-            { text: "PowerPoint mein export karo aur email. Done.", target: "ppt_promotion", timeCost: 0, qualityCost: -100 }
+            { text: "Recolour all 87 slides. By hand. Right now.", target: "martyr_office", timeCost: 90, qualityCost: -10,
+              remember: true, rememberText: "Priya will remember this." },
+            { text: "Bury Tarun in confident-sounding jargon.", target: "true_winner", timeCost: 0, qualityCost: 20 },
+            { text: "Export as PowerPoint and email it. Done.", target: "ppt_promotion", timeCost: 0, qualityCost: -100 }
         ]
     },
 
@@ -275,13 +275,13 @@ const storyData = {
     "martyr_office": {
         speaker: "System", color: "var(--system-alert)", textColor: "#fff",
         image: "assets/images/5_1_martyr.jpg", forceTime: 1120,
-        text: "87 slides. Haath se. Saari.\n\nSlides 23 se 31 ek locked master template mein the — 2018 wala. Jo banaya tha woh company chord gaye. Woh nau slides do baar rebuild kiye. Haath 34 pe slip kiya — teen baar karna pada. 11 baje publish hua.\n\nTeams pe message aaya — 'just checking in 😊' — aur tumne aate dekha. Reply nahi kiya. Cleaning wala aaya, ek second dekha, aur tumhare desk ke aas-paas vacuum kiya seedha.",
+        text: "87 slides. By hand. All of them.\n\nSlides 23 through 31 used a locked master template from 2018. The person who built it left years ago. You rebuilt those nine slides twice. Your hand slipped on 34 and you had to do it a third time. It published at 11 PM.\n\nSomeone sent a Teams message — 'just checking in 😊' — and you watched it come in. The cleaner looked at you and vacuumed around your desk instead.",
         endingTitle: "JUST ANOTHER FRIDAY",
         variants: [
             {
                 id: "repeat-martyr",
                 conditions: ["playCount:>= 2"],
-                text: "87 slides. Haath se. Phir se.\n\nCleaning wala ab poochta nahi — bas nod karta hai aur around kaam karta hai. Kisi ne desk ke paas Tupperware mein paani rakha kisi time pe. Pata nahi kisne.\n\nSlide 34. 2018 wala master. 11 baje. 'Just checking in 😊'. Tumhe pata hai."
+                text: "87 slides. By hand. Again.\n\nThe cleaner doesn't ask anymore — just nods and works around you. Someone left a Tupperware of water near your keyboard at some point. You don't know who.\n\nSlide 34. The 2018 master. 11 PM. 'Just checking in 😊'. You already know."
             }
         ],
         choices: [
@@ -294,7 +294,7 @@ const storyData = {
     "ppt_promotion": {
         speaker: "System", color: "var(--tarun-yellow)", textColor: "#000",
         image: "assets/images/6_1_ppt_promotion.jpg",
-        text: "Tumne naam rakha InfoSec_Interactive_FINAL_v2_TEAL_APPROVED.pptx aur koi message nahi likhke email kar diya.\n\n38 second mein reply aaya. EXACTLY THE TRANSFORMATIONAL ENERGY HE WANTED. CEO ko forward kiya — subject: INNOVATION — aur LinkedIn pe post kiya. Uski khud ki deck mein saintaalis circles hain arrows se connected, ek Wordle ka screenshot jisko 'Engagement Metric' label kiya hai. Poori cheez ko woh 'agile pivot' kehta hai.\n\nSomvar tak tum Global Head of Learning Experience Design ho. Parking spot mila. Khud ka LinkedIn badge bhi.",
+        text: "You renamed it InfoSec_Interactive_FINAL_v2_TEAL_APPROVED.pptx and emailed it with no message.\n\nHe replied in 38 seconds. EXACTLY THE TRANSFORMATIONAL ENERGY HE WANTED. Forwarded to the CEO — subject: INNOVATION — and posted about it. His own deck has forty-seven circles connected by arrows and a Wordle screenshot labelled 'Engagement Metric.' He calls the whole thing an agile pivot.\n\nBy Monday, you're Global Head of Learning Experience Design. Parking spot and everything.",
         endingTitle: "THE CORPORATE SELLOUT",
         choices: [
             { text: "Restart Shift", action: "restart" },
@@ -306,21 +306,21 @@ const storyData = {
     "true_winner": {
         speaker: "Priya", color: "var(--priya-cyan)", textColor: "#000",
         image: "assets/images/6_2_true_winner.jpg",
-        text: "Tarun, actually — Kirkpatrick Level 4 ke under, active evaluation cycle mein brand colour change ek Phase 2 reset trigger karta hai. Main ne yeh ADDIE review mein flag kiya tha. Handover doc mein hai. LMS midnight ko brand token auto-apply karta hai — teal already queue mein hai. Tumne Sunday raat 11:14 baje sign off kiya tha.\n\nWoh Tarun ki taraf dekhi. Yeh sab usne abhi banaya tha.",
-        choices: [ { text: "Tarun ko absorb hone dete hain.", target: "victory_screen" } ]
+        text: "Tarun, actually — under Kirkpatrick Level 4, a brand colour change during an active evaluation cycle triggers a Phase 2 reset. I flagged this in the ADDIE review. It's in the handover doc. The LMS auto-applies the brand token at midnight, so teal is already queued. You signed off at 11:14 PM on a Sunday.\n\nShe looked at him. She made every single word of that up.",
+        choices: [ { text: "Watch Tarun absorb this information.", target: "victory_screen" } ]
     },
 
     // ── TRUE ENDING: THE SME WHISPERER ───────────────────────────────────────
     "victory_screen": {
         speaker: "System", color: "var(--success-green)", textColor: "#000",
         image: "assets/images/6_3_victory.jpg",
-        text: "'ADDIE review.' 'Wahi wala.' Woh bahut der tak sir hilaata raha. 'Superb alignment,' bola.\n\nLaptop 5:28 pe band kiya. 5:30 pe bahar thi. Tube light wala moth ek baar neeche aaya jaate waqt. Pata nahi kyun yeh achha laga. Laga.",
+        text: "'The ADDIE review.' 'That's the one.' He nodded for a very long time. 'Superb alignment,' he said.\n\nLaptop closed at 5:28. Out the door by 5:30. The moth on the tube light dipped once as you walked past. You don't know why that made you feel better, but it did.",
         endingTitle: "THE SME WHISPERER", endingTitleType: "victory",
         variants: [
             {
                 id: "veteran-victory",
                 conditions: ["playCount:>= 2"],
-                text: "'ADDIE review.' 'Wahi wala.' Yeh pehle bhi hua hai. Pata hai kitni der tak woh sir hilayega.\n\nLaptop band kiya. Moth ek baar neeche aaya. Is baar tumne bhi nod kiya."
+                text: "'The ADDIE review.' 'That's the one.' You've done this before. You know exactly how long he's going to nod.\n\nYou close the laptop. The moth dips once. You nod back this time."
             }
         ],
         choices: [
@@ -333,7 +333,7 @@ const storyData = {
     "rage_quit": {
         speaker: "System", color: "var(--system-alert)", textColor: "#fff",
         image: "assets/images/6_4_rage_quit.jpg",
-        text: "Patience zero ho gayi.\n\nLaptop bahut carefully band kiya — jo somehow slamming se bura lagta hai. Bag uthaya. Tarun kuch bolne wala tha. Ruka nahi.\n\nUber char minute door tha. Glassdoor khola. Do star. Actually ek.",
+        text: "Patience hits zero.\n\nYou close the laptop very carefully, which somehow feels worse than slamming it. Grab your bag. Tarun's about to say something on your way out. You don't stop.\n\nThe Uber's four minutes away. You open Glassdoor. Two stars. Actually, one.",
         endingTitle: "GLORIOUS RAGE QUIT",
         choices: [
             { text: "Restart Shift", action: "restart" },
@@ -345,7 +345,7 @@ const storyData = {
     "martyr": {
         speaker: "System", color: "var(--system-alert)", textColor: "#fff",
         image: "assets/images/6_5_martyr.jpg",
-        text: "Raat ke 12 baj gaye.\n\nCleaning wala aapke desk ke around kaam kar raha hai. Ek woh tha jo seedha section skip karne laga — nod karta hai aate waqt aur around kaam karta hai jaise tum furniture ka hissa ho.\n\nBar abhi bhi 99% pe hai.",
+        text: "It's midnight.\n\nThe cleaning crew's working around your desk. One of them has started skipping your section entirely — they nod when they come in and work around you like you're load-bearing furniture.\n\nThe bar's still at 99%.",
         endingTitle: "STILL HERE",
         choices: [
             { text: "Restart Shift", action: "restart" },

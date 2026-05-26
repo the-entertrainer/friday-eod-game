@@ -651,12 +651,7 @@ function loadNode(nodeId) {
     gameHistory.visitedThisRun.add(nodeId);
     gameState.resolvedText = resolveNodeText(nodeId);
     gameState.pendingBubble = !!node.thoughtBubble;
-
-    if (node.cutaway && cutawayData[node.cutaway]) {
-        showCutaway(node.cutaway, () => typewriterEffect(gameState.resolvedText, node.choices));
-    } else {
-        typewriterEffect(gameState.resolvedText, node.choices);
-    }
+    typewriterEffect(gameState.resolvedText, node.choices);
 }
 
 function spawnEndingEffect(type) {
@@ -895,8 +890,16 @@ function typewriterEffect(text, choices) {
             uiText.innerHTML = text;
             gameState.isTyping = false;
             stopTypingSound();
-            renderChoices(choices);
-            if (gameState.pendingBubble) { gameState.pendingBubble = false; showThoughtBubble(); }
+            const curNode = storyData[gameState.currentNode];
+            const _afterCutaway = () => {
+                renderChoices(choices);
+                if (gameState.pendingBubble) { gameState.pendingBubble = false; showThoughtBubble(); }
+            };
+            if (curNode && curNode.cutaway && cutawayData[curNode.cutaway]) {
+                showCutaway(curNode.cutaway, _afterCutaway);
+            } else {
+                _afterCutaway();
+            }
         }
     }, _TW_SPEEDS[_twSpeedIdx]);
 }
@@ -910,8 +913,15 @@ function advanceDialogue() {
         uiText.innerHTML = gameState.resolvedText || node.text;
         gameState.isTyping = false;
         uiTapHint.classList.remove('visible');
-        renderChoices(node.choices);
-        if (gameState.pendingBubble) { gameState.pendingBubble = false; showThoughtBubble(); }
+        const _afterCutaway = () => {
+            renderChoices(node.choices);
+            if (gameState.pendingBubble) { gameState.pendingBubble = false; showThoughtBubble(); }
+        };
+        if (node.cutaway && cutawayData[node.cutaway]) {
+            showCutaway(node.cutaway, _afterCutaway);
+        } else {
+            _afterCutaway();
+        }
     }
 }
 

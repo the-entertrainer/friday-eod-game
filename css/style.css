@@ -1029,7 +1029,7 @@ body {
 .cutaway-panels {
     height: 100%; padding: 0;
     display: flex; flex-direction: column; gap: 6px;
-    background: #1a1a1a;
+    background: #000;
 }
 
 /* ── Three equal stacked panels ── */

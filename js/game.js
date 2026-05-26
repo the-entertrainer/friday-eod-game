@@ -250,8 +250,8 @@ const SCENE_MOODS = {
 
 // ─── File-based Scene BGM ─────────────────────────────────────────────────────
 const _MOOD_TO_FILE = {
-    office:   'assets/audio/Dialogues Theme.mp3',
-    defeated: 'assets/audio/Dialogues Theme.mp3',
+    office:   'assets/audio/Theme.wav',
+    defeated: 'assets/audio/Theme.wav',
     tense:    'assets/audio/Anxious.mp3',
     horror:   'assets/audio/Anxious.mp3',
     suspense: 'assets/audio/Anxious.mp3',
@@ -328,7 +328,7 @@ let _themeAudio = null;
 function startTitleBGM() {
     try {
         if (!_themeAudio) {
-            _themeAudio = new Audio('assets/audio/Dialogues Theme.mp3');
+            _themeAudio = new Audio('assets/audio/Theme.wav');
             _themeAudio.loop   = true;
             _themeAudio.volume = 0.45;
         }
@@ -847,7 +847,7 @@ function showCutaway(id, onComplete) {
     T(1500, () => tc.classList.add('hiding'));
     T(1800, () => tv.classList.add('visible'));
     T(2050, () => { pTop.classList.add('landed'); timers.push(setTimeout(() => pTop.classList.add('drifting'), 650)); });
-    T(2650, () => { pMid.classList.add('landed'); timers.push(setTimeout(() => pMid.classList.add('zooming'), 650)); });
+    T(2650, () => { pMid.classList.add('landed'); });
     T(3250, () => { pBot.classList.add('landed'); timers.push(setTimeout(() => pBot.classList.add('drifting-alt'), 650)); });
     T(4400, () => hint.classList.add('visible'));
 

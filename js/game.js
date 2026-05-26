@@ -5,6 +5,9 @@ let gameState = {
     currentNode: "intro",
     resolvedText: '',
     isTyping: false,
+    isSpotlighting: false,
+    spotlightTimers: [],
+    _afterSpotlightFn: null,
     typeInterval: null,
     trapTimeout: null,
     pendingBubble: false
@@ -752,6 +755,30 @@ function showEndingTitle(title, type) {
 
 // ─── Cutaway Panel System ─────────────────────────────────────────────────────
 // Fires before the typewriter when a node has cutaway: "id".
+// Highlights a phrase in uiText word by word, then calls onComplete.
+function runSpotlight(phrase, onComplete) {
+    gameState.isSpotlighting = true;
+    gameState._afterSpotlightFn = onComplete;
+
+    const tokens = phrase.split(/(\s+)/);
+    const wrapped = tokens.map(t => /\S/.test(t) ? `<span class="word-hl">${t}</span>` : t).join('');
+    uiText.innerHTML = uiText.innerHTML.replace(phrase, wrapped);
+
+    const spans = [...uiText.querySelectorAll('.word-hl')];
+    const PER_WORD = 110;
+    const timers = spans.map((s, i) => setTimeout(() => s.classList.add('lit'), i * PER_WORD));
+
+    const done = setTimeout(() => {
+        gameState.isSpotlighting = false;
+        gameState.spotlightTimers = [];
+        gameState._afterSpotlightFn = null;
+        onComplete();
+    }, spans.length * PER_WORD + 750);
+
+    timers.push(done);
+    gameState.spotlightTimers = timers;
+}
+
 // Shows a bold title card (Family Guy-style) then 3 comic panels flying in from
 // alternating sides inside a retro TV frame. Tap or wait 8s to dismiss.
 function showCutaway(id, onComplete) {
@@ -888,10 +915,17 @@ function typewriterEffect(text, choices) {
                 renderChoices(choices);
                 if (gameState.pendingBubble) { gameState.pendingBubble = false; showThoughtBubble(); }
             };
-            if (curNode && curNode.cutaway && cutawayData[curNode.cutaway]) {
-                showCutaway(curNode.cutaway, _afterCutaway);
+            const _afterSpotlight = () => {
+                if (curNode && curNode.cutaway && cutawayData[curNode.cutaway]) {
+                    showCutaway(curNode.cutaway, _afterCutaway);
+                } else {
+                    _afterCutaway();
+                }
+            };
+            if (curNode && curNode.spotlight) {
+                runSpotlight(curNode.spotlight, _afterSpotlight);
             } else {
-                _afterCutaway();
+                _afterSpotlight();
             }
         }
     }, _TW_SPEEDS[_twSpeedIdx]);
@@ -899,6 +933,15 @@ function typewriterEffect(text, choices) {
 
 function advanceDialogue() {
     if (_peekActive) return; // swallow tap after a drawer drag
+    if (gameState.isSpotlighting) {
+        gameState.spotlightTimers.forEach(clearTimeout);
+        gameState.spotlightTimers = [];
+        gameState.isSpotlighting = false;
+        const fn = gameState._afterSpotlightFn;
+        gameState._afterSpotlightFn = null;
+        if (fn) fn();
+        return;
+    }
     if (gameState.isTyping) {
         clearInterval(gameState.typeInterval);
         stopTypingSound();

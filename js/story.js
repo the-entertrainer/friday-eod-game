@@ -51,7 +51,8 @@ const storyData = {
         speaker: "Priya", color: "var(--priya-cyan)", textColor: "#000",
         image: "assets/images/1_1_bsod.jpg", forceTime: 1048,
         cutaway: "friday_eod_dragon",
-        text: "Storyline's been at 99% for fourteen minutes. Fourteen.\n\nTeams says Away. I'm very much still here. Haven't moved. The ThinkPad fan sounds like a disappointed relative — loud, constant, and somehow judging me.\n\nTwo more minutes and I'm done. That's all I need.\n\nBut it's Friday. And every single Friday, at exactly 4:58 PM, my boss wakes up from his weekly coma and remembers he's a manager.",
+        spotlight: "every single Friday, at exactly 5:00 PM, my boss wakes up from his weekly coma like a Chinese dragon on meth and remembers he's a manager.",
+        text: "Storyline's been at 99% for fourteen minutes. Fourteen.\n\nTeams says Away. I'm very much still here. Haven't moved. The ThinkPad fan sounds like a disappointed relative — loud, constant, and somehow judging me.\n\nTwo more minutes and I'm done. That's all I need.\n\nBut it's Friday. And every single Friday, at exactly 5:00 PM, my boss wakes up from his weekly coma like a Chinese dragon on meth and remembers he's a manager.",
         choices: [ { text: "Rewind — 4:45 PM →", target: "setup", timeCost: 0 } ],
         variants: [
             {

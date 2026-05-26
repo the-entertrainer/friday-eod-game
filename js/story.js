@@ -85,7 +85,7 @@ const storyData = {
     "meta_moment": {
         speaker: "Priya", color: "var(--priya-cyan)", textColor: "#000",
         image: "assets/images/2_4_kids.jpg",
-        text: "Tarun. Just — hold on.\n\nIt's Friday. It's 5:20 PM. I had a plan. A good one. It involved leaving this building at a reasonable hour for once in my career.\n\nI need one number from you right now. How many actual changes are we talking about.",
+        text: "Tarun. Hold on.\n\nSorry — I need to address whoever's making the decisions here right now.\n\nYou are the only reason I go home at a normal hour or I'm still here at midnight. Just. Good choices. That's the whole ask.\n\nOkay. Tarun. What were you saying.",
         choices: [
             { text: "Tarun: 'Twenty, maybe thirty. Tops. I'll send you a brief.'", target: "aggressive", timeCost: 4, patienceCost: -40 }
         ]

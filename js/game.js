@@ -779,22 +779,16 @@ function showCutaway(id, onComplete) {
     const panelsWrap = document.createElement('div');
     panelsWrap.className = 'cutaway-panels';
 
-    function makePanel(src, caption, extraClass) {
+    function makePanel(src, extraClass) {
         const p = document.createElement('div');
         p.className = 'cutaway-panel ' + extraClass;
         p.style.backgroundImage = `url('${src}')`;
-        if (caption) {
-            const cap = document.createElement('div');
-            cap.className = 'panel-caption';
-            cap.textContent = caption;
-            p.appendChild(cap);
-        }
         return p;
     }
 
-    const pTop = makePanel(data.panels[0].src, data.panels[0].caption, 'panel-top');
-    const pMid = makePanel(data.panels[1].src, data.panels[1].caption, 'panel-mid');
-    const pBot = makePanel(data.panels[2].src, data.panels[2].caption, 'panel-bot');
+    const pTop = makePanel(data.panels[0].src, 'panel-top');
+    const pMid = makePanel(data.panels[1].src, 'panel-mid');
+    const pBot = makePanel(data.panels[2].src, 'panel-bot');
 
     panelsWrap.appendChild(pTop);
     panelsWrap.appendChild(pMid);

@@ -1,15 +1,15 @@
 // ── CUTAWAY DATA ──────────────────────────────────────────────────────────────
-// Drop images in assets/cutaways/ — hero panels: 420×280px | small panels: 200×170px
-// Each cutaway: 1 hero image + 2 small images = 3 images total
+// Drop images in assets/cutaways/ — all panels: 1080×420px
+// Each cutaway: 3 equal stacked panels, pure visual storytelling (no captions)
 const cutawayData = {
 
     "friday_eod_dragon": {
         titleLine1: "EVERY FRIDAY. 4:58 PM.",
         titleLine2: "Every single week. Without fail.",
         panels: [
-            { src: "assets/cutaways/fri1.jpg", caption: "Monday to Thursday: Totally harmless." },
-            { src: "assets/cutaways/fri2.jpg", caption: "Friday. 4:58 PM. Something stirs." },
-            { src: "assets/cutaways/fri3.jpg", caption: "Your boss. Chinese dragon. On meth. LinkedIn Premium." }
+            { src: "assets/cutaways/fri1.png" },
+            { src: "assets/cutaways/fri2.png" },
+            { src: "assets/cutaways/fri3.png" }
         ]
     },
 
@@ -17,9 +17,9 @@ const cutawayData = {
         titleLine1: "THAT ONE TIME.",
         titleLine2: "Module 3. Slide 4. Fire Safety Protocol.",
         panels: [
-            { src: "assets/cutaways/syn1.jpg", caption: "He was explaining fire exit procedures. Normally." },
-            { src: "assets/cutaways/syn2.jpg", caption: "Then the video file glitched." },
-            { src: "assets/cutaways/syn3.jpg", caption: "He poked his own nose. 3 full seconds. No one will speak of it." }
+            { src: "assets/cutaways/syn1.png" },
+            { src: "assets/cutaways/syn2.png" },
+            { src: "assets/cutaways/syn3.png" }
         ]
     },
 
@@ -27,9 +27,9 @@ const cutawayData = {
         titleLine1: "TARUN'S RECURRING NIGHTMARE.",
         titleLine2: "(He refuses to discuss it. Not once.)",
         panels: [
-            { src: "assets/cutaways/tarun1.jpg", caption: "3 AM. A Tuesday." },
-            { src: "assets/cutaways/tarun2.jpg", caption: "The pivot tables came." },
-            { src: "assets/cutaways/tarun3.jpg", caption: "He ran. They had formulas." }
+            { src: "assets/cutaways/tarun1.png" },
+            { src: "assets/cutaways/tarun2.png" },
+            { src: "assets/cutaways/tarun3.png" }
         ]
     },
 
@@ -37,9 +37,9 @@ const cutawayData = {
         titleLine1: "STORYLINE PREVIEW SPEED.",
         titleLine2: "A comparative study.",
         panels: [
-            { src: "assets/cutaways/slow1.jpg", caption: "A snail completing his PhD." },
-            { src: "assets/cutaways/slow2.jpg", caption: "A glacier forming." },
-            { src: "assets/cutaways/slow3.jpg", caption: "Storyline's preview. Still loading." }
+            { src: "assets/cutaways/slow1.png" },
+            { src: "assets/cutaways/slow2.png" },
+            { src: "assets/cutaways/slow3.png" }
         ]
     }
 };

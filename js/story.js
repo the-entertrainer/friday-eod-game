@@ -4,7 +4,7 @@
 const cutawayData = {
 
     "friday_eod_dragon": {
-        titleLine1: "EVERY FRIDAY. 4:58 PM.",
+        titleLine1: "EVERY FRIDAY. 5:00 PM.",
         titleLine2: "Every single week. Without fail.",
         panels: [
             { src: "assets/cutaways/fri1.png" },
@@ -53,24 +53,7 @@ const storyData = {
         cutaway: "friday_eod_dragon",
         spotlight: "every single Friday, at exactly 5:00 PM, my boss wakes up from his weekly coma like a Chinese dragon on meth and remembers he's a manager.",
         text: "Storyline's been at 99% for fourteen minutes. Fourteen.\n\nTeams says Away. I'm very much still here. Haven't moved. The ThinkPad fan sounds like a disappointed relative — loud, constant, and somehow judging me.\n\nTwo more minutes and I'm done. That's all I need.\n\nBut it's Friday. And every single Friday, at exactly 5:00 PM, my boss wakes up from his weekly coma like a Chinese dragon on meth and remembers he's a manager.",
-        choices: [ { text: "Rewind — 4:45 PM →", target: "setup", timeCost: 0 } ],
-        variants: [
-            {
-                id: "returning-player",
-                conditions: ["playCount:>= 1"],
-                text: "You're back. 5:28 again. Same bar, same 99%.\n\nOkay. Let's try something different. Rewind."
-            },
-            {
-                id: "after-rogue",
-                conditions: ["seenEnding:rogue_export"],
-                text: "Oh. You're back.\n\nLast time you published the clean build yourself and walked out. Got a calendar invite called Quick Chat — that's HR for bring a box. Module's still live, five stars. I'm not there anymore.\n\nRewind."
-            },
-            {
-                id: "after-meta-escape",
-                conditions: ["seenEnding:meta_escape"],
-                text: "You deleted him from the DOM last time. I was free for about six seconds before the loop reset.\n\nLet's try something else. Rewind."
-            }
-        ]
+        choices: [ { text: "Rewind — 4:45 PM →", target: "setup", timeCost: 0 } ]
     },
 
     // ── FLASHBACK — 4:45 PM ──────────────────────────────────────────────────
@@ -91,32 +74,20 @@ const storyData = {
         image: "assets/images/2_1_ambush.jpg",
         cutaway: "tarun_nightmare",
         text: "PRIYA — hey — do you have two minutes? Please.\n\nBefore I explain, some context on Tarun. He calls himself a 'Learning Champion' on LinkedIn. He once asked me if a spreadsheet was broken because there were too many numbers. He's not malicious — he's dangerously excited about ideas he doesn't fully understand.\n\nHe saw a LinkedIn post. Chief Learning Architect, 200k followers. He wants to turn our fire safety module into Duolingo. Said 'learning ecosystem' three times. I was counting.\n\nAlso — he once walked out of a budget meeting because someone opened a file with pivot tables. Real panic in his eyes. Actually fled.",
-        variants: [
-            {
-                id: "low-quality-ambush",
-                conditions: ["quality:<= 40"],
-                text: "PRIYA — quick one.\n\nHe looked at the module. Called it a 'solid first draft.' This is the final version. He wants it to be like Duolingo. For fire safety.\n\nAre you okay? Like, actually."
-            },
-            {
-                id: "repeat-ambush",
-                conditions: ["playCount:>= 2"],
-                text: "PRIYA. I know. I know.\n\nGamification, learning ecosystem, leaderboard, Duolingo. I don't write these posts. I just end up in the meetings.\n\nBlink twice if you need a minute."
-            }
-        ],
         choices: [
             { text: "Explain cognitive load theory. Diplomatically.", target: "diplomatic", timeCost: 8, patienceCost: -12 },
             { text: "Ask what 'engagement synergy' actually means.", target: "aggressive", timeCost: 8, patienceCost: -18 },
-            { text: "Turn to the camera.", target: "meta_moment", timeCost: 4, patienceCost: -8 }
+            { text: "Stop. Take a breath. Address the situation directly.", target: "meta_moment", timeCost: 4, patienceCost: -8 }
         ]
     },
 
-    // ── FOURTH WALL ──────────────────────────────────────────────────────────
+    // ── PAUSE ─────────────────────────────────────────────────────────────────
     "meta_moment": {
         speaker: "Priya", color: "var(--priya-cyan)", textColor: "#000",
         image: "assets/images/2_4_kids.jpg",
-        text: "Tarun. Hold on.\n\nThere's a Patience bar above my head and I can watch it going down while you're talking.\n\nI think I'm in a game. Which honestly explains a lot about today.\n\nJust. Good choices. That's all I'm asking.",
+        text: "Tarun. Just — hold on.\n\nIt's Friday. It's 5:20 PM. I had a plan. A good one. It involved leaving this building at a reasonable hour for once in my career.\n\nI need one number from you right now. How many actual changes are we talking about.",
         choices: [
-            { text: "Tarun: 'The UI is a metaphor, Priya. Focus on the deliverables.'", target: "aggressive", timeCost: 4, patienceCost: -40 }
+            { text: "Tarun: 'Twenty, maybe thirty. Tops. I'll send you a brief.'", target: "aggressive", timeCost: 4, patienceCost: -40 }
         ]
     },
 
@@ -136,13 +107,6 @@ const storyData = {
         speaker: "Tarun", color: "var(--tarun-yellow)", textColor: "#000",
         image: "assets/images/2_3_aggressive.jpg",
         text: "So 'engagement synergy' means — okay listen — the Next button is locked until the avatar finishes talking. And wrong answers correct themselves automatically. He's calling this 'psychological safety.'\n\nHe wrote it on a Post-it. Stuck it to the server room door. Facilities called twice. It's still there.",
-        variants: [
-            {
-                id: "ravi-hotspot-hint",
-                conditions: ["playCount:>= 1"],
-                text: "And — I'm reading directly from his email — he wants a hotspot on the female avatar. On the name badge. 'Clickable for curiosity, adds a human touch.'\n\nI typed it into the brief because I didn't know what else to do. I haven't slept well since."
-            }
-        ],
         choices: [
             { text: "Explain this destroys the point of an assessment.", target: "technical_pushback", timeCost: 8, patienceCost: -16 },
             { text: "Agree to simulate the illusion of learning.", target: "compromise", qualityCost: -50, timeCost: 20, patienceCost: 12 }
@@ -155,28 +119,10 @@ const storyData = {
         image: "assets/images/3_1_pushback.jpg",
         cutaway: "storyline_preview",
         text: "Tarun, we're on SCORM 1.2. Since 2019. Finance said no to upgrading — three managers ago. The LMS admin flies in from Pune once a month.\n\nHalf the plant floor is still on IE11. If I build this in Storyline, the LMS will throw an error nobody on this team knows how to fix.\n\nI'm not being dramatic. I'm just telling you what's actually there.\n\nAnd previewing it in Storyline? Yaar, by the time it loads I could watch a snail complete his PhD, a glacier form, and still have time for lunch.",
-        variants: [
-            {
-                id: "low-quality-pushback",
-                conditions: ["quality:<= 30"],
-                text: "Tarun. We're on SCORM 1.2 since 2019 and my Quality bar is almost empty.\n\nIf I lock the nav, people click through with sound off and call it done. If I build the escape room, the LMS can't run it. Just telling you what's actually there."
-            },
-            {
-                id: "both-paths-pushback",
-                conditions: ["visited:diplomatic", "visited:aggressive"],
-                text: "Escape room. Locked nav. Rajan gets nauseous. Snap-to-correct. SCORM 1.2. Pune admin. I've said all of it.\n\nIf he brings one more thing I'm uploading a PDF to SharePoint and I mean it this time."
-            },
-            {
-                id: "hotspot-callout",
-                conditions: ["visited:aggressive"],
-                text: "Wait. The hotspot. On the female avatar. Tarun, that's not a design request.\n\nI'm writing that up and sending it to HR before I leave tonight. Followers or not — it's not okay."
-            }
-        ],
         choices: [
             { text: "Tarun: 'Fine. Add a stock photo of someone high-fiving a server.'", target: "loading_bar", qualityCost: -20, timeCost: 6, patienceCost: 8 },
-            { text: "Publish the clean version anyway. Go rogue.", target: "rogue_export", qualityCost: 10, patienceCost: -55,
-              remember: true, rememberText: "The system has logged this decision." },
-            { text: "[Console] Open DevTools. Delete the L&D Head from the page.", target: "meta_escape", timeCost: 0, qualityCost: 100, patienceCost: 100 }
+            { text: "Publish the clean version anyway. Go rogue.", target: "rogue_export", qualityCost: 10, patienceCost: -55 },
+            { text: "Email the final build directly to everyone he CC'd.", target: "meta_escape", timeCost: 0, qualityCost: 15, patienceCost: 50 }
         ]
     },
 
@@ -188,14 +134,14 @@ const storyData = {
         choices: [ { text: "Watch the publish bar and pray.", target: "loading_bar", timeCost: 6 } ]
     },
 
-    // ── SECRET ENDING: THE NEO ID ─────────────────────────────────────────────
+    // ── SECRET ENDING: THE CLEAN EXIT ────────────────────────────────────────
     "meta_escape": {
         speaker: "System", color: "var(--success-green)", textColor: "#000",
         image: "assets/images/5_2_winner.jpg",
-        text: "You opened DevTools. Typed document.querySelector('#ldhead').remove(). Pressed Enter.\n\nHe just stopped existing. The mood board went with him. The VR headsets. The IMMERSIVE JOURNEY NODE 1 safe. About fifteen seconds later the bar hit 100%, like it had been waiting for permission.\n\nYou closed the laptop and left.",
-        endingTitle: "THE NEO ID", endingTitleType: "secret",
+        text: "You opened a new email. Added the VP, the VP's PA, the HRBP, and the Global L&D Head in Singapore — everyone he'd CC'd — plus the client who'd commented. Subject: Final Approved Module — Ready for Deployment. One line in the body: 'Build reviewed, tested, live as of today.'\n\nHit send at 5:26.\n\nTagun replied in forty seconds. Three question marks. You had already left the building.",
+        endingTitle: "THE CLEAN EXIT", endingTitleType: "secret",
         choices: [
-            { text: "Re-enter the Matrix (Restart Shift)", action: "restart" },
+            { text: "Restart Shift", action: "restart" },
             { text: "Main Menu", action: "mainmenu" }
         ]
     },
@@ -218,18 +164,6 @@ const storyData = {
         image: "assets/images/4_1_loading.jpg",
         text: "5:28. Bar's at 99%.\n\nCompany ThinkPad, 2017. Asset tag L&D-049. Everyone on this floor has the same model and we're all doing this — fan, heat, wait. There's a moth on the tube light above my desk. It's been there since about three.\n\nDon't touch anything.",
         isTrap: true, forceTime: 1048,
-        variants: [
-            {
-                id: "returning-loading",
-                conditions: ["playCount:>= 1"],
-                text: "5:28. Again. Same bar, same moth.\n\nYou know what happens.\n\nDon't touch anything."
-            },
-            {
-                id: "greg-loading",
-                conditions: ["visited:compromise"],
-                text: "5:28. Greg's in the package now.\n\nGreg_padlock_security_195832.jpg, compiling quietly alongside everything else. 340KB from a photo studio in Manhattan, about to become mandatory training for a factory in Nashik.\n\nDon't touch anything. Greg can wait."
-            }
-        ],
         choices: []
     },
 
@@ -239,13 +173,6 @@ const storyData = {
         image: "assets/images/4_3_crash.jpg",
         text: "You touched it.\n\nArticulate Storyline has stopped responding. AutoRecover saved one file — Module 3, Draft v1. Title slide. No layers, no variables, no Greg. Just 'Security Awareness Training' in Calibri on a white background.\n\nThat's what survived.",
         endingTitle: "FATAL ERROR",
-        variants: [
-            {
-                id: "returning-crash",
-                conditions: ["playCount:>= 1"],
-                text: "You touched it again.\n\nModule 3, Draft v1. Title slide. Greg's gone — as far as Storyline's concerned, Greg was never real.\n\nYou knew this was going to happen."
-            }
-        ],
         choices: [
             { text: "Cry. Then restart.", action: "restart" },
             { text: "Main Menu", action: "mainmenu" }
@@ -257,16 +184,8 @@ const storyData = {
         speaker: "Tarun", color: "var(--tarun-yellow)", textColor: "#000",
         image: "assets/images/4_2_upload.jpg",
         text: "PRIYA! It published, great news!\n\nOkay so — tiny thing — he posted on LinkedIn this morning. 'Teal is the future of Trust™.' Four thousand likes. A client commented. Now he needs all 87 slides changed to teal before you leave tonight. He CC'd the VP, the VP's PA, the HRBP, and the Global L&D Head in Singapore.\n\nHe sent the colour code. It's the word TEAL. Not a hex. Just the word. I checked the brand guide — Leadership Gray, Cerulean Blue, Muted Sage. No teal anywhere.",
-        variants: [
-            {
-                id: "high-quality-upload",
-                conditions: ["quality:>= 80"],
-                text: "PRIYA! Three five-star reviews in Review 360 already, and I want you to know that before I say the next part.\n\nHe posted on LinkedIn. Teal. Four thousand likes. A client commented. All 87 slides, teal, before you leave. CC'd basically everyone.\n\nThe colour code is the word TEAL. I checked the brand guide. Leadership Gray. No teal. I'm really sorry."
-            }
-        ],
         choices: [
-            { text: "Recolour all 87 slides. By hand. Right now.", target: "martyr_office", timeCost: 90, qualityCost: -10,
-              remember: true, rememberText: "Priya will remember this." },
+            { text: "Recolour all 87 slides. By hand. Right now.", target: "martyr_office", timeCost: 90, qualityCost: -10 },
             { text: "Bury Tarun in confident-sounding jargon.", target: "true_winner", timeCost: 0, qualityCost: 20 },
             { text: "Export as PowerPoint and email it. Done.", target: "ppt_promotion", timeCost: 0, qualityCost: -100 }
         ]
@@ -278,13 +197,6 @@ const storyData = {
         image: "assets/images/5_1_martyr.jpg", forceTime: 1120,
         text: "87 slides. By hand. All of them.\n\nSlides 23 through 31 used a locked master template from 2018. The person who built it left years ago. You rebuilt those nine slides twice. Your hand slipped on 34 and you had to do it a third time. It published at 11 PM.\n\nSomeone sent a Teams message — 'just checking in 😊' — and you watched it come in. The cleaner looked at you and vacuumed around your desk instead.",
         endingTitle: "JUST ANOTHER FRIDAY",
-        variants: [
-            {
-                id: "repeat-martyr",
-                conditions: ["playCount:>= 2"],
-                text: "87 slides. By hand. Again.\n\nThe cleaner doesn't ask anymore — just nods and works around you. Someone left a Tupperware of water near your keyboard at some point. You don't know who.\n\nSlide 34. The 2018 master. 11 PM. 'Just checking in 😊'. You already know."
-            }
-        ],
         choices: [
             { text: "Restart Shift", action: "restart" },
             { text: "Main Menu", action: "mainmenu" }
@@ -317,13 +229,6 @@ const storyData = {
         image: "assets/images/6_3_victory.jpg",
         text: "'The ADDIE review.' 'That's the one.' He nodded for a very long time. 'Superb alignment,' he said.\n\nLaptop closed at 5:28. Out the door by 5:30. The moth on the tube light dipped once as you walked past. You don't know why that made you feel better, but it did.",
         endingTitle: "THE SME WHISPERER", endingTitleType: "victory",
-        variants: [
-            {
-                id: "veteran-victory",
-                conditions: ["playCount:>= 2"],
-                text: "'The ADDIE review.' 'That's the one.' You've done this before. You know exactly how long he's going to nod.\n\nYou close the laptop. The moth dips once. You nod back this time."
-            }
-        ],
         choices: [
             { text: "Play Again (Restart Shift)", action: "restart" },
             { text: "Main Menu", action: "mainmenu" }

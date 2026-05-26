@@ -32,66 +32,16 @@ const uiGameCont    = document.getElementById('game-container');
 
 // ─── Butterfly Effect: Dialogue Variation Engine ──────────────────────────────
 const gameHistory = {
-    playCount:       parseInt(localStorage.getItem('playCount') || '0'),
-    seenEndings:     new Set(JSON.parse(localStorage.getItem('seenEndings') || '[]')),
-    visitedThisRun:  new Set(),
-    variantsSeen:    new Set(JSON.parse(localStorage.getItem('variantsSeen') || '[]'))
+    playCount:   parseInt(localStorage.getItem('playCount') || '0'),
+    seenEndings: new Set(JSON.parse(localStorage.getItem('seenEndings') || '[]'))
 };
 
-function _numCmp(v, expr) {
-    const m = String(expr).trim().match(/^([<>]=?|==)\s*(\d+)$/);
-    if (!m) return false;
-    const n = parseInt(m[2]);
-    switch (m[1]) {
-        case '>=': return v >= n; case '<=': return v <= n;
-        case '>':  return v >  n; case '<':  return v <  n;
-        case '==': return v === n;
-    }
-    return false;
-}
-
-function _evalCond(cond) {
-    const [key, ...rest] = cond.split(':');
-    const val = rest.join(':');
-    switch (key) {
-        case 'playCount':  return _numCmp(gameHistory.playCount, val);
-        case 'quality':    return _numCmp(gameState.quality, val);
-        case 'patience':   return _numCmp(gameState.patience, val);
-        case 'visited':    return gameHistory.visitedThisRun.has(val);
-        case 'notVisited': return !gameHistory.visitedThisRun.has(val);
-        case 'seenEnding': return gameHistory.seenEndings.has(val);
-    }
-    return false;
-}
-
 function resolveNodeText(nodeId) {
-    const node = storyData[nodeId];
-    if (!node?.variants?.length) return node?.text || '';
-    for (const v of node.variants) {
-        if (!v.conditions || v.conditions.every(_evalCond)) {
-            const key = `${nodeId}__${v.id}`;
-            if (!gameHistory.variantsSeen.has(key)) {
-                gameHistory.variantsSeen.add(key);
-                localStorage.setItem('variantsSeen', JSON.stringify([...gameHistory.variantsSeen]));
-            }
-            return v.text;
-        }
-    }
-    return node.text;
+    return storyData[nodeId]?.text || '';
 }
 
 
-function showRememberToast(text) {
-    const toast = document.createElement('div');
-    toast.className = 'remember-toast';
-    toast.textContent = text;
-    uiGameCont.appendChild(toast);
-    requestAnimationFrame(() => toast.classList.add('visible'));
-    setTimeout(() => {
-        toast.classList.remove('visible');
-        setTimeout(() => toast.parentNode?.removeChild(toast), 400);
-    }, 2800);
-}
+
 
 // ─── Universal scaling ────────────────────────────────────────────────────────
 function scaleGame() {
@@ -481,7 +431,6 @@ function resetState() {
     gameState.minutes      = 1005;
     _clkMinAccum           = 0;
     _nodeLoading           = false;
-    gameHistory.visitedThisRun.clear();
     gameState.quality      = 100;
     gameState.patience     = 50;
     uiEndingCard.style.display = 'none';
@@ -651,7 +600,6 @@ function loadNode(nodeId) {
         runTrapSequence();
     }
 
-    gameHistory.visitedThisRun.add(nodeId);
     gameState.resolvedText = resolveNodeText(nodeId);
     gameState.pendingBubble = !!node.thoughtBubble;
     typewriterEffect(gameState.resolvedText, node.choices);
@@ -1143,10 +1091,6 @@ function handleChoice(choice) {
     gameState.quality  = Math.max(0, Math.min(100, gameState.quality));
     gameState.patience = Math.max(0, Math.min(50,  gameState.patience));
     updateHUD();
-
-    if (choice.remember && choice.rememberText) {
-        showRememberToast(choice.rememberText);
-    }
 
     // Overflow endings: skip if already on an ending node, or if the chosen target is itself an ending
     if (!ALL_ENDINGS.has(gameState.currentNode) && !ALL_ENDINGS.has(choice.target)) {

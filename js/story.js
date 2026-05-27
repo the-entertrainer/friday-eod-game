@@ -51,7 +51,7 @@ const storyData = {
         speaker: "Priya", color: "var(--priya-cyan)", textColor: "#000",
         image: "assets/images/1_1_bsod.jpg", forceTime: 1048,
         cutaway: "friday_eod_dragon",
-        spotlight: "every single Friday, at exactly 5:00 PM, my boss wakes up from his weekly coma, reads a trending post on LinkedIn, and suddenly remembers he's a manager.",
+        spotlight: "every single Friday, at exactly 5:00 PM, my boss wakes up from his weekly coma like a Chinese dragon on meth and remembers he's a manager.",
         text: "The e-learning software has been sitting at 99% for fourteen minutes. Fourteen.\n\nMy company ThinkPad (Asset Tag L&D-049) is gasping for air like an old diesel engine climbing a hill in July. Teams says my status is 'Away', but I haven't moved an inch.",
         choices: [ { text: "Next →", target: "intro_2", timeCost: 0 } ]
     },
@@ -60,7 +60,7 @@ const storyData = {
         speaker: "Priya", color: "var(--priya-cyan)", textColor: "#000",
         image: "assets/images/1_1_bsod.jpg",
         text: "If this loading bar crashes, my weekend is officially dead.\n\nTwo more minutes and I'm done. That's all I need. But it's Friday. And every single Friday, at exactly 5:00 PM, my boss wakes up from his weekly coma, reads a trending post on LinkedIn, and suddenly remembers he's a manager.",
-        choices: [ { text: "Rewind — 4:45 PM →", target: "setup", timeCost: 0 } ]
+        choices: [ { text: "Rewind to 4:45 PM →", target: "setup", timeCost: 0 } ]
     },
 
     // ── FLASHBACK — 4:45 PM ──────────────────────────────────────────────────
@@ -68,10 +68,10 @@ const storyData = {
         speaker: "Priya", color: "var(--priya-cyan)", textColor: "#000",
         image: "assets/images/1_2_setup.jpg", forceTime: 1005,
         cutaway: "synthesia_glitch",
-        text: "4:45 PM. The module was actually done. Not 'draft two' done. Done done.\n\nThe AI-generated presenter we use for the training video only glitched once on the fire safety slide — poked his own nose for three full seconds, straight to camera. The clip is still in the review folder. We don't discuss it.\n\nI genuinely believed I was going to be home by five.",
+        text: "4:45 PM. The module was actually done. Not 'draft two' done. Done done.\n\nThe AI-generated presenter we use for the training video only glitched once on the fire safety slide—poking his own nose for three full seconds, straight to camera. The clip is still in the review folder. We don't discuss it.\n\nI genuinely believed I was going to be home by five.",
         choices: [
-            { text: "Hit Publish and grab my coat.", target: "ambush", timeCost: 2 },
-            { text: "One last QA pass. Just one.", target: "ambush", timeCost: 5 }
+            { text: "Hit Publish. Leave.", target: "ambush", timeCost: 2 },
+            { text: "One last QA pass.", target: "ambush", timeCost: 5 }
         ]
     },
 
@@ -89,9 +89,9 @@ const storyData = {
         image: "assets/images/2_1_ambush.jpg",
         text: "Let me translate that from Manager-Speak.\n\nHe saw a LinkedIn post from an influencer with 200k followers. Now he wants to turn our boring 10-minute fire safety slideshow into Duolingo. Complete with a passive-aggressive cartoon owl threatening factory workers if they don't click a fire extinguisher fast enough.",
         choices: [
-            { text: "Diplomatically explain why this is a terrible idea.", target: "diplomatic", timeCost: 8, patienceCost: -12 },
-            { text: "Ask what an 'Impact Ecosystem' actually means.", target: "aggressive", timeCost: 8, patienceCost: -18 },
-            { text: "Stop. Take a breath. Address the situation directly.", target: "meta_moment", timeCost: 4, patienceCost: -8 }
+            { text: "Push back politely.", target: "diplomatic", timeCost: 8, patienceCost: -12 },
+            { text: "Call his bluff.", target: "aggressive", timeCost: 8, patienceCost: -18 },
+            { text: "Break the fourth wall.", target: "meta_moment", timeCost: 4, patienceCost: -8 }
         ]
     },
 
@@ -99,7 +99,7 @@ const storyData = {
     "meta_moment": {
         speaker: "Priya", color: "var(--priya-cyan)", textColor: "#000",
         image: "assets/images/2_4_kids.jpg",
-        text: "I break character for a second and look straight at the screen. Yes, I'm talking to you — the person clicking the choices in this game.\n\nPlease. Just make good choices. My weekend plans are entirely in your hands.",
+        text: "I break character for a second and look straight at the screen. Yes, I'm talking to you—the person clicking the choices in this game.\n\nPlease. Just make good choices. My weekend plans are entirely in your hands.",
         choices: [ { text: "Next →", target: "meta_moment_2", timeCost: 0 } ]
     },
 
@@ -108,7 +108,7 @@ const storyData = {
         image: "assets/images/2_4_kids.jpg",
         text: "Right. Back to reality. Tarun is still staring at me, waiting for an answer.",
         choices: [
-            { text: "Tarun: 'Twenty, maybe thirty. Tops. I'll send you a brief.'", target: "aggressive", timeCost: 4, patienceCost: -40 }
+            { text: "Hear him out.", target: "aggressive", timeCost: 4, patienceCost: -40 }
         ]
     },
 
@@ -123,10 +123,10 @@ const storyData = {
     "diplomatic_2": {
         speaker: "Priya", color: "var(--priya-cyan)", textColor: "#000",
         image: "assets/images/2_2_diplomatic.jpg",
-        text: "Translation: He wants me to build a digital maze that will completely crash our ancient HR portal, which runs on a server in Pune held together by rubber bands and prayers.\n\nAlso, we have exactly two VR headsets in the entire cabinet. One is missing a lens, and the other is waiting on a gatepass approval from Rajan in IT since last August.",
+        text: "Translation: He wants me to build a digital maze that will completely crash the client's ancient HR portal, which runs on a local Gurgaon server held together by rubber bands and prayers.\n\nAlso, we have exactly two VR headsets in the entire cabinet. One is missing a lens, and the other is waiting on a gatepass approval from Rajan in IT since last August.",
         choices: [
-            { text: "Explain that our software is not a game engine.", target: "technical_pushback", timeCost: 10, patienceCost: -20 },
-            { text: "Surrender. Build the whole thing.", target: "compromise", timeCost: 40, qualityCost: -40, patienceCost: 15 }
+            { text: "Explain the tech limits.", target: "technical_pushback", timeCost: 10, patienceCost: -20 },
+            { text: "Surrender. Build it.", target: "compromise", timeCost: 40, qualityCost: -40, patienceCost: 15 }
         ]
     },
 
@@ -143,8 +143,8 @@ const storyData = {
         image: "assets/images/2_3_aggressive.jpg",
         text: "Translation: He wants to lock the screen so grown adults on the factory floor are legally forced to sit and watch an AI puppet slowly read text out loud. It's corporate waterboarding.",
         choices: [
-            { text: "Explain this destroys the point of an assessment.", target: "technical_pushback", timeCost: 8, patienceCost: -16 },
-            { text: "Agree to simulate the illusion of learning.", target: "compromise", qualityCost: -50, timeCost: 20, patienceCost: 12 }
+            { text: "Argue the pedagogy.", target: "technical_pushback", timeCost: 8, patienceCost: -16 },
+            { text: "Cave in. Build it.", target: "compromise", qualityCost: -50, timeCost: 20, patienceCost: 12 }
         ]
     },
 
@@ -153,11 +153,11 @@ const storyData = {
         speaker: "Priya", color: "var(--priya-cyan)", textColor: "#000",
         image: "assets/images/3_1_pushback.jpg",
         cutaway: "storyline_preview",
-        text: "I looked at him. 'Tarun, our backend was built during the dot-com bubble. Half the plant floor is still running Internet Explorer. If I upload a heavy game file, it will crash the entire HR portal.'\n\nI'm not being dramatic. I'm just telling him what's actually there. By the time it loads, I could watch a snail complete his PhD.",
+        text: "I looked at him. 'Tarun, the client's backend was built during the dot-com bubble. Half their plant floor is still running Internet Explorer. If I upload a heavy game file, it will crash their entire HR portal.'\n\nI'm not being dramatic. I'm just telling him what's actually there. By the time it loads, I could watch a snail complete his PhD.",
         choices: [
-            { text: "Tarun: 'Fine. Add a stock photo of someone high-fiving a server.'", target: "loading_bar", qualityCost: -20, timeCost: 6, patienceCost: 8 },
-            { text: "Publish the clean version anyway. Go rogue.", target: "rogue_export", qualityCost: 10, patienceCost: -55 },
-            { text: "Email the final build directly to everyone he CC'd.", target: "meta_escape", timeCost: 0, qualityCost: 15, patienceCost: 50 }
+            { text: "Accept a dumb compromise.", target: "loading_bar", qualityCost: -20, timeCost: 6, patienceCost: 8 },
+            { text: "Go rogue. Publish.", target: "rogue_export", qualityCost: 10, patienceCost: -55 },
+            { text: "Email clients directly.", target: "meta_escape", timeCost: 0, qualityCost: 15, patienceCost: 50 }
         ]
     },
 
@@ -165,15 +165,15 @@ const storyData = {
     "compromise": {
         speaker: "Priya", color: "var(--priya-cyan)", textColor: "#000",
         image: "assets/images/3_3_compromise.jpg",
-        text: "I surrendered. I found a padlock on Shutterstock. Ten dollars. The guy in the photo is clearly in an American office — he's in a suit, there's a skyline, he's very New York.\n\nHis name is Greg. Greg is now representing a digital padlock for our compliance learners in Nashik. That's just where we are in life.",
-        choices: [ { text: "Watch the publish bar and pray.", target: "loading_bar", timeCost: 6 } ]
+        text: "I surrendered. I found a padlock on Shutterstock. Ten dollars. The guy in the photo is clearly in an American office — he's in a suit, there's a skyline, he's very New York.\n\nHis name is Greg. Greg is now representing a digital padlock for the client's compliance learners in Gurgaon. That's just where we are in life.",
+        choices: [ { text: "Watch and pray.", target: "loading_bar", timeCost: 6 } ]
     },
 
     // ── SECRET ENDING: THE CLEAN EXIT ────────────────────────────────────────
     "meta_escape": {
         speaker: "System", color: "var(--success-green)", textColor: "#000",
         image: "assets/images/5_2_winner.jpg",
-        text: "You bypassed Tarun completely. You opened a new email, attached the raw file, and sent it directly to the Global VP in Singapore, the HRBP, and the client. Subject: Final Approved Module.\n\nYou hit send at 5:26 PM.\n\nTarun replied in forty seconds with three question marks. You had already left the building.",
+        text: "You bypassed Tarun completely. You opened a new email, attached the raw file, and sent it directly to the clients. Subject: Final Approved Module.\n\nYou hit send at 5:26 PM.\n\nTarun replied in forty seconds with three question marks. You had already left the building.",
         endingTitle: "THE CLEAN EXIT", endingTitleType: "secret",
         choices: [
             { text: "Restart Shift", action: "restart" },
@@ -185,7 +185,7 @@ const storyData = {
     "rogue_export": {
         speaker: "System", color: "var(--system-alert)", textColor: "#fff",
         image: "assets/images/3_4_rogue.jpg",
-        text: "You published the clean build yourself and walked out.\n\nThe module went live. Five stars on the first review, 94% completion — nobody gets that. You were a minor hero for about three days.\n\nThen the L&D Head sent an email. Subject: Creative Unilateralism: A Formal Concern. They let you go. The module is still running.",
+        text: "You published the clean build yourself and walked out.\n\nThe module went live. Five stars on the first review, 94% completion — nobody gets that. You were a minor hero for about three days.\n\nThen the clients sent an email. Subject: Creative Unilateralism: A Formal Concern. Management let you go. The module is still running.",
         endingTitle: "THE MARTYR",
         choices: [
             { text: "Restart Shift", action: "restart" },
@@ -209,7 +209,7 @@ const storyData = {
         text: "You touched it.\n\nThe software has stopped responding. AutoRecover saved exactly one file — Draft v1. Title slide. No variables, no videos, no Greg. Just 'Security Awareness Training' in Calibri on a white background.\n\nYour weekend is over.",
         endingTitle: "FATAL ERROR",
         choices: [
-            { text: "Cry. Then restart.", action: "restart" },
+            { text: "Cry. Restart.", action: "restart" },
             { text: "Main Menu", action: "mainmenu" }
         ]
     },
@@ -218,18 +218,18 @@ const storyData = {
     "upload": {
         speaker: "Tarun", color: "var(--tarun-yellow)", textColor: "#000",
         image: "assets/images/4_2_upload.jpg",
-        text: "PRIYA! It published, great news!\n\nOkay so — tiny thing — the Singapore VP posted on LinkedIn this morning. 'Teal is the future of Trust™.' So I need you to change all 87 slides to teal before you leave tonight. I CC'd the Global Head!",
+        text: "PRIYA! It published, great news!\n\nOkay so — tiny thing — the client posted on LinkedIn this morning. 'Teal is the future of Trust™.' So I need you to change all 87 slides to teal before you leave tonight. I CC'd the clients!",
         choices: [ { text: "Next →", target: "upload_2", timeCost: 0 } ]
     },
 
     "upload_2": {
         speaker: "Priya", color: "var(--priya-cyan)", textColor: "#000",
         image: "assets/images/4_2_upload.jpg",
-        text: "I checked the email. He sent the color code. It was literally just the word TEAL. Not a hex code. Just the word.\n\nI checked the brand guide — Leadership Gray, Cerulean Blue, Muted Sage. There is no teal anywhere.",
+        text: "I checked the email. They sent the color code. It was literally just the word TEAL. Not a hex code. Just the word.\n\nI checked the brand guide — Leadership Gray, Cerulean Blue, Muted Sage. There is no teal anywhere.",
         choices: [
-            { text: "Recolour all 87 slides. By hand. Right now.", target: "martyr_office", timeCost: 90, qualityCost: -10 },
-            { text: "Gaslight Tarun with fake corporate laws.", target: "true_winner", timeCost: 0, qualityCost: 20 },
-            { text: "Export as PowerPoint and email it. Done.", target: "ppt_promotion", timeCost: 0, qualityCost: -100 }
+            { text: "Recolour by hand.", target: "martyr_office", timeCost: 90, qualityCost: -10 },
+            { text: "Gaslight him.", target: "true_winner", timeCost: 0, qualityCost: 20 },
+            { text: "Export as PPT.", target: "ppt_promotion", timeCost: 0, qualityCost: -100 }
         ]
     },
 
@@ -249,7 +249,7 @@ const storyData = {
     "ppt_promotion": {
         speaker: "System", color: "var(--tarun-yellow)", textColor: "#000",
         image: "assets/images/6_1_ppt_promotion.jpg",
-        text: "You gave up. You exported the entire thing as a flat PowerPoint, named it Innovation_Hub.pptx, and emailed it with no message.\n\nTarun replied in 38 seconds: EXACTLY THE TRANSFORMATIONAL ENERGY HE WANTED. He calls the whole thing an 'agile pivot.'\n\nBy Monday, you are promoted to Global Head of LXD. Parking spot and everything.",
+        text: "You gave up. You exported the entire thing as a flat PowerPoint, named it Innovation_Hub.pptx, and emailed it to the clients with no message.\n\nTarun replied in 38 seconds: EXACTLY THE TRANSFORMATIONAL ENERGY HE WANTED. He calls the whole thing an 'agile pivot.'\n\nBy Monday, you are promoted to Global Head of LXD. Parking spot and everything.",
         endingTitle: "THE CORPORATE SELLOUT",
         choices: [
             { text: "Restart Shift", action: "restart" },
@@ -261,8 +261,8 @@ const storyData = {
     "true_winner": {
         speaker: "Priya", color: "var(--priya-cyan)", textColor: "#000",
         image: "assets/images/6_2_true_winner.jpg",
-        text: "I looked him dead in the eye and said, 'Tarun, actually, under the National Corporate Synergy Act, altering a hue-matrix during an active evaluation cycle automatically voids our ISO compliance. The brand token auto-applies at midnight.'\n\nI made every single word of that up.",
-        choices: [ { text: "Watch Tarun absorb this information.", target: "victory_screen" } ]
+        text: "I looked him dead in the eye and said, 'Tarun, actually, under the National Corporate Synergy Act, altering a hue-matrix during an active evaluation cycle automatically voids the client's ISO compliance. The brand token auto-applies at midnight.'\n\nI made every single word of that up.",
+        choices: [ { text: "Watch him process this.", target: "victory_screen" } ]
     },
 
     // ── TRUE ENDING: THE SME WHISPERER ───────────────────────────────────────
@@ -272,7 +272,7 @@ const storyData = {
         text: "Tarun nodded for a very long time, absolutely terrified to admit he didn't know what any of that meant. 'Superb alignment,' he said.\n\nPriya closed the laptop at 5:28. Out the door by 5:30. The moth on the tube light dipped once as she walked past. You don't know why that made you feel better, but it did.",
         endingTitle: "THE SME WHISPERER", endingTitleType: "victory",
         choices: [
-            { text: "Play Again (Restart Shift)", action: "restart" },
+            { text: "Play Again", action: "restart" },
             { text: "Main Menu", action: "mainmenu" }
         ]
     },

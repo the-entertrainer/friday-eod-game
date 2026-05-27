@@ -5,9 +5,13 @@ let gameState = {
     currentNode: "intro",
     resolvedText: '',
     isTyping: false,
+    isSpotlighting: false,
+    spotlightTimers: [],
+    _afterSpotlightFn: null,
     typeInterval: null,
     trapTimeout: null,
-    pendingBubble: false
+    pendingBubble: false,
+    cutawayShown: false
 };
 
 const uiClock       = document.getElementById('clock-display');
@@ -29,66 +33,16 @@ const uiGameCont    = document.getElementById('game-container');
 
 // ─── Butterfly Effect: Dialogue Variation Engine ──────────────────────────────
 const gameHistory = {
-    playCount:       parseInt(localStorage.getItem('playCount') || '0'),
-    seenEndings:     new Set(JSON.parse(localStorage.getItem('seenEndings') || '[]')),
-    visitedThisRun:  new Set(),
-    variantsSeen:    new Set(JSON.parse(localStorage.getItem('variantsSeen') || '[]'))
+    playCount:   parseInt(localStorage.getItem('playCount') || '0'),
+    seenEndings: new Set(JSON.parse(localStorage.getItem('seenEndings') || '[]'))
 };
 
-function _numCmp(v, expr) {
-    const m = String(expr).trim().match(/^([<>]=?|==)\s*(\d+)$/);
-    if (!m) return false;
-    const n = parseInt(m[2]);
-    switch (m[1]) {
-        case '>=': return v >= n; case '<=': return v <= n;
-        case '>':  return v >  n; case '<':  return v <  n;
-        case '==': return v === n;
-    }
-    return false;
-}
-
-function _evalCond(cond) {
-    const [key, ...rest] = cond.split(':');
-    const val = rest.join(':');
-    switch (key) {
-        case 'playCount':  return _numCmp(gameHistory.playCount, val);
-        case 'quality':    return _numCmp(gameState.quality, val);
-        case 'patience':   return _numCmp(gameState.patience, val);
-        case 'visited':    return gameHistory.visitedThisRun.has(val);
-        case 'notVisited': return !gameHistory.visitedThisRun.has(val);
-        case 'seenEnding': return gameHistory.seenEndings.has(val);
-    }
-    return false;
-}
-
 function resolveNodeText(nodeId) {
-    const node = storyData[nodeId];
-    if (!node?.variants?.length) return node?.text || '';
-    for (const v of node.variants) {
-        if (!v.conditions || v.conditions.every(_evalCond)) {
-            const key = `${nodeId}__${v.id}`;
-            if (!gameHistory.variantsSeen.has(key)) {
-                gameHistory.variantsSeen.add(key);
-                localStorage.setItem('variantsSeen', JSON.stringify([...gameHistory.variantsSeen]));
-            }
-            return v.text;
-        }
-    }
-    return node.text;
+    return storyData[nodeId]?.text || '';
 }
 
 
-function showRememberToast(text) {
-    const toast = document.createElement('div');
-    toast.className = 'remember-toast';
-    toast.textContent = text;
-    uiGameCont.appendChild(toast);
-    requestAnimationFrame(() => toast.classList.add('visible'));
-    setTimeout(() => {
-        toast.classList.remove('visible');
-        setTimeout(() => toast.parentNode?.removeChild(toast), 400);
-    }, 2800);
-}
+
 
 // ─── Universal scaling ────────────────────────────────────────────────────────
 function scaleGame() {
@@ -248,8 +202,8 @@ const SCENE_MOODS = {
 
 // ─── File-based Scene BGM ─────────────────────────────────────────────────────
 const _MOOD_TO_FILE = {
-    office:   'assets/audio/Dialogues Theme.mp3',
-    defeated: 'assets/audio/Dialogues Theme.mp3',
+    office:   'assets/audio/Theme.wav',
+    defeated: 'assets/audio/Theme.wav',
     tense:    'assets/audio/Anxious.mp3',
     horror:   'assets/audio/Anxious.mp3',
     suspense: 'assets/audio/Anxious.mp3',
@@ -326,7 +280,7 @@ let _themeAudio = null;
 function startTitleBGM() {
     try {
         if (!_themeAudio) {
-            _themeAudio = new Audio('assets/audio/Dialogues Theme.mp3');
+            _themeAudio = new Audio('assets/audio/Theme.wav');
             _themeAudio.loop   = true;
             _themeAudio.volume = 0.45;
         }
@@ -479,7 +433,6 @@ function resetState() {
     gameState.minutes      = 1005;
     _clkMinAccum           = 0;
     _nodeLoading           = false;
-    gameHistory.visitedThisRun.clear();
     gameState.quality      = 100;
     gameState.patience     = 50;
     uiEndingCard.style.display = 'none';
@@ -603,6 +556,7 @@ function loadNode(nodeId) {
     uiEndingCard.innerHTML = '';
     uiChoices.innerHTML = '';
     uiText.innerHTML = '';
+    gameState.cutawayShown = false;
 
     uiGameCont.classList.remove('ending-victory', 'ending-bad');
     if (VICTORY_ENDINGS.has(nodeId)) {
@@ -644,12 +598,22 @@ function loadNode(nodeId) {
     uiName.style.color = node.textColor;
     uiName.style.transform = 'rotate(-3deg) scale(1.1)';
     setTimeout(() => { uiName.style.transform = 'rotate(-3deg) scale(1)'; }, 200);
+    uiName.dataset.mood = node.speaker === 'Tarun' ? '🤩' :
+                          node.speaker === 'Priya' ? (node.monologue ? '💭' : '😑') : '⚠️';
+
+    // Terminal speaker tinting + monologue style
+    const terminalEl = document.getElementById('terminal');
+    terminalEl.classList.remove('speaker-priya', 'speaker-tarun', 'speaker-system', 'is-monologue');
+    terminalEl.classList.add(
+        node.speaker === 'Priya'  ? 'speaker-priya'  :
+        node.speaker === 'Tarun'  ? 'speaker-tarun'  : 'speaker-system'
+    );
+    if (node.monologue) terminalEl.classList.add('is-monologue');
 
     if (node.isTrap) {
         runTrapSequence();
     }
 
-    gameHistory.visitedThisRun.add(nodeId);
     gameState.resolvedText = resolveNodeText(nodeId);
     gameState.pendingBubble = !!node.thoughtBubble;
     typewriterEffect(gameState.resolvedText, node.choices);
@@ -751,6 +715,119 @@ function showEndingTitle(title, type) {
     })(performance.now());
 }
 
+// ─── Cutaway Panel System ─────────────────────────────────────────────────────
+// Fires before the typewriter when a node has cutaway: "id".
+// Highlights a phrase in uiText word by word, then calls onComplete.
+function runSpotlight(phrase, onComplete) {
+    gameState.isSpotlighting = true;
+    gameState._afterSpotlightFn = onComplete;
+
+    const tokens = phrase.split(/(\s+)/);
+    const wrapped = tokens.map(t => /\S/.test(t) ? `<span class="word-hl">${t}</span>` : t).join('');
+    uiText.innerHTML = uiText.innerHTML.replace(phrase, wrapped);
+
+    const spans = [...uiText.querySelectorAll('.word-hl')];
+    const PER_WORD = 110;
+    const timers = spans.map((s, i) => setTimeout(() => s.classList.add('lit'), i * PER_WORD));
+
+    const done = setTimeout(() => {
+        gameState.isSpotlighting = false;
+        gameState.spotlightTimers = [];
+        gameState._afterSpotlightFn = null;
+        onComplete();
+    }, spans.length * PER_WORD + 750);
+
+    timers.push(done);
+    gameState.spotlightTimers = timers;
+}
+
+// Shows a bold title card (Family Guy-style) then 3 comic panels flying in from
+// alternating sides inside a retro TV frame. Tap or wait 8s to dismiss.
+function showCutaway(id, onComplete) {
+    const data = cutawayData[id];
+    if (!data) { onComplete(); return; }
+
+    const ov = document.createElement('div');
+    ov.className = 'cutaway-overlay';
+
+    // ── Phase 1: title card flash ──
+    const tc = document.createElement('div');
+    tc.className = 'cutaway-title-card';
+    tc.innerHTML =
+        `<div class="ct-main">${data.titleLine1}</div>` +
+        (data.titleLine2 ? `<div class="ct-divider"></div><div class="ct-sub">${data.titleLine2}</div>` : '');
+    ov.appendChild(tc);
+
+    // ── Phase 2: retro TV ──
+    const tv = document.createElement('div');
+    tv.className = 'retro-tv';
+
+    const screen = document.createElement('div');
+    screen.className = 'retro-tv-screen';
+
+    const panelsWrap = document.createElement('div');
+    panelsWrap.className = 'cutaway-panels';
+
+    function makePanel(src, extraClass) {
+        const p = document.createElement('div');
+        p.className = 'cutaway-panel ' + extraClass;
+        p.style.backgroundImage = `url('${src}')`;
+        return p;
+    }
+
+    const pTop = makePanel(data.panels[0].src, 'panel-top');
+    const pMid = makePanel(data.panels[1].src, 'panel-mid');
+    const pBot = makePanel(data.panels[2].src, 'panel-bot');
+
+    panelsWrap.appendChild(pTop);
+    panelsWrap.appendChild(pMid);
+    panelsWrap.appendChild(pBot);
+    screen.appendChild(panelsWrap);
+    tv.appendChild(screen);
+
+    // TV decorative footer
+    const foot = document.createElement('div');
+    foot.className = 'tv-footer';
+    foot.innerHTML =
+        '<div class="tv-knobs"><div class="tv-knob"></div><div class="tv-knob"></div></div>' +
+        '<div class="tv-speaker">' + '<span></span>'.repeat(9) + '</div>';
+    tv.appendChild(foot);
+    ov.appendChild(tv);
+
+    // Tap hint
+    const hint = document.createElement('div');
+    hint.className = 'cutaway-tap-hint';
+    hint.textContent = '▼ tap to continue';
+    ov.appendChild(hint);
+
+    uiGameCont.appendChild(ov);
+
+    // ── Animation timeline ──
+    const timers = [];
+    const T = (ms, fn) => timers.push(setTimeout(fn, ms));
+
+    T(1500, () => tc.classList.add('hiding'));
+    T(1800, () => tv.classList.add('visible'));
+    T(2050, () => { pTop.classList.add('landed'); timers.push(setTimeout(() => pTop.classList.add('drifting'), 650)); });
+    T(2650, () => { pMid.classList.add('landed'); });
+    T(3250, () => { pBot.classList.add('landed'); timers.push(setTimeout(() => pBot.classList.add('drifting-alt'), 650)); });
+    T(4200, () => hint.classList.add('visible'));
+
+    let gone = false;
+    const dismiss = () => {
+        if (gone) return;
+        gone = true;
+        timers.forEach(clearTimeout);
+        ov.style.transition = 'opacity 0.35s ease';
+        ov.style.opacity = '0';
+        ov.style.pointerEvents = 'none';
+        setTimeout(() => { ov.remove(); onComplete(); }, 380);
+    };
+
+    timers.push(setTimeout(dismiss, 8000)); // auto-dismiss after 8s
+    ov.addEventListener('pointerup', dismiss);
+}
+
 function showThoughtBubble() {
     const existing = document.getElementById('_thought_bubble');
     if (existing) existing.remove();
@@ -777,32 +854,98 @@ function showThoughtBubble() {
 }
 
 // ─── Dialogue ─────────────────────────────────────────────────────────────────
-function typewriterEffect(text, choices) {
+function typewriterEffect(text, choices, startOffset) {
+    startOffset = startOffset || 0;
     clearInterval(gameState.typeInterval);
     gameState.isTyping = true;
-    let i = 0;
+    let i = startOffset;
 
     if (choices && choices.length > 0) uiTapHint.classList.add('visible');
-
-    showContextualEffect(text);
+    if (startOffset === 0) showContextualEffect(text);
     startTypingSound();
+
+    const curNode = storyData[gameState.currentNode];
+    let spotlightTriggerIdx = -1;
+    let spotlightFired = false;
+
+    // Compute mid-text spotlight trigger only when both spotlight+cutaway exist
+    if (startOffset === 0 && curNode && curNode.spotlight && curNode.cutaway) {
+        const idx = text.indexOf(curNode.spotlight);
+        if (idx >= 0) spotlightTriggerIdx = idx + curNode.spotlight.length;
+    }
+
+    if (startOffset > 0) uiText.innerHTML = text.substring(0, startOffset);
 
     gameState.typeInterval = setInterval(() => {
         uiText.innerHTML = text.substring(0, i + 1) + '<span class="cursor"></span>';
         i++;
+
+        // Mid-text spotlight trigger: pause typing, highlight, 400ms, cutaway, then continue
+        if (spotlightTriggerIdx >= 0 && i >= spotlightTriggerIdx && !spotlightFired) {
+            spotlightFired = true;
+            clearInterval(gameState.typeInterval);
+            gameState.isTyping = false;
+            stopTypingSound();
+            uiText.innerHTML = text.substring(0, i);
+
+            const capturedI = i;
+            const afterCutaway = () => {
+                gameState.cutawayShown = true;
+                const rest = text.substring(capturedI);
+                if (rest.length > 0) {
+                    typewriterEffect(text, choices, capturedI);
+                } else {
+                    renderChoices(choices);
+                    if (gameState.pendingBubble) { gameState.pendingBubble = false; showThoughtBubble(); }
+                }
+            };
+            runSpotlight(curNode.spotlight, () => {
+                setTimeout(() => showCutaway(curNode.cutaway, afterCutaway), 400);
+            });
+            return;
+        }
+
         if (i >= text.length) {
             clearInterval(gameState.typeInterval);
             uiText.innerHTML = text;
             gameState.isTyping = false;
             stopTypingSound();
-            renderChoices(choices);
-            if (gameState.pendingBubble) { gameState.pendingBubble = false; showThoughtBubble(); }
+
+            const _afterCutaway = () => {
+                renderChoices(choices);
+                if (gameState.pendingBubble) { gameState.pendingBubble = false; showThoughtBubble(); }
+            };
+            const _afterSpotlight = () => {
+                if (curNode && curNode.cutaway && cutawayData[curNode.cutaway] && !gameState.cutawayShown) {
+                    showCutaway(curNode.cutaway, _afterCutaway);
+                } else {
+                    _afterCutaway();
+                }
+            };
+
+            // continuation pass OR mid-text spotlight already fired → skip to choices
+            if (startOffset > 0 || spotlightFired) {
+                _afterCutaway();
+            } else if (curNode && curNode.spotlight) {
+                runSpotlight(curNode.spotlight, _afterSpotlight);
+            } else {
+                _afterSpotlight();
+            }
         }
     }, _TW_SPEEDS[_twSpeedIdx]);
 }
 
 function advanceDialogue() {
     if (_peekActive) return; // swallow tap after a drawer drag
+    if (gameState.isSpotlighting) {
+        gameState.spotlightTimers.forEach(clearTimeout);
+        gameState.spotlightTimers = [];
+        gameState.isSpotlighting = false;
+        const fn = gameState._afterSpotlightFn;
+        gameState._afterSpotlightFn = null;
+        if (fn) fn();
+        return;
+    }
     if (gameState.isTyping) {
         clearInterval(gameState.typeInterval);
         stopTypingSound();
@@ -810,8 +953,15 @@ function advanceDialogue() {
         uiText.innerHTML = gameState.resolvedText || node.text;
         gameState.isTyping = false;
         uiTapHint.classList.remove('visible');
-        renderChoices(node.choices);
-        if (gameState.pendingBubble) { gameState.pendingBubble = false; showThoughtBubble(); }
+        const _afterCutaway = () => {
+            renderChoices(node.choices);
+            if (gameState.pendingBubble) { gameState.pendingBubble = false; showThoughtBubble(); }
+        };
+        if (node.cutaway && cutawayData[node.cutaway] && !gameState.cutawayShown) {
+            showCutaway(node.cutaway, _afterCutaway);
+        } else {
+            _afterCutaway();
+        }
     }
 }
 
@@ -917,6 +1067,8 @@ function renderChoices(choices) {
     choices.forEach((choice, index) => {
         const btn = document.createElement('button');
         btn.className = 'choice-btn';
+        if (choice.patienceCost < 0 || choice.qualityCost < 0) btn.classList.add('choice-risky');
+        else if (choice.patienceCost > 0 || choice.qualityCost > 0) btn.classList.add('choice-safe');
         btn.style.animationDelay = `${index * 0.08}s`;
 
         const textSpan = document.createElement('span');
@@ -997,10 +1149,6 @@ function handleChoice(choice) {
     gameState.quality  = Math.max(0, Math.min(100, gameState.quality));
     gameState.patience = Math.max(0, Math.min(50,  gameState.patience));
     updateHUD();
-
-    if (choice.remember && choice.rememberText) {
-        showRememberToast(choice.rememberText);
-    }
 
     // Overflow endings: skip if already on an ending node, or if the chosen target is itself an ending
     if (!ALL_ENDINGS.has(gameState.currentNode) && !ALL_ENDINGS.has(choice.target)) {

@@ -235,10 +235,10 @@ function showContextualEffect(text) {
 
 // ─── Game BGM System ──────────────────────────────────────────────────────────
 const SCENE_MOODS = {
-    intro: 'office', setup: 'office', upload: 'office',
-    ambush: 'tense', ambush_2: 'tense', meta_moment: 'tense',
-    diplomatic: 'tense', technical_pushback_2: 'tense',
-    aggressive: 'tense', technical_pushback: 'tense',
+    intro: 'office', intro_2: 'office', setup: 'office', upload: 'office', upload_2: 'office',
+    ambush: 'tense', ambush_2: 'tense', meta_moment: 'tense', meta_moment_2: 'tense',
+    diplomatic: 'tense', diplomatic_2: 'tense',
+    aggressive: 'tense', aggressive_2: 'tense', technical_pushback: 'tense',
     compromise: 'defeated', loading_bar: 'suspense',
     crash: 'horror', meta_escape: 'matrix', rogue_export: 'action',
     martyr_office: 'defeated', ppt_promotion: 'office',

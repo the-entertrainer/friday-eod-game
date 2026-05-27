@@ -69,6 +69,7 @@ const storyData = {
         speaker: "Priya", color: "var(--priya-cyan)", textColor: "#000",
         image: "assets/images/1_2_setup.jpg", forceTime: 1005,
         cutaway: "synthesia_glitch",
+        spotlight: "only glitched once on the fire safety slide—poking his own nose for three full seconds, straight to camera.",
         text: "4:45 PM. The module was actually done. Not 'draft two' done. Done done.\n\nThe AI-generated presenter we use for the training video only glitched once on the fire safety slide—poking his own nose for three full seconds, straight to camera. The clip is still in the review folder. We don't discuss it.\n\nI genuinely believed I was going to be home by five.",
         choices: [
             { text: "Hit Publish. Leave.", target: "ambush", timeCost: 2 },
@@ -81,6 +82,7 @@ const storyData = {
         speaker: "Tarun", color: "var(--tarun-yellow)", textColor: "#000",
         image: "assets/images/2_1_ambush.jpg",
         cutaway: "tarun_nightmare",
+        spotlight: "Why can't we make this Fire Safety module more like an Impact Ecosystem™?",
         text: "PRIYA — hey — do you have two minutes? Please.\n\nListen, I was just reading this article by a Global Chief Evangelist. Matlab, mind blown, bro. We need to completely sunset this linear architecture. Why can't we make this Fire Safety module more like an Impact Ecosystem™?",
         choices: [ { text: "Next →", target: "ambush_2", timeCost: 0 } ]
     },
@@ -157,6 +159,7 @@ const storyData = {
         speaker: "Priya", color: "var(--priya-cyan)", textColor: "#000",
         image: "assets/images/3_1_pushback.jpg",
         cutaway: "storyline_preview",
+        spotlight: "By the time it loads, I could watch a snail complete his PhD.",
         text: "I looked at him. 'Tarun, the client's backend was built during the dot-com bubble. Half their plant floor is still running Internet Explorer. If I upload a heavy game file, it will crash their entire HR portal.'\n\nI'm not being dramatic. I'm just telling him what's actually there. By the time it loads, I could watch a snail complete his PhD.",
         choices: [
             { text: "Accept a dumb compromise.", target: "loading_bar", qualityCost: -20, timeCost: 6, patienceCost: 8 },
@@ -177,7 +180,7 @@ const storyData = {
     "meta_escape": {
         speaker: "System", color: "var(--success-green)", textColor: "#000",
         image: "assets/images/5_2_winner.jpg",
-        text: "You bypassed Tarun completely. You opened a new email, attached the raw file, and sent it directly to the clients. Subject: Final Approved Module.\n\nYou hit send at 5:26 PM.\n\nTarun replied in forty seconds with three question marks. You had already left the building.",
+        text: "You bypassed Tarun completely. You opened a new email, attached the raw file, and sent it directly to the clients. Subject: Final Approved Module.\n\nYou hit send at 5:31 PM.\n\nTarun replied in forty seconds with three question marks. You had already left the building.",
         endingTitle: "THE CLEAN EXIT", endingTitleType: "secret",
         choices: [
             { text: "Restart Shift", action: "restart" },
@@ -274,6 +277,7 @@ const storyData = {
     "victory_screen": {
         speaker: "System", color: "var(--success-green)", textColor: "#000",
         image: "assets/images/6_3_victory.jpg",
+        forceTime: 1050,
         text: "Tarun nodded for a very long time, absolutely terrified to admit he didn't know what any of that meant. 'Superb alignment,' he said.\n\nPriya closed the laptop at 5:28. Out the door by 5:30. The moth on the tube light dipped once as she walked past. You don't know why that made you feel better, but it did.",
         endingTitle: "THE SME WHISPERER", endingTitleType: "victory",
         choices: [

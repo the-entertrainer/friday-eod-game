@@ -11,7 +11,8 @@ let gameState = {
     typeInterval: null,
     trapTimeout: null,
     pendingBubble: false,
-    cutawayShown: false
+    cutawayShown: false,
+    isCutawayPlaying: false
 };
 
 const uiClock       = document.getElementById('clock-display');
@@ -557,6 +558,7 @@ function loadNode(nodeId) {
     uiChoices.innerHTML = '';
     uiText.innerHTML = '';
     gameState.cutawayShown = false;
+    gameState.isCutawayPlaying = false;
 
     uiGameCont.classList.remove('ending-victory', 'ending-bad');
     if (VICTORY_ENDINGS.has(nodeId)) {
@@ -801,6 +803,7 @@ function showCutaway(id, onComplete) {
     ov.appendChild(hint);
 
     uiGameCont.appendChild(ov);
+    gameState.isCutawayPlaying = true;
 
     // ── Animation timeline ──
     const timers = [];
@@ -818,6 +821,7 @@ function showCutaway(id, onComplete) {
         if (gone) return;
         gone = true;
         timers.forEach(clearTimeout);
+        gameState.isCutawayPlaying = false;
         ov.style.transition = 'opacity 0.35s ease';
         ov.style.opacity = '0';
         ov.style.pointerEvents = 'none';
@@ -825,7 +829,8 @@ function showCutaway(id, onComplete) {
     };
 
     timers.push(setTimeout(dismiss, 8000)); // auto-dismiss after 8s
-    ov.addEventListener('pointerup', dismiss);
+    // Only allow tap-to-dismiss after all panels have landed (4500ms)
+    T(4500, () => ov.addEventListener('pointerup', dismiss));
 }
 
 function showThoughtBubble() {
@@ -936,33 +941,9 @@ function typewriterEffect(text, choices, startOffset) {
 }
 
 function advanceDialogue() {
-    if (_peekActive) return; // swallow tap after a drawer drag
-    if (gameState.isSpotlighting) {
-        gameState.spotlightTimers.forEach(clearTimeout);
-        gameState.spotlightTimers = [];
-        gameState.isSpotlighting = false;
-        const fn = gameState._afterSpotlightFn;
-        gameState._afterSpotlightFn = null;
-        if (fn) fn();
-        return;
-    }
-    if (gameState.isTyping) {
-        clearInterval(gameState.typeInterval);
-        stopTypingSound();
-        const node = storyData[gameState.currentNode];
-        uiText.innerHTML = gameState.resolvedText || node.text;
-        gameState.isTyping = false;
-        uiTapHint.classList.remove('visible');
-        const _afterCutaway = () => {
-            renderChoices(node.choices);
-            if (gameState.pendingBubble) { gameState.pendingBubble = false; showThoughtBubble(); }
-        };
-        if (node.cutaway && cutawayData[node.cutaway] && !gameState.cutawayShown) {
-            showCutaway(node.cutaway, _afterCutaway);
-        } else {
-            _afterCutaway();
-        }
-    }
+    if (_peekActive) return;
+    // No skipping — typewriter, spotlight, and cutaway must all complete on their own
+    if (gameState.isTyping || gameState.isSpotlighting || gameState.isCutawayPlaying) return;
 }
 
 function triggerTrap() {

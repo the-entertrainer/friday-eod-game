@@ -50,8 +50,6 @@ const storyData = {
     "intro": {
         speaker: "Priya", color: "var(--priya-cyan)", textColor: "#000",
         image: "assets/images/1_1_bsod.jpg", forceTime: 1048,
-        cutaway: "friday_eod_dragon",
-        spotlight: "every single Friday, at exactly 5:00 PM, my boss wakes up from his weekly coma like a Chinese dragon on meth and remembers he's a manager.",
         text: "The e-learning software has been sitting at 99% for fourteen minutes. Fourteen.\n\nMy company ThinkPad (Asset Tag L&D-049) is gasping for air like an old diesel engine climbing a hill in July. Teams says my status is 'Away', but I haven't moved an inch.",
         choices: [ { text: "Next →", target: "intro_2", timeCost: 0 } ]
     },
@@ -59,6 +57,9 @@ const storyData = {
     "intro_2": {
         speaker: "Priya", color: "var(--priya-cyan)", textColor: "#000",
         image: "assets/images/1_1_bsod.jpg",
+        monologue: true,
+        cutaway: "friday_eod_dragon",
+        spotlight: "my boss wakes up from his weekly coma, reads a trending post on LinkedIn, and suddenly remembers he's a manager.",
         text: "If this loading bar crashes, my weekend is officially dead.\n\nTwo more minutes and I'm done. That's all I need. But it's Friday. And every single Friday, at exactly 5:00 PM, my boss wakes up from his weekly coma, reads a trending post on LinkedIn, and suddenly remembers he's a manager.",
         choices: [ { text: "Rewind to 4:45 PM →", target: "setup", timeCost: 0 } ]
     },
@@ -87,6 +88,7 @@ const storyData = {
     "ambush_2": {
         speaker: "Priya", color: "var(--priya-cyan)", textColor: "#000",
         image: "assets/images/2_1_ambush.jpg",
+        monologue: true,
         text: "Let me translate that from Manager-Speak.\n\nHe saw a LinkedIn post from an influencer with 200k followers. Now he wants to turn our boring 10-minute fire safety slideshow into Duolingo. Complete with a passive-aggressive cartoon owl threatening factory workers if they don't click a fire extinguisher fast enough.",
         choices: [
             { text: "Push back politely.", target: "diplomatic", timeCost: 8, patienceCost: -12 },
@@ -123,6 +125,7 @@ const storyData = {
     "diplomatic_2": {
         speaker: "Priya", color: "var(--priya-cyan)", textColor: "#000",
         image: "assets/images/2_2_diplomatic.jpg",
+        monologue: true,
         text: "Translation: He wants me to build a digital maze that will completely crash the client's ancient HR portal, which runs on a local Gurgaon server held together by rubber bands and prayers.\n\nAlso, we have exactly two VR headsets in the entire cabinet. One is missing a lens, and the other is waiting on a gatepass approval from Rajan in IT since last August.",
         choices: [
             { text: "Explain the tech limits.", target: "technical_pushback", timeCost: 10, patienceCost: -20 },
@@ -141,6 +144,7 @@ const storyData = {
     "aggressive_2": {
         speaker: "Priya", color: "var(--priya-cyan)", textColor: "#000",
         image: "assets/images/2_3_aggressive.jpg",
+        monologue: true,
         text: "Translation: He wants to lock the screen so grown adults on the factory floor are legally forced to sit and watch an AI puppet slowly read text out loud. It's corporate waterboarding.",
         choices: [
             { text: "Argue the pedagogy.", target: "technical_pushback", timeCost: 8, patienceCost: -16 },
@@ -225,6 +229,7 @@ const storyData = {
     "upload_2": {
         speaker: "Priya", color: "var(--priya-cyan)", textColor: "#000",
         image: "assets/images/4_2_upload.jpg",
+        monologue: true,
         text: "I checked the email. They sent the color code. It was literally just the word TEAL. Not a hex code. Just the word.\n\nI checked the brand guide — Leadership Gray, Cerulean Blue, Muted Sage. There is no teal anywhere.",
         choices: [
             { text: "Recolour by hand.", target: "martyr_office", timeCost: 90, qualityCost: -10 },

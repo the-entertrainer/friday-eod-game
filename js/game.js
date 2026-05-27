@@ -10,7 +10,8 @@ let gameState = {
     _afterSpotlightFn: null,
     typeInterval: null,
     trapTimeout: null,
-    pendingBubble: false
+    pendingBubble: false,
+    cutawayShown: false
 };
 
 const uiClock       = document.getElementById('clock-display');
@@ -555,6 +556,7 @@ function loadNode(nodeId) {
     uiEndingCard.innerHTML = '';
     uiChoices.innerHTML = '';
     uiText.innerHTML = '';
+    gameState.cutawayShown = false;
 
     uiGameCont.classList.remove('ending-victory', 'ending-bad');
     if (VICTORY_ENDINGS.has(nodeId)) {
@@ -596,6 +598,17 @@ function loadNode(nodeId) {
     uiName.style.color = node.textColor;
     uiName.style.transform = 'rotate(-3deg) scale(1.1)';
     setTimeout(() => { uiName.style.transform = 'rotate(-3deg) scale(1)'; }, 200);
+    uiName.dataset.mood = node.speaker === 'Tarun' ? '🤩' :
+                          node.speaker === 'Priya' ? (node.monologue ? '💭' : '😑') : '⚠️';
+
+    // Terminal speaker tinting + monologue style
+    const terminalEl = document.getElementById('terminal');
+    terminalEl.classList.remove('speaker-priya', 'speaker-tarun', 'speaker-system', 'is-monologue');
+    terminalEl.classList.add(
+        node.speaker === 'Priya'  ? 'speaker-priya'  :
+        node.speaker === 'Tarun'  ? 'speaker-tarun'  : 'speaker-system'
+    );
+    if (node.monologue) terminalEl.classList.add('is-monologue');
 
     if (node.isTrap) {
         runTrapSequence();
@@ -841,37 +854,79 @@ function showThoughtBubble() {
 }
 
 // ─── Dialogue ─────────────────────────────────────────────────────────────────
-function typewriterEffect(text, choices) {
+function typewriterEffect(text, choices, startOffset) {
+    startOffset = startOffset || 0;
     clearInterval(gameState.typeInterval);
     gameState.isTyping = true;
-    let i = 0;
+    let i = startOffset;
 
     if (choices && choices.length > 0) uiTapHint.classList.add('visible');
-
-    showContextualEffect(text);
+    if (startOffset === 0) showContextualEffect(text);
     startTypingSound();
+
+    const curNode = storyData[gameState.currentNode];
+    let spotlightTriggerIdx = -1;
+    let spotlightFired = false;
+
+    // Compute mid-text spotlight trigger only when both spotlight+cutaway exist
+    if (startOffset === 0 && curNode && curNode.spotlight && curNode.cutaway) {
+        const idx = text.indexOf(curNode.spotlight);
+        if (idx >= 0) spotlightTriggerIdx = idx + curNode.spotlight.length;
+    }
+
+    if (startOffset > 0) uiText.innerHTML = text.substring(0, startOffset);
 
     gameState.typeInterval = setInterval(() => {
         uiText.innerHTML = text.substring(0, i + 1) + '<span class="cursor"></span>';
         i++;
+
+        // Mid-text spotlight trigger: pause typing, highlight, 400ms, cutaway, then continue
+        if (spotlightTriggerIdx >= 0 && i >= spotlightTriggerIdx && !spotlightFired) {
+            spotlightFired = true;
+            clearInterval(gameState.typeInterval);
+            gameState.isTyping = false;
+            stopTypingSound();
+            uiText.innerHTML = text.substring(0, i);
+
+            const capturedI = i;
+            const afterCutaway = () => {
+                gameState.cutawayShown = true;
+                const rest = text.substring(capturedI);
+                if (rest.length > 0) {
+                    typewriterEffect(text, choices, capturedI);
+                } else {
+                    renderChoices(choices);
+                    if (gameState.pendingBubble) { gameState.pendingBubble = false; showThoughtBubble(); }
+                }
+            };
+            runSpotlight(curNode.spotlight, () => {
+                setTimeout(() => showCutaway(curNode.cutaway, afterCutaway), 400);
+            });
+            return;
+        }
+
         if (i >= text.length) {
             clearInterval(gameState.typeInterval);
             uiText.innerHTML = text;
             gameState.isTyping = false;
             stopTypingSound();
-            const curNode = storyData[gameState.currentNode];
+
             const _afterCutaway = () => {
                 renderChoices(choices);
                 if (gameState.pendingBubble) { gameState.pendingBubble = false; showThoughtBubble(); }
             };
             const _afterSpotlight = () => {
-                if (curNode && curNode.cutaway && cutawayData[curNode.cutaway]) {
+                if (curNode && curNode.cutaway && cutawayData[curNode.cutaway] && !gameState.cutawayShown) {
                     showCutaway(curNode.cutaway, _afterCutaway);
                 } else {
                     _afterCutaway();
                 }
             };
-            if (curNode && curNode.spotlight) {
+
+            // continuation pass OR mid-text spotlight already fired → skip to choices
+            if (startOffset > 0 || spotlightFired) {
+                _afterCutaway();
+            } else if (curNode && curNode.spotlight) {
                 runSpotlight(curNode.spotlight, _afterSpotlight);
             } else {
                 _afterSpotlight();
@@ -902,7 +957,7 @@ function advanceDialogue() {
             renderChoices(node.choices);
             if (gameState.pendingBubble) { gameState.pendingBubble = false; showThoughtBubble(); }
         };
-        if (node.cutaway && cutawayData[node.cutaway]) {
+        if (node.cutaway && cutawayData[node.cutaway] && !gameState.cutawayShown) {
             showCutaway(node.cutaway, _afterCutaway);
         } else {
             _afterCutaway();
@@ -1012,6 +1067,8 @@ function renderChoices(choices) {
     choices.forEach((choice, index) => {
         const btn = document.createElement('button');
         btn.className = 'choice-btn';
+        if (choice.patienceCost < 0 || choice.qualityCost < 0) btn.classList.add('choice-risky');
+        else if (choice.patienceCost > 0 || choice.qualityCost > 0) btn.classList.add('choice-safe');
         btn.style.animationDelay = `${index * 0.08}s`;
 
         const textSpan = document.createElement('span');
